@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v28 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v29 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -159,7 +159,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v28</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v29</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -177,8 +177,8 @@ textarea::placeholder{color:var(--dim)}
       💡 <b>API 키란?</b> AI 서비스를 사용하기 위한 비밀번호예요.<br>
       각 AI 회사 홈페이지에서 무료/유료 키를 발급받아 아래에 입력하세요.<br>
       <span style="color:var(--green)">✓ 한 번 입력하면 브라우저에 저장되어 매번 입력할 필요 없어요.</span><br>
-      <span style="color:var(--dim)">• 음성인식(녹음)을 사용하려면 <b>OpenAI 키</b> 또는 <b>Groq 키</b>가 필요합니다.</span><br>
-      <span style="color:var(--dim)">• Groq Whisper는 초고속 무료 음성인식! Groq 키만으로도 녹음 가능.</span><br>
+      <span style="color:var(--dim)">• 음성인식(녹음)은 <b>Groq</b> · <b>Gemini</b> · <b>OpenAI</b> 키 중 하나면 됩니다.</span><br>
+      <span style="color:var(--dim)">• Groq Whisper = 초고속 무료 · Gemini 3.5 Transcribe = 의학용어 사전 + 화자분리.</span><br>
       <span style="color:var(--dim)">• 나머지는 사용할 AI만 입력하면 됩니다. 전부 입력할 필요 없어요.</span>
     </div>
     <div class="api-wrap" id="apiWrap"></div>
@@ -208,7 +208,9 @@ textarea::placeholder{color:var(--dim)}
         <option value="정형외과">🦴 정형외과</option>
         <option value="일반외과">🔪 일반외과</option>
         <option value="내과">💊 내과</option>
-        <option value="마취과">😴 마취과</option>
+        <option value="가정의학과">🏡 가정의학과</option>
+        <option value="마취통증의학과">😴 마취통증의학과</option>
+        <option value="재활의학과">🏃 재활의학과</option>
         <option value="영상의학과">🩻 영상의학과</option>
       </select>
       <span style="font-size:9px;color:var(--dim)">선택 시 기본 설정 자동 적용</span>
@@ -266,7 +268,7 @@ textarea::placeholder{color:var(--dim)}
 <div class="card">
   <div class="card-hdr"><span class="card-title">🤖 SOAP 작성 AI 선택</span><span class="btn-sm" onclick="loadExample()">예시</span></div>
   <div class="card-body">
-    <div style="font-size:10px;color:var(--dim);margin-bottom:6px;line-height:1.6">사용할 AI를 체크하세요. 여러 개 선택하면 동시에 SOAP을 작성해서 비교할 수 있어요.<br>★Best = 최고성능 · 🔥Hot = 인기 · ⚡Fast = 빠른응답</div>
+    <div style="font-size:10px;color:var(--dim);margin-bottom:6px;line-height:1.6">사용할 AI를 체크하세요. 여러 개 선택하면 동시에 SOAP을 작성해서 비교할 수 있어요.<br>★Best = 최고성능 · 🔥Hot = 인기 · ⚡Fast = 빠른응답 · NEW = 신규</div>
     <div class="sel-bar"><span style="color:var(--dim)">선택된 모델</span><span class="sel-cnt" id="selCnt">0</span></div>
     <div class="qsel">
       <button class="qbtn" onclick="selAll()">전체</button>
@@ -288,7 +290,7 @@ textarea::placeholder{color:var(--dim)}
           <option value="deepseek">DeepSeek</option>
           <option value="cerebras">Cerebras</option>
         </select>
-        <input type="text" class="api-inp" id="customModelId" placeholder="모델 ID (예: gpt-4o)" style="flex:1;font-size:9px;min-width:100px">
+        <input type="text" class="api-inp" id="customModelId" placeholder="모델 ID (예: gpt-5.6-terra)" style="flex:1;font-size:9px;min-width:100px">
         <button class="btn-sm" onclick="addCustomModel()" style="font-size:9px;white-space:nowrap">➕ 추가</button>
       </div>
       <div id="customModels" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px"></div>
@@ -300,24 +302,27 @@ textarea::placeholder{color:var(--dim)}
 <div class="card">
   <div class="card-hdr"><span class="card-title">🖼️ 의료 이미지 생성 엔진</span></div>
   <div class="card-body">
-    <div style="font-size:10px;color:var(--dim);margin-bottom:4px;line-height:1.5">SOAP 작성 완료 후, 진단명에 맞는 의료 교육용 이미지를 자동 생성합니다.<br>원하는 엔진을 선택하세요. Gemini 3종 + OpenAI 2종 + Grok + NovelAI = 7개!</div>
+    <div style="font-size:10px;color:var(--dim);margin-bottom:4px;line-height:1.5">SOAP 작성 완료 후, 진단명에 맞는 의료 교육용 이미지를 자동 생성합니다.<br>원하는 엔진을 선택하세요. Gemini 4종 + OpenAI 2종 + Grok 2종 + NovelAI 2종.</div>
     <div style="font-size:9px;font-weight:600;color:var(--gemini);margin:4px 0 2px">💎 Gemini 이미지 (Nano Banana 시리즈)</div>
     <div class="img-model-grid">
-      <label class="detail-opt sel"><input type="checkbox" name="imgEng" value="nanobana" checked> 🍌 NanoBanana (OG)</label>
-      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nanobana2"> 🍌2 NanoBanana2 (4K)</label>
-      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nanobanapro"> 🍌👑 NanoBanana Pro</label>
+      <label class="detail-opt sel"><input type="checkbox" name="imgEng" value="nanobana2" checked> 🍌2 NanoBanana 2</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nanobana2lite"> 🍌 NanoBanana 2 Lite</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nanobanapro"> 🍌👑 NanoBanana Pro (4K)</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nanobana"> 🍌 NanoBanana (OG 2.5)</label>
     </div>
     <div style="font-size:9px;font-weight:600;color:var(--openai);margin:6px 0 2px">🤖 OpenAI 이미지</div>
     <div class="img-model-grid">
-      <label class="detail-opt sel"><input type="checkbox" name="imgEng" value="gpt" checked> 🤖 GPT Image 1</label>
-      <label class="detail-opt"><input type="checkbox" name="imgEng" value="dalle3"> 🎨 DALL-E 3</label>
+      <label class="detail-opt sel"><input type="checkbox" name="imgEng" value="gpt" checked> 🤖 GPT Image 2.5 Flare</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="gptpro"> 🤖👑 GPT Image 2.5 Sunburst</label>
     </div>
     <div style="font-size:9px;font-weight:600;color:var(--dim);margin:6px 0 2px">기타 엔진</div>
     <div class="img-model-grid">
-      <label class="detail-opt"><input type="checkbox" name="imgEng" value="grok"> ⚡ Grok</label>
-      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nai"> 🎨 NovelAI</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="grok"> ⚡ Grok Imagine</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="grokpro"> ⚡👑 Grok Imagine Pro</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nai"> 🎨 NovelAI V5 Full</label>
+      <label class="detail-opt"><input type="checkbox" name="imgEng" value="nai45"> 🎨 NovelAI V4.5 Full</label>
     </div>
-    <div style="font-size:9px;color:var(--dim);margin-top:4px">기본: NanoBanana(OG) + GPT Image · 🍌OG=$0.039 · 🍌2=$0.045~0.15 · 🍌Pro=$0.134 · DALL-E 3=무료티어있음</div>
+    <div style="font-size:9px;color:var(--dim);margin-top:4px">기본: NanoBanana 2 + GPT Image 2.5 Flare · Gemini 2.5 계열은 2026-10-16 종료 예정</div>
   </div>
 </div>
 
@@ -362,9 +367,11 @@ MRI 찍고 가바펜틴 시작하려고 함.
         <select class="api-inp" id="sttEngine" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
           <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
-          <option value="openai">🤖 OpenAI Whisper</option>
-          <option value="gpt4o-mini">💰 GPT-4o Mini Transcribe</option>
-          <option value="gpt4o">🧠 GPT-4o Transcribe (화자분리)</option>
+          <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
+          <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
+          <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
+          <option value="gpt4o-dia">🤖 GPT-4o Transcribe (화자분리)</option>
+          <option value="openai">🤖 OpenAI Whisper-1</option>
         </select>
       </div>
       <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
@@ -396,9 +403,11 @@ MRI 찍고 가바펜틴 시작하려고 함.
         <select class="api-inp" id="sttEngine2" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
           <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
-          <option value="openai">🤖 OpenAI Whisper</option>
-          <option value="gpt4o-mini">💰 GPT-4o Mini Transcribe</option>
-          <option value="gpt4o">🧠 GPT-4o Transcribe (화자분리)</option>
+          <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
+          <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
+          <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
+          <option value="gpt4o-dia">🤖 GPT-4o Transcribe (화자분리)</option>
+          <option value="openai">🤖 OpenAI Whisper-1</option>
         </select>
       </div>
       <div class="upload-box" id="uploadBox" onclick="document.getElementById('audioFile').click()">
@@ -474,18 +483,16 @@ MRI 찍고 가바펜틴 시작하려고 함.
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== PROVIDERS =====
+// ===== PROVIDERS (2026-09 기준 모델 ID) =====
 const PROVIDERS = {
   cerebras:{name:'⚡ Cerebras',color:'cerebras',apiType:'openai',baseUrl:'https://api.cerebras.ai/v1',keyId:'cerebras',models:[
-    {id:'cb-qw3',name:'Qwen3 235B (1400t/s)',m:'qwen-3-235b-a22b-instruct-2507',tag:'best'},
-    {id:'cb-gptoss',name:'GPT-OSS 120B (3000t/s)',m:'gpt-oss-120b',tag:'hot'},
-    {id:'cb-glm47',name:'GLM 4.7 (355B)',m:'zai-glm-4.7',tag:'new'},
-    {id:'cb-llama31',name:'Llama 3.1 8B (2200t/s)',m:'llama3.1-8b',tag:'fast'},
+    {id:'cb-gptoss',name:'GPT-OSS 120B (3000t/s)',m:'gpt-oss-120b',tag:'best'},
+    {id:'cb-qw38',name:'Qwen 3.8 27B (1500t/s)',m:'qwen-3.8-27b',tag:'new'},
   ]},
   gemini:{name:'💎 Gemini',color:'gemini',apiType:'gemini',baseUrl:'https://generativelanguage.googleapis.com/v1beta',keyId:'gemini',models:[
     {id:'gem31p',name:'Gemini 3.1 Pro',m:'gemini-3.1-pro-preview',tag:'best'},
-    {id:'gem3f',name:'Gemini 3 Flash',m:'gemini-3-flash-preview',tag:'hot'},
-    {id:'gem31f',name:'Gemini 3.1 Flash Lite',m:'gemini-3.1-flash-lite-preview',tag:'fast'},
+    {id:'gem38f',name:'Gemini 3.8 Flash',m:'gemini-3.8-flash',tag:'hot'},
+    {id:'gem35fl',name:'Gemini 3.5 Flash-Lite',m:'gemini-3.5-flash-lite',tag:'fast'},
   ]},
   groq:{name:'🚀 Groq',color:'groq',apiType:'openai',baseUrl:'https://api.groq.com/openai/v1',keyId:'groq',models:[
     {id:'grq-gptoss',name:'GPT-OSS 120B (500t/s)',m:'openai/gpt-oss-120b',tag:'best'},
@@ -493,31 +500,34 @@ const PROVIDERS = {
     {id:'grq-gptoss20',name:'GPT-OSS 20B (1000t/s)',m:'openai/gpt-oss-20b',tag:'fast'},
   ]},
   deepseek:{name:'💰 DeepSeek',color:'deepseek',apiType:'openai',baseUrl:'https://api.deepseek.com/v1',keyId:'deepseek',models:[
-    {id:'ds-r1',name:'R1 Reasoner',m:'deepseek-reasoner',tag:'best'},
-    {id:'ds-v3',name:'V3 Chat',m:'deepseek-chat',tag:'hot'},
-    {id:'ds-r1d',name:'R1 Distill 70B',m:'deepseek-r1-distill-llama-70b',tag:'fast'},
+    {id:'ds-v4p',name:'V4 Pro',m:'deepseek-v4-pro',tag:'best'},
+    {id:'ds-v4f',name:'V4 Flash',m:'deepseek-v4-flash',tag:'fast'},
+    {id:'ds-v4v',name:'V4 Flash Vision (MRI)',m:'deepseek-v4-flash-vision-exp',tag:'new'},
   ]},
   xai:{name:'🤖 xAI (Grok)',color:'xai',apiType:'openai',baseUrl:'https://api.x.ai/v1',keyId:'xai',models:[
-    {id:'grk41r',name:'Grok 4.1 Fast(R)',m:'grok-4-1-fast-reasoning',tag:'best'},
-    {id:'grk41n',name:'Grok 4.1 Fast',m:'grok-4-1-fast-non-reasoning',tag:'hot'},
-    {id:'grk3m',name:'Grok 3 Mini',m:'grok-3-mini-latest',tag:'fast'},
+    {id:'grk45',name:'Grok 4.5',m:'grok-4.5',tag:'best'},
+    {id:'grk43',name:'Grok 4.3',m:'grok-4.3',tag:'hot'},
+    {id:'grk41n',name:'Grok 4.1 Fast',m:'grok-4-1-fast-non-reasoning',tag:'fast'},
   ]},
   openai:{name:'🤖 OpenAI',color:'openai',apiType:'openai',baseUrl:'https://api.openai.com/v1',keyId:'openai',models:[
-    {id:'oai-54',name:'GPT-5.4',m:'gpt-5.4',tag:'best'},
-    {id:'oai-54m',name:'GPT-5.4 Mini',m:'gpt-5.4-mini',tag:'hot'},
-    {id:'oai-54n',name:'GPT-5.4 Nano',m:'gpt-5.4-nano',tag:'fast'},
+    {id:'oai-6a',name:'GPT-6 Astra',m:'gpt-6-astra',tag:'best'},
+    {id:'oai-56s',name:'GPT-5.6 Sol',m:'gpt-5.6-sol',tag:'hot'},
+    {id:'oai-56t',name:'GPT-5.6 Terra',m:'gpt-5.6-terra',tag:'new'},
+    {id:'oai-56l',name:'GPT-5.6 Luna',m:'gpt-5.6-luna',tag:'fast'},
   ]},
   anthropic:{name:'🧠 Claude',color:'anthropic',apiType:'anthropic',baseUrl:'https://api.anthropic.com/v1',keyId:'anthropic',models:[
-    {id:'ant-o46',name:'Opus 4.6',m:'claude-opus-4-6',tag:'best'},
-    {id:'ant-s45',name:'Sonnet 4.5',m:'claude-sonnet-4-5-20250929',tag:'hot'},
+    {id:'ant-f51',name:'Fable 5.1',m:'claude-fable-5-1',tag:'best'},
+    {id:'ant-o5',name:'Opus 5',m:'claude-opus-5',tag:'hot'},
+    {id:'ant-s5',name:'Sonnet 5',m:'claude-sonnet-5',tag:'new'},
+    {id:'ant-h45',name:'Haiku 4.5',m:'claude-haiku-4-5-20251001',tag:'fast'},
   ]},
 };
 
 const API_KEYS_CONFIG = [
-  {id:'openai',label:'🤖 OpenAI (Whisper+GPT)',placeholder:'sk-...'},
+  {id:'openai',label:'🤖 OpenAI (GPT-6 + Transcribe + Image)',placeholder:'sk-...'},
   {id:'anthropic',label:'🧠 Claude',placeholder:'sk-ant-...'},
-  {id:'gemini',label:'💎 Gemini',placeholder:'AIza...'},
-  {id:'groq',label:'🚀 Groq (텍스트+Whisper STT)',placeholder:'gsk_...'},
+  {id:'gemini',label:'💎 Gemini (텍스트 + Transcribe + NanoBanana)',placeholder:'AIza...'},
+  {id:'groq',label:'🚀 Groq (텍스트 + Whisper STT)',placeholder:'gsk_...'},
   {id:'xai',label:'🤖 xAI (Grok)',placeholder:'xai-...'},
   {id:'deepseek',label:'💰 DeepSeek',placeholder:'sk-...'},
   {id:'cerebras',label:'⚡ Cerebras',placeholder:'csk-...'},
@@ -619,7 +629,9 @@ const DEPT_PRESETS = {
   '정형외과':{specialty:'Joint / Trauma / Sports Medicine',patients:'관절질환, 골절, 인대손상, 스포츠 손상',philosophy:'',meds:'',instruction:'골절 시 분류(AO/Weber 등) 기재, ROM 수치 포함'},
   '일반외과':{specialty:'General / GI / Hepatobiliary Surgery',patients:'복부 수술, 탈장, 담낭, 갑상선, 유방질환',philosophy:'',meds:'',instruction:'수술 소견 상세 기술, 병리 결과 포함 시 기재'},
   '내과':{specialty:'Internal Medicine',patients:'만성질환(DM, HTN, CKD), 감염, 소화기, 호흡기',philosophy:'',meds:'',instruction:'검사 수치 변화 추이 기록, 약물 조절 이유 명시'},
-  '마취과':{specialty:'Anesthesiology / Pain Medicine',patients:'수술 전 평가, 통증 클리닉, 중환자 관리',philosophy:'',meds:'',instruction:'ASA 분류, NPO 시간, 기도 평가 포함'},
+  '가정의학과':{specialty:'Family Medicine / Geriatrics',patients:'요양병원 입원환자, 고령 만성질환, 욕창, 연하곤란, 낙상, 폐렴, 요로감염',philosophy:'',meds:'',instruction:'다약제 복용(polypharmacy) 검토, 욕창 단계/부위 기재, 식이·연하 상태, 낙상 위험도, 보호자 상담 내용 포함'},
+  '마취통증의학과':{specialty:'Anesthesiology / Pain Medicine',patients:'수술 전 평가, 통증 클리닉, 신경차단술, 중환자 관리',philosophy:'',meds:'',instruction:'ASA 분류, NPO 시간, 기도 평가, 시술 부위/레벨/약제 용량 포함'},
+  '재활의학과':{specialty:'Physical Medicine & Rehabilitation',patients:'뇌졸중, 척수손상, 근골격계 통증, 소아재활',philosophy:'',meds:'',instruction:'MMT/ROM 수치, 기능 평가(MBI, FIM), 치료 처방(PT/OT/ST) 세부 항목 기재'},
   '영상의학과':{specialty:'Diagnostic Radiology',patients:'X-ray, CT, MRI, 초음파 판독',philosophy:'',meds:'',instruction:'판독 소견은 Objective에 가장 상세하게. Findings → Impression 구조.'},
 };
 
@@ -631,6 +643,35 @@ function applyDeptPreset(dept){
   if(p.instruction)document.getElementById('pf-instruction').value=p.instruction;
   updateProfileSummary();
   showToast('🏥 '+dept+' 프리셋 적용됨 — 💾저장을 눌러주세요');
+}
+
+// ===== STT 의학용어 사전 (진료과별) =====
+// Gemini Transcribe: custom_vocabulary 배열로 전체 전달 (최대 100개 권장)
+// Whisper 계열: prompt 문자열 — Groq ~224토큰, OpenAI ~244토큰 제한이라 앞부분만 잘라서 전달
+const STT_VOCAB = {
+  common:['VAS','MRI','CT','X-ray','EMG','고혈압','당뇨','골다공증','물리치료','도수치료','체외충격파','프롤로테라피','비급여','수술','재활','통증','저림','마비'],
+  '신경외과':['척추관협착증','추간판탈출증','디스크','협착증','방사통','신경인성 파행','간헐적 파행','신경차단술','경막외 차단술','신경근','후관절','MBB','요추','경추','흉추','천추','L4-5','L5-S1','C5-6','SLR','Spurling','미세현미경','내시경','유합술','TLIF','PLIF','ACDF','후궁절제술','압박골절','척추전방전위증','척추측만증','좌골신경통','하지근력','감각저하','배뇨장애','가바펜틴','프레가발린','트라마돌','세레콕시브','리리카','뉴론틴','울트라셋','케토락','덱사메타손','뇌종양','뇌출혈','두부외상'],
+  '정형외과':['회전근개','반월상연골','전방십자인대','ACL','PCL','골절','인공관절','TKA','THA','석고고정','ROM','관절경','건염','족저근막염','오십견','유착성 관절낭염','테니스엘보','히알루론산','스테로이드 주사'],
+  '일반외과':['담낭염','담석','충수염','탈장','서혜부','복강경','갑상선','유방','종괴','병리','절제술','문합','장폐색','치핵','치루'],
+  '내과':['혈당','HbA1c','크레아티닌','eGFR','LDL','간수치','AST','ALT','폐렴','COPD','천식','위염','역류성 식도염','헬리코박터','심전도','부정맥','심부전','메트포르민','암로디핀','아토르바스타틴'],
+  '가정의학과':['욕창','연하곤란','낙상','섬망','치매','요로감염','흡인성 폐렴','경관영양','L-tube','PEG','도뇨관','유치도뇨관','욕창 2단계','드레싱','항생제','수액','영양상태','알부민','보호자','DNR','연명치료'],
+  '마취통증의학과':['ASA','NPO','기도 평가','Mallampati','척추마취','경막외','전신마취','신경차단술','TPI','통증유발점','고주파 열응고술','RF','신경성형술','케이지','리도카인','부피바카인','트리암시놀론'],
+  '재활의학과':['MMT','ROM','MBI','FIM','편마비','경직','보툴리눔','연하재활','언어치료','작업치료','물리치료','보행훈련','보조기','휠체어','욕창','경직','바클로펜'],
+  '영상의학과':['판독','Findings','Impression','조영증강','신호강도','T1','T2','STIR','저음영','고음영','석회화','종괴','림프절','흉수','복수','폐결절','경색','출혈'],
+};
+
+function getSttVocab(){
+  const dept=document.getElementById('pf-dept')?.value?.trim()||'신경외과';
+  const list=[...(STT_VOCAB[dept]||STT_VOCAB['신경외과']),...STT_VOCAB.common];
+  const extra=(document.getElementById('pf-patients')?.value||'').split(/[,、·\s]+/).filter(w=>w.length>1&&w.length<15);
+  return [...new Set([...list,...extra])].slice(0,100);
+}
+// Whisper prompt: 엔진별 글자수 제한 (한글 1자 ≈ 2~3토큰)
+function buildSttPrompt(sttEng){
+  const limit=sttEng.startsWith('groq')?110:sttEng==='gpt-tx'?600:120;
+  let s='',out=[];
+  for(const w of getSttVocab()){ if((s+w).length>limit)break; out.push(w); s+=w+', '; }
+  return out.join(', ');
 }
 
 // ===== INIT =====
@@ -650,7 +691,7 @@ function init() {
       }
     });
   });
-  // Gemini 3.1 Pro 기본 체크
+  // 기본 체크: Gemini 3.1 Pro
   const defaultModels=['gem31p'];
   defaultModels.forEach(mid=>{
     const label=document.querySelector(`.model-cb[data-mid="${mid}"]`);
@@ -828,8 +869,11 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode){
       medImages.forEach(img=>{content.push({type:'image',source:{type:'base64',media_type:img.mimeType,data:img.base64}});});
     }
     content.push({type:'text',text:userMsg});
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:modelInfo.m,max_tokens:1500,system:sysPrompt,messages:[{role:'user',content}]})});
-    const d=await r.json();if(d.error)throw new Error(d.error.message);return d.content[0].text;
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:modelInfo.m,max_tokens:2000,system:sysPrompt,messages:[{role:'user',content}]})});
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    const txt=(d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+    if(!txt)throw new Error('Claude: 빈 응답');
+    return txt;
 
   } else if(prov.apiType==='gemini'){
     // Gemini: vision 지원
@@ -839,16 +883,19 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode){
     }
     parts.push({text:userMsg});
     const r=await fetch(`${prov.baseUrl}/models/${modelInfo.m}:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:sysPrompt}]},contents:[{parts}]})});
-    const d=await r.json();if(d.error)throw new Error(d.error.message);return d.candidates[0].content.parts[0].text;
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    const gparts=d.candidates?.[0]?.content?.parts||[];
+    const txt=gparts.filter(p=>p.text&&!p.thought).map(p=>p.text).join('\n');
+    if(!txt)throw new Error('Gemini: 빈 응답');
+    return txt;
 
   } else {
-    // OpenAI-compatible: GPT-5.4/Grok 등 vision 지원
+    // OpenAI-compatible: GPT/Grok/DeepSeek/Groq/Cerebras
     const hdrs={'Content-Type':'application/json','Authorization':`Bearer ${key}`};
-    if(provKey==='openrouter'){hdrs['HTTP-Referer']='https://soap.kr';hdrs['X-Title']='SOAP';}
     const userContent=[];
-    // 비전 지원 프로바이더: openai, xai (grok)
-    const visionProviders=['openai','xai'];
-    if(medImages.length && visionProviders.includes(provKey)){
+    // 비전 지원: openai, xai 전체 / deepseek은 vision 모델만
+    const supportsVision=['openai','xai'].includes(provKey)||(provKey==='deepseek'&&modelInfo.m.includes('vision'));
+    if(medImages.length && supportsVision){
       medImages.forEach(img=>{userContent.push({type:'image_url',image_url:{url:`data:${img.mimeType};base64,${img.base64}`,detail:'high'}});});
       userContent.push({type:'text',text:userMsg});
     }
@@ -856,25 +903,29 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode){
     if(userContent.length){messages.push({role:'user',content:userContent});}
     else{messages.push({role:'user',content:userMsg});}
     const body={model:modelInfo.m,messages};
-    // OpenAI GPT-5.4/o-series는 max_completion_tokens 사용
-    if(provKey==='openai'&&(modelInfo.m.startsWith('gpt-5')||modelInfo.m.startsWith('o'))){
-      body.max_completion_tokens=1500;
+    if(provKey==='openai'){
+      // GPT-6 / GPT-5.x: max_completion_tokens 필수, reasoning 토큰까지 포함되므로 넉넉히
+      body.max_completion_tokens=8000;
+      // GPT-6 Astra는 최소 'low' (none 미지원). 5.6 계열은 none 가능하지만 low가 SOAP 품질/속도 균형점
+      if(modelInfo.m.startsWith('gpt-6')||modelInfo.m.startsWith('gpt-5'))body.reasoning_effort='low';
     } else {
-      body.max_tokens=1500;
+      body.max_tokens=2000;
     }
-    // Cerebras GLM 4.7 / GPT-OSS: reasoning 비활성화
-    if(provKey==='cerebras'&&(modelInfo.m.includes('glm')||modelInfo.m.includes('gpt-oss'))){
-      body.reasoning_effort='none';body.reasoning_format='hidden';
+    // Cerebras: GPT-OSS는 reasoning 끄기, Qwen 3.8은 기본 xhigh라 반드시 낮춰야 함
+    if(provKey==='cerebras'){
+      body.reasoning_effort=modelInfo.m.includes('qwen')?'low':'none';
+      body.reasoning_format='hidden';
     }
     // Groq: thinking 모델 대응 (system prompt에 직접 지시)
-    if(provKey==='groq'&&(modelInfo.m.includes('qwen3')||modelInfo.m.includes('llama-4'))){
+    if(provKey==='groq'&&(modelInfo.m.includes('qwen')||modelInfo.m.includes('llama-4'))){
       messages[0].content+='\n\nIMPORTANT: Do NOT use <think> tags. Respond with the SOAP note directly.';
     }
     const r=await fetch(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)});
     const d=await r.json();if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
     // <think> 태그 제거 (reasoning 모델 대응)
-    let result=d.choices[0].message.content||'';
+    let result=d.choices?.[0]?.message?.content||'';
     result=result.replace(/<think>[\s\S]*?<\/think>/g,'').trim();
+    if(!result)throw new Error('빈 응답 (reasoning 파라미터 확인 필요)');
     return result;
   }
 }
@@ -964,6 +1015,8 @@ function buildImagePrompt(){
   document.getElementById('imgPrompt').value=`medical illustration, anatomical diagram, ${(p.A||'').trim()}, patient symptoms: ${(p.S||'').trim()}, clean medical textbook style, labeled anatomy, professional healthcare infographic, white background, high detail, educational, landscape orientation, wide format`.substring(0,800);
 }
 
+const IMG_LABELS={nanobana2:'🍌2 NanoBanana 2',nanobana2lite:'🍌 NanoBanana 2 Lite',nanobanapro:'🍌👑 NanoBanana Pro',nanobana:'🍌 NanoBanana (OG)',gpt:'🤖 GPT Image 2.5 Flare',gptpro:'🤖👑 GPT Image 2.5 Sunburst',grok:'⚡ Grok Imagine',grokpro:'⚡👑 Grok Imagine Pro',nai:'🎨 NovelAI V5',nai45:'🎨 NovelAI V4.5'};
+
 async function genImages(){
   const prompt=document.getElementById('imgPrompt').value.trim();
   if(!prompt){showToast('⚠️ 이미지 프롬프트 비어있음');return;}
@@ -971,20 +1024,23 @@ async function genImages(){
   document.querySelectorAll('input[name="imgEng"]:checked').forEach(cb=>engines.push(cb.value));
   if(!engines.length){showToast('⚠️ 이미지 엔진 선택');return;}
   const div=document.getElementById('imgResults');div.innerHTML='';
-  const labels={nanobana:'🍌 NanoBanana (OG)',nanobana2:'🍌2 NanoBanana2 (4K)',nanobanapro:'🍌👑 NanoBanana Pro',gpt:'🤖 GPT Image 1',dalle3:'🎨 DALL-E 3',grok:'⚡ Grok',nai:'🎨 NovelAI'};
+  const labels=IMG_LABELS;
   engines.forEach(e=>{const el=document.createElement('div');el.className='img-loading';el.id='img_'+e;el.innerHTML=`<div style="text-align:center"><div class="spinner"></div><div style="font-size:10px;color:var(--dim)">${labels[e]} 생성 중...</div></div>`;div.appendChild(el);});
 
   await Promise.allSettled(engines.map(async eng=>{
     try{
       let url;
       switch(eng){
+        case 'nanobana2': url=await genGeminiImage(prompt,'gemini-3.1-flash-image'); break;
+        case 'nanobana2lite': url=await genGeminiImage(prompt,'gemini-3.1-flash-lite-image'); break;
+        case 'nanobanapro': url=await genGeminiImage(prompt,'gemini-3-pro-image'); break;
         case 'nanobana': url=await genGeminiImage(prompt,'gemini-2.5-flash-image'); break;
-        case 'nanobana2': url=await genGeminiImage(prompt,'gemini-3.1-flash-image-preview'); break;
-        case 'nanobanapro': url=await genGeminiImage(prompt,'gemini-3-pro-image-preview'); break;
-        case 'gpt': url=await genGPTImg(prompt); break;
-        case 'dalle3': url=await genDalle3(prompt); break;
-        case 'grok': url=await genGrokImg(prompt); break;
-        case 'nai': url=await genNAI(prompt); break;
+        case 'gpt': url=await genGPTImg(prompt,'gpt-image-2.5-flare'); break;
+        case 'gptpro': url=await genGPTImg(prompt,'gpt-image-2.5-sunburst'); break;
+        case 'grok': url=await genGrokImg(prompt,'grok-imagine-image'); break;
+        case 'grokpro': url=await genGrokImg(prompt,'grok-imagine-image-pro'); break;
+        case 'nai': url=await genNAI(prompt,'v5'); break;
+        case 'nai45': url=await genNAI(prompt,'v45'); break;
       }
       const el=document.getElementById('img_'+eng);el.className='img-result';
       el.innerHTML=`<img src="${url}" onclick="showImgModal(this.src,'${eng}')"><div class="img-label"><span>${labels[eng]}</span><button class="btn-sm" style="font-size:8px" onclick="downloadImg(this.closest('.img-result').querySelector('img').src,'soap_${eng}.png')">💾</button></div>`;
@@ -996,7 +1052,7 @@ async function genImages(){
 // Gemini Image (NanoBanana 시리즈 공용)
 async function genGeminiImage(prompt,model){
   const key=getKey('gemini');if(!key)throw new Error('Gemini API 키 필요');
-  if(!model)model='gemini-2.5-flash-image';
+  if(!model)model='gemini-3.1-flash-image';
   const cleanPrompt=prompt.replace(/[{}\[\]<>]/g,'').substring(0,1800);
   const body={
     contents:[{parts:[{text:`Generate an image (horizontal wide 16:9): ${cleanPrompt}`}]}],
@@ -1016,10 +1072,11 @@ async function genGeminiImage(prompt,model){
   throw new Error('Gemini: 이미지 없음');
 }
 
-// GPT Image
-async function genGPTImg(prompt){
+// GPT Image 2.5 (flare / sunburst 공용)
+async function genGPTImg(prompt,model){
   const key=getKey('openai');if(!key)throw new Error('OpenAI 키 필요');
-  const r=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'gpt-image-1',prompt:prompt.substring(0,4000),n:1,size:'1536x1024',quality:'low'})});
+  model=model||'gpt-image-2.5-flare';
+  const r=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model,prompt:prompt.substring(0,4000),n:1,size:'1536x1024',quality:'medium'})});
   const d=await r.json();if(d.error)throw new Error(d.error.message);
   const b64=d?.data?.[0]?.b64_json;
   if(b64)return `data:image/png;base64,${b64}`;
@@ -1027,22 +1084,12 @@ async function genGPTImg(prompt){
   throw new Error('GPT Image: 결과 없음');
 }
 
-// DALL-E 3
-async function genDalle3(prompt){
-  const key=getKey('openai');if(!key)throw new Error('OpenAI 키 필요');
-  const r=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'dall-e-3',prompt:prompt.substring(0,4000),n:1,size:'1792x1024',quality:'standard',style:'natural'})});
-  const d=await r.json();if(d.error)throw new Error(d.error.message);
-  const url=d?.data?.[0]?.url;if(url)return url;
-  const b64=d?.data?.[0]?.b64_json;
-  if(b64)return `data:image/png;base64,${b64}`;
-  throw new Error('DALL-E 3: 결과 없음');
-}
-
 // Grok Image (CORS 프록시 체인)
-async function genGrokImg(prompt){
+async function genGrokImg(prompt,model){
   const key=getKey('xai');if(!key)throw new Error('xAI 키 필요');
+  model=model||'grok-imagine-image';
   const apiUrl='https://api.x.ai/v1/images/generations';
-  const payload=JSON.stringify({model:'grok-imagine-image',prompt:prompt.substring(0,4000),n:1,aspect_ratio:'16:9',response_format:'url'});
+  const payload=JSON.stringify({model,prompt:prompt.substring(0,4000),n:1,aspect_ratio:'16:9',response_format:'url'});
   const hdrs={'Authorization':'Bearer '+key,'Content-Type':'application/json'};
   // 직접 + CORS 프록시 시도
   const proxies=[
@@ -1072,16 +1119,35 @@ async function genGrokImg(prompt){
   throw new Error('Grok: 이미지 없음');
 }
 
-// NovelAI
-async function genNAI(prompt){
+// NovelAI — V5 Full (기본) / V4.5 Full
+// V5: params_version 4, noise_schedule karras 고정, SMEA·Vibe Transfer·reference 배열 미지원, 기본 guidance 7 / steps 23
+async function genNAI(prompt,ver){
   const key=getKey('novelai');if(!key)throw new Error('NovelAI 키 필요');
-  const r=await fetch('https://image.novelai.net/ai/generate-image',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'Origin':'https://novelai.net','Referer':'https://novelai.net/'},body:JSON.stringify({input:`masterpiece, best quality, ${prompt}`,model:'nai-diffusion-4-5-full',action:'generate',parameters:{params_version:3,width:1216,height:832,n_samples:1,sampler:'k_dpmpp_2m_sde',steps:28,scale:5.3,uncond_scale:1,cfg_rescale:0,noise_schedule:'karras',autoSmea:true,qualityToggle:true,ucPreset:0,legacy:false,legacy_v3_extend:false,add_original_image:true,prefer_brownian:true,deliberate_euler_ancestral_bug:false,v4_model_preset:'Illustrative',negative_prompt:'worst quality, bad quality, lowres, text, watermark',seed:Math.floor(Math.random()*4294967295),v4_prompt:{caption:{base_caption:`masterpiece, best quality, ${prompt}`,char_captions:[]},use_coords:false,use_order:true},v4_negative_prompt:{caption:{base_caption:'worst quality, bad quality, lowres, text, watermark',char_captions:[]},use_coords:false,use_order:false,legacy_uc:false},characterPrompts:[],reference_image_multiple:[],reference_information_extracted_multiple:[],reference_strength_multiple:[]}})});
-  if(!r.ok)throw new Error('NAI '+r.status);
+  const isV5=ver!=='v45';
+  const model=isV5?'nai-diffusion-5-full':'nai-diffusion-4-5-full';
+  const quality=isV5?'very aesthetic, masterpiece, no text':'masterpiece, best quality';
+  const pos=`${quality}, ${prompt}`;
+  const neg='worst quality, bad quality, lowres, text, watermark';
+  const seed=Math.floor(Math.random()*4294967295);
+  let parameters;
+  if(isV5){
+    parameters={params_version:4,width:1216,height:832,n_samples:1,sampler:'k_euler_ancestral',steps:23,scale:7,cfg_rescale:0,noise_schedule:'karras',qualityToggle:true,ucPreset:0,legacy:false,negative_prompt:neg,seed,
+      v4_prompt:{caption:{base_caption:pos,char_captions:[]},use_coords:false,use_order:true},
+      v4_negative_prompt:{caption:{base_caption:neg,char_captions:[]},legacy_uc:false}};
+  } else {
+    parameters={params_version:3,width:1216,height:832,n_samples:1,sampler:'k_dpmpp_2m_sde',steps:28,scale:5.3,uncond_scale:1,cfg_rescale:0,noise_schedule:'karras',autoSmea:true,qualityToggle:true,ucPreset:0,legacy:false,legacy_v3_extend:false,add_original_image:true,prefer_brownian:true,deliberate_euler_ancestral_bug:false,v4_model_preset:'Illustrative',negative_prompt:neg,seed,
+      v4_prompt:{caption:{base_caption:pos,char_captions:[]},use_coords:false,use_order:true},
+      v4_negative_prompt:{caption:{base_caption:neg,char_captions:[]},use_coords:false,use_order:false,legacy_uc:false},
+      characterPrompts:[],reference_image_multiple:[],reference_information_extracted_multiple:[],reference_strength_multiple:[]};
+  }
+  const r=await fetch('https://image.novelai.net/ai/generate-image',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({input:pos,model,action:'generate',parameters})});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error('NAI '+r.status+(e.message?': '+e.message:''));}
   const zip=await JSZip.loadAsync(await r.arrayBuffer());
   const fnames=Object.keys(zip.files);
   if(fnames.length>0){
     const blob=await zip.files[fnames[0]].async('blob');
-    return URL.createObjectURL(new Blob([blob],{type:'image/png'}));
+    const mime=fnames[0].endsWith('.webp')?'image/webp':'image/png';
+    return URL.createObjectURL(new Blob([blob],{type:mime}));
   }
   throw new Error('NAI: 이미지 없음');
 }
@@ -1149,11 +1215,15 @@ function updateRecTimer(){
   if(autoStopSec>0&&recSeconds>=autoStopSec){stopRecording();showToast('⏱ '+Math.floor(autoStopSec/60)+'분 자동 종료');}
 }
 
+// STT 엔진 → 필요한 키
+function sttKeyFor(eng){ return eng.startsWith('groq')?'groq':eng.startsWith('gemini')?'gemini':'openai'; }
+const STT_KEY_LABEL={groq:'Groq',gemini:'Gemini',openai:'OpenAI'};
+
 async function toggleRecord(){if(isRecording)stopRecording();else startRecording();}
 async function startRecording(){
   const sttEng=document.getElementById('sttEngine')?.value||'groq-turbo';
-  const needKey=sttEng.startsWith('groq')?'groq':'openai';
-  if(!getKey(needKey)){showToast('⚠️ '+(needKey==='groq'?'Groq':'OpenAI')+' API Key 필요');return;}
+  const needKey=sttKeyFor(sttEng);
+  if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' API Key 필요');return;}
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:16000,channelCount:1,echoCancellation:true,noiseSuppression:true}});
     const mimes=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4','audio/mpeg'];
@@ -1188,8 +1258,8 @@ function stopRecording(){
 async function handleFileUpload(e){
   const file=e.target.files[0];if(!file)return;
   const sttEng=document.getElementById('sttEngine2')?.value||'groq-turbo';
-  const needKey=sttEng.startsWith('groq')?'groq':'openai';
-  if(!getKey(needKey)){showToast('⚠️ '+(needKey==='groq'?'Groq':'OpenAI')+' Key 필요');e.target.value='';return;}
+  const needKey=sttKeyFor(sttEng);
+  if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' Key 필요');e.target.value='';return;}
   if(file.size>25*1024*1024){showToast('⚠️ 25MB 초과');e.target.value='';return;}
   document.getElementById('uploadBox').classList.add('processing');
   document.getElementById('uploadText').textContent='처리 중: '+file.name;
@@ -1249,31 +1319,49 @@ function renderMedImgPreview(){
 
 function removeMedImg(i){medImages.splice(i,1);renderMedImgPreview();}
 
+// ===== STT (엔진 디스패치) =====
+const STT_CONFIG={
+  'groq-turbo':{url:'https://api.groq.com/openai/v1/audio/transcriptions',model:'whisper-large-v3-turbo',label:'Groq Whisper Turbo',fmt:'text'},
+  'groq-v3':{url:'https://api.groq.com/openai/v1/audio/transcriptions',model:'whisper-large-v3',label:'Groq Whisper V3',fmt:'text'},
+  'openai':{url:'https://api.openai.com/v1/audio/transcriptions',model:'whisper-1',label:'OpenAI Whisper',fmt:'text'},
+  'gpt-tx':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-transcribe',label:'GPT-Transcribe',fmt:'json'},
+  'gpt4o-dia':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-4o-transcribe-diarize',label:'GPT-4o Transcribe 화자분리',fmt:'diarized_json'},
+  'gemini-tx':{label:'Gemini 3.5 Transcribe',gemini:true,diarize:false},
+  'gemini-tx-dia':{label:'Gemini 3.5 Transcribe 화자분리',gemini:true,diarize:true},
+};
+
 async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
   sttEng=sttEng||'groq-turbo';
-  const isGroq=sttEng.startsWith('groq');
-  const key=isGroq?getKey('groq'):getKey('openai');
+  const cfg=STT_CONFIG[sttEng]||STT_CONFIG['groq-turbo'];
+  const key=getKey(sttKeyFor(sttEng));
   const pipe=document.getElementById(pipeId),s1=document.getElementById(s1Id),s2=document.getElementById(s2Id);
-  // STT 엔진별 설정
-  const sttConfig={
-    'openai':{url:'https://api.openai.com/v1/audio/transcriptions',model:'whisper-1',label:'OpenAI Whisper'},
-    'groq-turbo':{url:'https://api.groq.com/openai/v1/audio/transcriptions',model:'whisper-large-v3-turbo',label:'Groq Whisper Turbo'},
-    'groq-v3':{url:'https://api.groq.com/openai/v1/audio/transcriptions',model:'whisper-large-v3',label:'Groq Whisper V3'},
-    'gpt4o-mini':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-4o-mini-transcribe',label:'GPT-4o Mini Transcribe'},
-    'gpt4o':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-4o-transcribe',label:'GPT-4o Transcribe'},
-  };
-  const cfg=sttConfig[sttEng]||sttConfig['groq-turbo'];
   pipe.classList.add('show');s1.className='stt-step active';s2.className='stt-step';
   s1.querySelector('.stt-dot').nextSibling.textContent=cfg.label+' 처리 중...';
   try{
-    const ext=filename.split('.').pop().toLowerCase();
-    const ok=['mp3','mp4','mpeg','mpga','m4a','wav','webm','ogg','flac'];
-    let sendBlob=blob,sendName=filename;
-    if(!ok.includes(ext)){try{sendBlob=await convertToWav(blob);sendName='recording.wav';}catch(e){sendName=filename.replace(/\.[^.]+$/,'.mp4');}}
-    const fd=new FormData();fd.append('file',sendBlob,sendName);fd.append('model',cfg.model);fd.append('language','ko');fd.append('response_format','text');
-    const r=await fetch(cfg.url,{method:'POST',headers:{'Authorization':'Bearer '+key},body:fd});
-    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(cfg.label+': '+(e.error?.message||r.statusText));}
-    const transcript=await r.text();s1.className='stt-step done';s2.className='stt-step done';
+    let transcript='';
+    if(cfg.gemini){
+      transcript=await runGeminiTranscribe(blob,filename,key,cfg.diarize);
+    } else {
+      const ext=filename.split('.').pop().toLowerCase();
+      const ok=['mp3','mp4','mpeg','mpga','m4a','wav','webm','ogg','flac'];
+      let sendBlob=blob,sendName=filename;
+      if(!ok.includes(ext)){try{sendBlob=await convertToWav(blob);sendName='recording.wav';}catch(e){sendName=filename.replace(/\.[^.]+$/,'.mp4');}}
+      const fd=new FormData();fd.append('file',sendBlob,sendName);fd.append('model',cfg.model);fd.append('language','ko');fd.append('response_format',cfg.fmt);
+      if(cfg.fmt==='diarized_json'){fd.append('chunking_strategy','auto');}
+      else{const p=buildSttPrompt(sttEng);if(p)fd.append('prompt',p);}
+      const r=await fetch(cfg.url,{method:'POST',headers:{'Authorization':'Bearer '+key},body:fd});
+      if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(cfg.label+': '+(e.error?.message||r.statusText));}
+      if(cfg.fmt==='text'){transcript=await r.text();}
+      else{
+        const j=await r.json();
+        if(cfg.fmt==='diarized_json'&&Array.isArray(j.segments)&&j.segments.length){
+          transcript=mergeSpeakerLines(j.segments.map(s=>({speaker:s.speaker,text:s.text})));
+        } else transcript=j.text||'';
+      }
+    }
+    transcript=(transcript||'').trim();
+    if(!transcript)throw new Error(cfg.label+': 인식된 텍스트 없음');
+    s1.className='stt-step done';s2.className='stt-step done';
     document.getElementById('inputTxt').value=transcript;switchInput('text');
     navigator.clipboard.writeText(transcript).catch(()=>{});
     showToast('✅ '+cfg.label+' 음성인식 완료!');
@@ -1284,6 +1372,76 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
     }
   }catch(err){showToast('❌ '+err.message);s1.className='stt-step';s2.className='stt-step';}
   finally{document.getElementById('recBtn')?.classList.remove('processing');document.getElementById('recLabel').textContent='탭하여 녹음 시작';}
+}
+
+// 화자별 세그먼트 → "화자1: ..." 줄로 병합
+function mergeSpeakerLines(items){
+  const lines=[];let cur=null,buf='';
+  const label=s=>{const n=String(s||'').replace(/\D/g,'')||'?';return '화자'+n;};
+  for(const it of items){
+    const spk=it.speaker||'';
+    if(cur!==null&&spk!==cur){lines.push(label(cur)+': '+buf.trim());buf='';}
+    cur=spk;buf+=(it.text||'')+' ';
+  }
+  if(buf.trim())lines.push(label(cur)+': '+buf.trim());
+  return lines.join('\n');
+}
+
+// ===== Gemini 3.5 Transcribe (Files API 업로드 → Interactions API) =====
+async function geminiUploadFile(blob,mime,key){
+  const base='https://generativelanguage.googleapis.com';
+  const start=await fetch(`${base}/upload/v1beta/files?key=${key}`,{method:'POST',headers:{
+    'X-Goog-Upload-Protocol':'resumable','X-Goog-Upload-Command':'start',
+    'X-Goog-Upload-Header-Content-Length':String(blob.size),'X-Goog-Upload-Header-Content-Type':mime,
+    'Content-Type':'application/json'},body:JSON.stringify({file:{display_name:'soap_audio_'+Date.now()}})});
+  if(!start.ok){const e=await start.json().catch(()=>({}));throw new Error('Gemini 업로드 시작 실패: '+(e.error?.message||start.status));}
+  const upUrl=start.headers.get('X-Goog-Upload-URL')||start.headers.get('x-goog-upload-url');
+  if(!upUrl)throw new Error('Gemini 업로드 URL 없음 (CORS 헤더 미노출)');
+  const up=await fetch(upUrl,{method:'POST',headers:{'X-Goog-Upload-Offset':'0','X-Goog-Upload-Command':'upload, finalize'},body:blob});
+  if(!up.ok)throw new Error('Gemini 업로드 실패: '+up.status);
+  let file=(await up.json()).file;
+  // 처리 완료 대기 (오디오는 보통 즉시 ACTIVE)
+  for(let i=0;i<20&&file.state&&file.state!=='ACTIVE';i++){
+    await new Promise(r=>setTimeout(r,1000));
+    const g=await fetch(`${base}/v1beta/${file.name}?key=${key}`);
+    if(g.ok)file=await g.json();
+  }
+  if(file.state&&file.state!=='ACTIVE')throw new Error('Gemini 파일 처리 실패: '+file.state);
+  return file;
+}
+
+function geminiInteractionText(d){
+  if(typeof d.output_text==='string'&&d.output_text)return d.output_text;
+  let out='';
+  for(const step of d.steps||[])for(const c of step.content||[])if(c.type==='text'&&c.text)out+=c.text;
+  if(!out)for(const c of d.outputs||d.output||[])if(c.type==='text'&&c.text)out+=c.text;
+  return out;
+}
+function geminiWordAnnotations(d){
+  const words=[];
+  for(const step of d.steps||[])for(const c of step.content||[])for(const a of c.annotations||[])if(a.type==='word_info')words.push(a);
+  return words;
+}
+
+async function runGeminiTranscribe(blob,filename,key,diarize){
+  if(!key)throw new Error('Gemini API 키 필요');
+  let mime=(blob.type||'').split(';')[0].trim();
+  if(!mime){const ext=filename.split('.').pop().toLowerCase();mime={mp3:'audio/mp3',wav:'audio/wav',m4a:'audio/m4a',ogg:'audio/ogg',flac:'audio/flac',webm:'audio/webm',mp4:'audio/mp4'}[ext]||'audio/webm';}
+  const file=await geminiUploadFile(blob,mime,key);
+  const tc={language_codes:['ko-KR']};
+  if(diarize)tc.mode={type:'verbatim',diarization_mode:'speaker'};
+  else tc.custom_vocabulary=getSttVocab(); // 화자분리와 동시 사용 불가
+  const body={model:'gemini-3.5-transcribe',input:[{type:'audio',uri:file.uri,mime_type:file.mimeType||mime}],generation_config:{transcription_config:tc}};
+  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/interactions',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(!r.ok||d.error)throw new Error('Gemini Transcribe: '+(d.error?.message||r.status));
+  // 업로드 파일 정리 (실패해도 무시)
+  fetch(`https://generativelanguage.googleapis.com/v1beta/${file.name}?key=${key}`,{method:'DELETE'}).catch(()=>{});
+  if(diarize){
+    const words=geminiWordAnnotations(d);
+    if(words.length)return mergeSpeakerLines(words.map(w=>({speaker:w.speaker,text:w.text})));
+  }
+  return geminiInteractionText(d);
 }
 
 async function convertToWav(blob){
