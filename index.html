@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v37 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v38 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -174,7 +174,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v37</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v38</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -1217,6 +1217,12 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal){
       if(modelInfo.m.includes('qwen')){body.reasoning_effort='none';}
       else{body.reasoning_effort='low';body.reasoning_format='hidden';}
       body.max_tokens=6000; // reasoning 토큰이 max_tokens에 포함됨
+    }
+    // DeepSeek V4/V4.1: 기본이 thinking(high) → 2000토큰을 추론에 다 씀. SOAP은 non-thinking으로 충분·빠름·저렴
+    if(provKey==='deepseek'){
+      body.thinking={type:'disabled'};
+      body.reasoning_effort='none';
+      body.max_tokens=6000;
     }
     // OpenRouter: 통합 reasoning 파라미터 — 최소 effort + 출력에서 제외, reasoning 토큰 대비 max_tokens 여유
     if(provKey==='openrouter'){
