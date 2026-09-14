@@ -785,13 +785,8 @@ function init() {
       }
     });
   });
-  // 기본 체크: Gemini 3.1 Pro
-  const defaultModels=['gem31p'];
-  defaultModels.forEach(mid=>{
-    const label=document.querySelector(`.model-cb[data-mid="${mid}"]`);
-    if(label){label.querySelector('input').checked=true;label.classList.add('sel');}
-  });
-  updCount();
+  // 시작할 때는 기본·사용자 추가 모델 모두 선택하지 않음.
+  selNone();
   // 진료과 드롭다운 이벤트
   const deptSel=document.getElementById('deptSelect');
   if(deptSel) deptSel.addEventListener('change',function(){applyDeptPreset(this.value);});
@@ -836,8 +831,8 @@ let customModelList = JSON.parse(localStorage.getItem('soap_custom_models')||'[]
 function renderCustomModels(){
   const div=document.getElementById('customModels');div.replaceChildren();
   customModelList.forEach((cm,i)=>{
-    const lab=el('label','model-cb sel');lab.dataset.pid=cm.provider;lab.dataset.mid='custom_'+i;lab.style.borderColor='var(--accent)';
-    const cb=document.createElement('input');cb.type='checkbox';cb.value='custom_'+i;cb.checked=true;cb.addEventListener('change',updCount);
+    const lab=el('label','model-cb');lab.dataset.pid=cm.provider;lab.dataset.mid='custom_'+i;lab.style.borderColor='var(--accent)';
+    const cb=document.createElement('input');cb.type='checkbox';cb.value='custom_'+i;cb.checked=false;cb.addEventListener('change',updCount);
     const nm=el('span','','🔧 '+cm.modelId+' ');
     const pv=el('span','','('+cm.provider+')');pv.style.cssText='font-size:8px;color:var(--dim)';
     const x=el('span','','✕');x.style.cssText='cursor:pointer;margin-left:2px;color:#f87171;font-size:10px';
