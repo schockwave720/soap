@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v31 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v32 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -171,7 +171,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v31</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v32</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -264,23 +264,22 @@ textarea::placeholder{color:var(--dim)}
     <div style="font-size:10px;font-weight:600;color:var(--green);margin:10px 0 4px">📦 약속처방 세트 (EMR 주문표 생성용)</div>
     <div class="api-card" style="border-color:rgba(6,214,160,.35)"><label>선생님이 실제로 쓰는 약속처방을 세트 단위로 등록 → AI가 P 작성 시 이 세트 중에서만 골라 <b style="color:var(--green)">주문표(TSV)</b>를 뱉어냅니다. 세트 밖 약은 "원외"로 분리 표시.</label>
       <textarea class="api-inp" id="pf-orders" style="min-height:140px;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;line-height:1.6;resize:vertical" placeholder="## 세트명 | 적응증(언제 쓰는지) | 제외조건(선택)
-약품코드	약품명(함량)	1회량	단위	횟수	일수	용법
+처방코드	처방명	급여	수량	단위	횟수	日	용법코드	용법
 ...
 
-예시:
-## 요통-신경병증 기본 | 요추 HNP/협착 + 방사통, VAS 5-7, 위장질환 없음 | 신부전, 75세 이상은 가바 반감
-A01234	뉴론틴캡슐 300mg	1	C	3	7	식후 30분
-A05678	울트라셋정 37.5/325	1	T	2	7	식후
-A09012	알마겔정	1	T	3	7	식후
+예시 (메트로 처방N 열과 동일 순서):
+## 요통-신경병증 기본 | 요추 HNP/협착 + 방사통, VAS 5-7 | 신부전, 75세 이상 감량
+A01234	뉴론틴캡슐 300mg	Y	1	C	3	7	PC	식후30분
+A05678	울트라셋정 37.5/325mg	Y	1	T	2	7	PC	식후30분
 
-## 급성 요통 단기 | 급성 요통, 방사통 없음, 발병 2주 이내 |
-A02222	낙센정 500mg	1	T	2	5	식후
-A03333	에페리손정 50mg	1	T	3	5	식후
+## 급성 요통 단기 | 급성 요통, 방사통 없음, 2주 이내 |
+A02222	낙센정 500mg	Y	1	T	2	5	PC	식후30분
 
-## 시술: TFESI | 방사통 보존치료 실패, 영상 확인 |
-P10001	경막외신경차단술(TFESI)	1	회	1	1	L4-5 Rt
+## 검사: L-spine 기본 | 첫 방문 요통 |
+R00123	L-spine AP/Lat	Y	1	회	1	1		
 
-빈 줄로 세트 구분. 탭 또는 | 로 열 구분. 코드 없으면 빈칸 유지."></textarea>
+메트로 이전처방에서 행 복사 → 여기에 붙이면 코드/용법코드가 정확히 들어옵니다.
+빈 줄로 세트 구분. 탭 또는 | 로 열 구분. 모르는 칸은 비워두세요."></textarea>
     </div>
     <div class="api-card" style="margin-top:4px">
       <label>📁 약속처방 파일 불러오기 (txt, csv, xlsx — 위 형식이면 가장 좋고, 아니면 그대로 붙여서 AI가 해석)</label>
@@ -890,16 +889,30 @@ function getProfileContext(){
 }
 
 // ===== 약속처방 (RX ORDER TABLE) =====
-const RX_COLS=['구분','세트명','약품코드','약품명','1회량','단위','횟수','일수','용법','비고'];
+const RX_COLS=['구분','세트명','처방코드','처방명','급여','수량','단위','횟수','日','용법코드','용법','비고'];
+// 메트로 EMR 처방N 그리드 헤더 (사용자 제공, 순서 그대로)
+const METRO_HDR='처방묶음\t처방코드\t처방명\t급여\t수량\t단위\t횟수\t日\t용법\t용법\t간격\t간격\t약구분\t약구분\t예외\t예외\tRPTFG\tRPTFGNM\tDOW\tS\tA\tM\tP\tE\tI\tF\t부\t부위\t부위\tR-L-B\t용도\t용도\t검체\t검체\t실시日\t時\t종료日\t時\t끼니\t협진내역\t재활치료부위\tD/C정보\t입원정보\t원외전용약\t비고\tD/C원처방 Key(퇴원약)\t인접\t수술구분\tPOW\t분할합계\t아침\t점심\t저녁\t자기전\t투약시간1\t투약시간2\t투약시간3\t투약시간4\t투약시간5\t투약시간6\t투여속도\t투여구분\t재료수령부서\t재료 수령부서\t처치 치아1\t처치 치아2\t처치 치아3\t처치 치아4';
+const METRO_COLS=METRO_HDR.split('\t');
+// RX 행 → 메트로 70열 행 (모르는 칸은 빈칸 유지)
+function rxToMetroRow(r){
+  const m=new Array(METRO_COLS.length).fill('');
+  // r: 구분,세트명,처방코드,처방명,급여,수량,단위,횟수,日,용법코드,용법,비고
+  m[1]=r[2];m[2]=r[3];m[3]=r[4];m[4]=r[5];m[5]=r[6];m[6]=r[7];m[7]=r[8];m[8]=r[9];m[9]=r[10];
+  const iExt=METRO_COLS.indexOf('원외전용약'),iMemo=METRO_COLS.indexOf('비고');
+  if(r[0]==='원외')m[iExt]='Y';
+  m[iMemo]=r[11]||'';
+  return m;
+}
 function rxPromptRule(){
   const has=!!(document.getElementById('pf-orders')?.value?.trim());
   if(!has)return '';
   return `\n\nORDER TABLE RULE (mandatory):
-After the P section, output a final block that starts with a line exactly "RX_TABLE:" followed by tab-separated rows, one order per line, with these 10 columns in this order:
+After the P section, output a final block that starts with a line exactly "RX_TABLE:" followed by tab-separated rows, one order per line, with these 12 columns in this order:
 ${RX_COLS.join('\t')}
-- 구분 = "세트" if the item comes from a registered 약속처방 세트 (copy 약품코드/약품명/1회량/단위/횟수/일수/용법 EXACTLY as registered — never invent or alter codes or doses). Use "원외" for anything not in the sets (leave 약품코드 blank), "검사" for tests, "시술" for procedures.
+- 구분 = "세트" if the item comes from a registered 약속처방 세트 (copy 처방코드/처방명/급여/수량/단위/횟수/日/용법코드/용법 EXACTLY as registered — never invent or alter codes, doses or 용법코드; if a registered line lacks a column, leave that cell blank). Use "원외" for anything not in the sets (leave 처방코드 and 용법코드 blank), "검사" for tests, "시술" for procedures.
+- Registered set lines are in this column order: 처방코드, 처방명, 급여, 수량, 단위, 횟수, 日, 용법코드, 용법 (older sets may have only 7 columns: 코드, 처방명, 수량, 단위, 횟수, 日, 용법 — then 급여/용법코드 stay blank).
 - 세트명 = the registered set name used. Pick the single best-matching set for this visit; add items from a second set only if clinically required. Respect each set's 제외조건.
-- Adjust 일수 only when the note states a different duration; otherwise keep the registered 일수.
+- Adjust 日 only when the note states a different duration; otherwise keep the registered 日.
 - 비고: short reason or caution (max 8 words). Put "확인필요" here when a required fact (renal function, allergy, age) is missing rather than assuming it is normal.
 - If nothing should be ordered, output exactly "RX_TABLE: NONE".
 - No markdown, no header row, no extra text after the table.`;
@@ -926,12 +939,13 @@ function splitRxTable(raw){
 function renderRxTable(rows,mid){
   const wrap=el('div','rx-wrap');wrap.id='rx_'+mid;
   const hdr=el('div','rx-hdr');
-  hdr.appendChild(el('span','','📦 처방 주문표 · '+rows.length+'행 · 셀 클릭하면 수정 가능'));
+  hdr.appendChild(el('span','','📦 처방 주문표 · '+rows.length+'행 · 셀 클릭 수정 · 열 순서 = 메트로 처방N'));
   const btns=el('div','rx-btns');
-  const b1=el('button','btn-copy','📋 주문 복사 (TSV)');b1.addEventListener('click',()=>copyRx(mid,'tsv'));
+  const b0=el('button','btn-copy','🏥 메트로 붙여넣기용');b0.title='메트로 처방N 그리드 70열 순서 · 헤더 없이 데이터만';b0.addEventListener('click',()=>copyRx(mid,'metro'));
+  const b1=el('button','btn-sm','📋 TSV');b1.addEventListener('click',()=>copyRx(mid,'tsv'));
   const b2=el('button','btn-sm','📋 코드만');b2.addEventListener('click',()=>copyRx(mid,'codes'));
-  const b3=el('button','btn-sm','📊 엑셀');b3.addEventListener('click',()=>downloadRx(mid));
-  btns.append(b1,b2,b3);hdr.appendChild(btns);wrap.appendChild(hdr);
+  const b3=el('button','btn-sm','📊 엑셀');b3.title='메트로 헤더 포함 xlsx';b3.addEventListener('click',()=>downloadRx(mid));
+  btns.append(b0,b1,b2,b3);hdr.appendChild(btns);wrap.appendChild(hdr);
   if(!rows.length){wrap.appendChild(el('div','rx-empty','처방 없음 (RX_TABLE: NONE)'));return wrap;}
   const tbl=el('table','rx-tbl');
   const thead=el('thead');const trh=el('tr');trh.appendChild(el('th','','✓'));RX_COLS.forEach(c=>trh.appendChild(el('th','',c)));thead.appendChild(trh);tbl.appendChild(thead);
@@ -954,23 +968,28 @@ function copyRx(mid,mode){
   const rows=getRxRows(mid);if(!rows.length){showToast('⚠️ 선택된 처방 행 없음');return;}
   let t;
   if(mode==='codes')t=rows.map(r=>r[2]||r[3]).filter(Boolean).join('\n');
+  else if(mode==='metro')t=rows.map(r=>rxToMetroRow(r).join('\t')).join('\n');
   else t=RX_COLS.join('\t')+'\n'+rows.map(r=>r.join('\t')).join('\n');
-  navigator.clipboard.writeText(t).then(()=>showToast(mode==='codes'?'✅ 약품코드 '+rows.length+'개 복사':'✅ 주문표 '+rows.length+'행 복사 (엑셀/EMR 붙여넣기)'));
+  navigator.clipboard.writeText(t).then(()=>showToast(mode==='codes'?'✅ 처방코드 '+rows.length+'개 복사':mode==='metro'?'🏥 메트로 형식 '+rows.length+'행 복사 — 처방N 첫 셀 클릭 후 Ctrl+V':'✅ TSV '+rows.length+'행 복사'));
 }
 function downloadRx(mid){
   const rows=getRxRows(mid);if(!rows.length){showToast('⚠️ 선택된 처방 행 없음');return;}
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet([METRO_COLS,...rows.map(rxToMetroRow)]);
+  ws1['!cols']=METRO_COLS.map((c,i)=>({wch:i===2?26:8}));
+  XLSX.utils.book_append_sheet(wb,ws1,'메트로');
   const ws=XLSX.utils.aoa_to_sheet([RX_COLS,...rows]);
-  ws['!cols']=[{wch:6},{wch:18},{wch:10},{wch:26},{wch:6},{wch:5},{wch:5},{wch:5},{wch:10},{wch:18}];
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'처방');
+  ws['!cols']=[{wch:6},{wch:18},{wch:10},{wch:26},{wch:5},{wch:6},{wch:5},{wch:5},{wch:5},{wch:8},{wch:10},{wch:18}];
+  XLSX.utils.book_append_sheet(wb,ws,'처방');
   const d=new Date(),ts=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
   XLSX.writeFile(wb,'처방_'+ts+'.xlsx');showToast('📊 엑셀 저장됨');
 }
 function downloadOrdersTemplate(){
-  const aoa=[['세트명','적응증','제외조건','약품코드','약품명(함량)','1회량','단위','횟수','일수','용법'],
-    ['요통-신경병증 기본','요추 HNP/협착 + 방사통, VAS 5-7','신부전, 75세 이상 감량','A01234','뉴론틴캡슐 300mg','1','C','3','7','식후 30분'],
-    ['요통-신경병증 기본','','','A05678','울트라셋정 37.5/325','1','T','2','7','식후'],
-    ['급성 요통 단기','급성 요통, 방사통 없음','위궤양','A02222','낙센정 500mg','1','T','2','5','식후']];
-  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=[{wch:18},{wch:28},{wch:20},{wch:10},{wch:26},{wch:6},{wch:5},{wch:5},{wch:5},{wch:12}];
+  const aoa=[['세트명','적응증','제외조건','처방코드','처방명','급여','수량','단위','횟수','日','용법코드','용법'],
+    ['요통-신경병증 기본','요추 HNP/협착 + 방사통, VAS 5-7','신부전, 75세 이상 감량','A01234','뉴론틴캡슐 300mg','Y','1','C','3','7','PC','식후30분'],
+    ['요통-신경병증 기본','','','A05678','울트라셋정 37.5/325mg','Y','1','T','2','7','PC','식후30분'],
+    ['급성 요통 단기','급성 요통, 방사통 없음','위궤양','A02222','낙센정 500mg','Y','1','T','2','5','PC','식후30분']];
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=[{wch:18},{wch:28},{wch:20},{wch:10},{wch:26},{wch:5},{wch:6},{wch:5},{wch:5},{wch:5},{wch:8},{wch:12}];
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'약속처방');XLSX.writeFile(wb,'약속처방_양식.xlsx');
   showToast('📥 양식 다운로드 — 채워서 다시 올리면 됩니다');
 }
@@ -978,7 +997,7 @@ function downloadOrdersTemplate(){
 function ordersAoaToText(aoa){
   if(!aoa.length)return '';
   const head=aoa[0].map(c=>String(c||'').trim());
-  const isTpl=head[0]&&head[0].includes('세트')&&head.some(h=>h.includes('약품'));
+  const isTpl=head[0]&&head[0].includes('세트')&&head.some(h=>h.includes('처방')||h.includes('약품'));
   if(!isTpl)return aoa.map(r=>r.map(c=>String(c??'').trim()).join('\t')).join('\n');
   const sets={},order=[];
   for(const r of aoa.slice(1)){
@@ -986,7 +1005,7 @@ function ordersAoaToText(aoa){
     const name=c[0];if(!name)continue;
     if(!sets[name]){sets[name]={ind:c[1],exc:c[2],lines:[]};order.push(name);}
     if(c[1]&&!sets[name].ind)sets[name].ind=c[1];if(c[2]&&!sets[name].exc)sets[name].exc=c[2];
-    if(c[3]||c[4])sets[name].lines.push(c.slice(3,10).join('\t'));
+    if(c[3]||c[4])sets[name].lines.push(c.slice(3,12).join('\t'));
   }
   return order.map(n=>`## ${n} | ${sets[n].ind||''} | ${sets[n].exc||''}\n${sets[n].lines.join('\n')}`).join('\n\n');
 }
@@ -1736,4 +1755,3 @@ init();
 </script>
 </body>
 </html>
-
