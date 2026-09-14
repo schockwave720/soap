@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v30 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v31 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -147,6 +147,18 @@ textarea::placeholder{color:var(--dim)}
 .img-loading{display:flex;align-items:center;justify-content:center;min-height:160px;background:var(--surface2);border-radius:6px;border:1px solid var(--border);flex:1;min-width:280px;max-width:400px}
 .img-err{padding:10px;background:rgba(239,68,68,.08);border-radius:5px;color:#f87171;font-size:10px;flex:1;min-width:280px;max-width:400px}
 .img-model-grid{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.rx-wrap{margin-top:8px;border:1px solid rgba(6,214,160,.35);border-radius:6px;overflow:hidden;background:rgba(6,214,160,.04)}
+.rx-hdr{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 10px;background:rgba(6,214,160,.1);border-bottom:1px solid rgba(6,214,160,.25);font-size:10px;font-weight:700;color:var(--green);flex-wrap:wrap}
+.rx-hdr .rx-btns{display:flex;gap:4px}
+.rx-tbl{width:100%;border-collapse:collapse;font-size:10.5px;font-family:'JetBrains Mono','Noto Sans KR',monospace}
+.rx-tbl th{background:var(--surface2);color:var(--dim);font-weight:600;padding:4px 6px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;font-size:9px;letter-spacing:.5px}
+.rx-tbl td{padding:4px 6px;border-bottom:1px solid rgba(30,48,80,.6);vertical-align:top}
+.rx-tbl td[contenteditable]{outline:none;cursor:text}
+.rx-tbl td[contenteditable]:focus{background:rgba(0,180,216,.12);box-shadow:inset 0 0 0 1px var(--accent)}
+.rx-tbl tr.off td{opacity:.35;text-decoration:line-through}
+.rx-tbl tr.ext td{color:#fbbf24}
+.rx-tbl input[type=checkbox]{accent-color:var(--green)}
+.rx-empty{padding:8px 10px;font-size:10px;color:var(--dim)}
 .img-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;animation:fadeIn .2s}
 .img-modal img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:8px;box-shadow:0 0 40px rgba(0,180,216,.3)}
 .img-modal-bar{display:flex;gap:8px;margin-top:12px}
@@ -159,7 +171,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v30</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v31</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -245,6 +257,38 @@ textarea::placeholder{color:var(--dim)}
         <button class="btn-sm" onclick="document.getElementById('pfFile').click()" style="font-size:10px">📁 파일 선택</button>
         <input type="file" id="pfFile" accept=".txt,.csv,.xlsx,.xls,.md,.tsv" style="display:none" onchange="handleProfileFile(event)">
         <span style="font-size:9px;color:var(--dim)" id="pfFileStatus">파일을 선택하면 약제 정보란에 추가됩니다</span>
+      </div>
+    </div>
+
+    <!-- 약속처방 세트 -->
+    <div style="font-size:10px;font-weight:600;color:var(--green);margin:10px 0 4px">📦 약속처방 세트 (EMR 주문표 생성용)</div>
+    <div class="api-card" style="border-color:rgba(6,214,160,.35)"><label>선생님이 실제로 쓰는 약속처방을 세트 단위로 등록 → AI가 P 작성 시 이 세트 중에서만 골라 <b style="color:var(--green)">주문표(TSV)</b>를 뱉어냅니다. 세트 밖 약은 "원외"로 분리 표시.</label>
+      <textarea class="api-inp" id="pf-orders" style="min-height:140px;font-family:'JetBrains Mono','Noto Sans KR',monospace;font-size:10.5px;line-height:1.6;resize:vertical" placeholder="## 세트명 | 적응증(언제 쓰는지) | 제외조건(선택)
+약품코드	약품명(함량)	1회량	단위	횟수	일수	용법
+...
+
+예시:
+## 요통-신경병증 기본 | 요추 HNP/협착 + 방사통, VAS 5-7, 위장질환 없음 | 신부전, 75세 이상은 가바 반감
+A01234	뉴론틴캡슐 300mg	1	C	3	7	식후 30분
+A05678	울트라셋정 37.5/325	1	T	2	7	식후
+A09012	알마겔정	1	T	3	7	식후
+
+## 급성 요통 단기 | 급성 요통, 방사통 없음, 발병 2주 이내 |
+A02222	낙센정 500mg	1	T	2	5	식후
+A03333	에페리손정 50mg	1	T	3	5	식후
+
+## 시술: TFESI | 방사통 보존치료 실패, 영상 확인 |
+P10001	경막외신경차단술(TFESI)	1	회	1	1	L4-5 Rt
+
+빈 줄로 세트 구분. 탭 또는 | 로 열 구분. 코드 없으면 빈칸 유지."></textarea>
+    </div>
+    <div class="api-card" style="margin-top:4px">
+      <label>📁 약속처방 파일 불러오기 (txt, csv, xlsx — 위 형식이면 가장 좋고, 아니면 그대로 붙여서 AI가 해석)</label>
+      <div style="display:flex;gap:4px;margin-top:3px;align-items:center;flex-wrap:wrap">
+        <button class="btn-sm" onclick="document.getElementById('pfOrdersFile').click()" style="font-size:10px">📁 파일 선택</button>
+        <input type="file" id="pfOrdersFile" accept=".txt,.csv,.xlsx,.xls,.md,.tsv" style="display:none" onchange="handleOrdersFile(event)">
+        <button class="btn-sm" onclick="downloadOrdersTemplate()" style="font-size:10px">📥 엑셀 양식 받기</button>
+        <span style="font-size:9px;color:var(--dim)" id="pfOrdersFileStatus"><span id="pfOrdersCount"></span></span>
       </div>
     </div>
 
@@ -499,7 +543,7 @@ const PROVIDERS = {
   ]},
   groq:{name:'🚀 Groq',color:'groq',apiType:'openai',baseUrl:'https://api.groq.com/openai/v1',keyId:'groq',models:[
     {id:'grq-gptoss',name:'GPT-OSS 120B (500t/s)',m:'openai/gpt-oss-120b',tag:'best'},
-    {id:'grq-llama4',name:'Llama 4 Scout 17B',m:'meta-llama/llama-4-scout-17b-16e-instruct',tag:'hot'},
+    {id:'grq-qwen36',name:'Qwen 3.6 27B',m:'qwen/qwen3.6-27b',tag:'hot'},
     {id:'grq-gptoss20',name:'GPT-OSS 20B (1000t/s)',m:'openai/gpt-oss-20b',tag:'fast'},
   ]},
   deepseek:{name:'💰 DeepSeek',color:'deepseek',apiType:'openai',baseUrl:'https://api.deepseek.com/v1',keyId:'deepseek',models:[
@@ -789,7 +833,7 @@ function loadExample(){
 }
 
 // ===== PROFILE =====
-const PF_FIELDS=['pf-hospital','pf-doctor','pf-dept','pf-specialty','pf-years','pf-patients','pf-philosophy','pf-meds','pf-instruction'];
+const PF_FIELDS=['pf-hospital','pf-doctor','pf-dept','pf-specialty','pf-years','pf-patients','pf-philosophy','pf-meds','pf-orders','pf-instruction'];
 
 function saveProfile(){
   const data={};PF_FIELDS.forEach(id=>{data[id]=document.getElementById(id)?.value||'';});
@@ -804,7 +848,7 @@ function loadProfile(){
 }
 
 function resetProfile(){
-  const defaults={'pf-hospital':'구리센트럴병원','pf-doctor':'','pf-dept':'신경외과','pf-specialty':'Spine Surgery','pf-years':'20','pf-patients':'','pf-philosophy':'','pf-meds':'','pf-instruction':''};
+  const defaults={'pf-hospital':'구리센트럴병원','pf-doctor':'','pf-dept':'신경외과','pf-specialty':'Spine Surgery','pf-years':'20','pf-patients':'','pf-philosophy':'','pf-meds':'','pf-orders':'','pf-instruction':''};
   PF_FIELDS.forEach(id=>{const el=document.getElementById(id);if(el)el.value=defaults[id]||'';});
   localStorage.removeItem('soap_profile');updateProfileSummary();showToast('🔄 초기화됨');
 }
@@ -817,7 +861,9 @@ function updateProfileSummary(){
   const hasMeds=document.getElementById('pf-meds')?.value?.trim()?'💊':'';
   const hasPhil=document.getElementById('pf-philosophy')?.value?.trim()?'🧠':'';
   let sum=`${h} · ${d}`;if(s)sum+=` · ${s}`;if(dr)sum+=` · ${dr}`;
-  if(hasMeds||hasPhil)sum+=` ${hasPhil}${hasMeds}`;
+  const hasOrd=document.getElementById('pf-orders')?.value?.trim()?'📦':'';
+  if(hasMeds||hasPhil||hasOrd)sum+=` ${hasPhil}${hasMeds}${hasOrd}`;
+  const oc=document.getElementById('pfOrdersCount');if(oc){const n=(document.getElementById('pf-orders')?.value.match(/^##\s*\S/gm)||[]).length;oc.textContent=n?`등록 세트 ${n}개`:'';}
   document.getElementById('profileSummary').textContent=sum;
 }
 
@@ -837,8 +883,131 @@ function getProfileContext(){
   if(yrs)ctx+=`경력: ${yrs}년. `;if(pts)ctx+=`주요 환자군: ${pts}. `;
   if(phil)ctx+=`\n\n[진료 철학 및 수술 원칙]\n${phil}`;
   if(meds)ctx+=`\n\n[약제/처방/구비약물 정보 — Plan 작성 시 이 정보를 참고하여 구체적 약제명, 용량, 비급여 항목 및 예상 비용을 포함하세요. 구비약물이 있으면 우선 처방하세요]\n${meds}`;
+  const orders=document.getElementById('pf-orders')?.value?.trim()||'';
+  if(orders)ctx+=`\n\n[약속처방 세트 — 아래 세트가 이 의사의 실제 처방 레퍼토리입니다. P의 약물/시술은 반드시 이 세트에서 선택하세요]\n${orders}`;
   if(inst)ctx+=`\n\n[특별 지시사항]\n${inst}`;
   return ctx;
+}
+
+// ===== 약속처방 (RX ORDER TABLE) =====
+const RX_COLS=['구분','세트명','약품코드','약품명','1회량','단위','횟수','일수','용법','비고'];
+function rxPromptRule(){
+  const has=!!(document.getElementById('pf-orders')?.value?.trim());
+  if(!has)return '';
+  return `\n\nORDER TABLE RULE (mandatory):
+After the P section, output a final block that starts with a line exactly "RX_TABLE:" followed by tab-separated rows, one order per line, with these 10 columns in this order:
+${RX_COLS.join('\t')}
+- 구분 = "세트" if the item comes from a registered 약속처방 세트 (copy 약품코드/약품명/1회량/단위/횟수/일수/용법 EXACTLY as registered — never invent or alter codes or doses). Use "원외" for anything not in the sets (leave 약품코드 blank), "검사" for tests, "시술" for procedures.
+- 세트명 = the registered set name used. Pick the single best-matching set for this visit; add items from a second set only if clinically required. Respect each set's 제외조건.
+- Adjust 일수 only when the note states a different duration; otherwise keep the registered 일수.
+- 비고: short reason or caution (max 8 words). Put "확인필요" here when a required fact (renal function, allergy, age) is missing rather than assuming it is normal.
+- If nothing should be ordered, output exactly "RX_TABLE: NONE".
+- No markdown, no header row, no extra text after the table.`;
+}
+function splitRxTable(raw){
+  const idx=raw.search(/^\s*(?:\*\*)?RX_TABLE\s*:/mi);
+  if(idx<0)return {soap:raw,rows:null};
+  const soap=raw.slice(0,idx).trim();
+  let tail=raw.slice(idx).replace(/^\s*(?:\*\*)?RX_TABLE\s*:\s*(?:\*\*)?/i,'').replace(/```[a-z]*/gi,'').trim();
+  if(/^NONE/i.test(tail))return {soap,rows:[]};
+  const rows=[];
+  for(const line of tail.split('\n')){
+    const t=line.trim();if(!t||/^[-|\s]+$/.test(t))continue;
+    let cells=t.includes('\t')?t.split('\t'):t.split('|');
+    cells=cells.map(c=>c.trim());
+    if(!t.includes('\t')&&cells[0]==='')cells.shift();
+    if(cells[cells.length-1]==='')cells.pop();
+    if(cells[0]==='구분'||/^구분/.test(cells[0]))continue;
+    while(cells.length<RX_COLS.length)cells.push('');
+    rows.push(cells.slice(0,RX_COLS.length));
+  }
+  return {soap,rows};
+}
+function renderRxTable(rows,mid){
+  const wrap=el('div','rx-wrap');wrap.id='rx_'+mid;
+  const hdr=el('div','rx-hdr');
+  hdr.appendChild(el('span','','📦 처방 주문표 · '+rows.length+'행 · 셀 클릭하면 수정 가능'));
+  const btns=el('div','rx-btns');
+  const b1=el('button','btn-copy','📋 주문 복사 (TSV)');b1.addEventListener('click',()=>copyRx(mid,'tsv'));
+  const b2=el('button','btn-sm','📋 코드만');b2.addEventListener('click',()=>copyRx(mid,'codes'));
+  const b3=el('button','btn-sm','📊 엑셀');b3.addEventListener('click',()=>downloadRx(mid));
+  btns.append(b1,b2,b3);hdr.appendChild(btns);wrap.appendChild(hdr);
+  if(!rows.length){wrap.appendChild(el('div','rx-empty','처방 없음 (RX_TABLE: NONE)'));return wrap;}
+  const tbl=el('table','rx-tbl');
+  const thead=el('thead');const trh=el('tr');trh.appendChild(el('th','','✓'));RX_COLS.forEach(c=>trh.appendChild(el('th','',c)));thead.appendChild(trh);tbl.appendChild(thead);
+  const tb=el('tbody');
+  rows.forEach(r=>{
+    const tr=el('tr');if(r[0]==='원외')tr.classList.add('ext');
+    const tdc=el('td');const cb=document.createElement('input');cb.type='checkbox';cb.checked=true;
+    cb.addEventListener('change',()=>tr.classList.toggle('off',!cb.checked));tdc.appendChild(cb);tr.appendChild(tdc);
+    r.forEach(v=>{const td=el('td','',v);td.contentEditable='true';td.spellcheck=false;tr.appendChild(td);});
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb);wrap.appendChild(tbl);return wrap;
+}
+function getRxRows(mid){
+  const wrap=document.getElementById('rx_'+mid);if(!wrap)return [];
+  return [...wrap.querySelectorAll('tbody tr')].filter(tr=>tr.querySelector('input[type=checkbox]')?.checked)
+    .map(tr=>[...tr.querySelectorAll('td[contenteditable]')].map(td=>td.textContent.replace(/[\t\n]+/g,' ').trim()));
+}
+function copyRx(mid,mode){
+  const rows=getRxRows(mid);if(!rows.length){showToast('⚠️ 선택된 처방 행 없음');return;}
+  let t;
+  if(mode==='codes')t=rows.map(r=>r[2]||r[3]).filter(Boolean).join('\n');
+  else t=RX_COLS.join('\t')+'\n'+rows.map(r=>r.join('\t')).join('\n');
+  navigator.clipboard.writeText(t).then(()=>showToast(mode==='codes'?'✅ 약품코드 '+rows.length+'개 복사':'✅ 주문표 '+rows.length+'행 복사 (엑셀/EMR 붙여넣기)'));
+}
+function downloadRx(mid){
+  const rows=getRxRows(mid);if(!rows.length){showToast('⚠️ 선택된 처방 행 없음');return;}
+  const ws=XLSX.utils.aoa_to_sheet([RX_COLS,...rows]);
+  ws['!cols']=[{wch:6},{wch:18},{wch:10},{wch:26},{wch:6},{wch:5},{wch:5},{wch:5},{wch:10},{wch:18}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'처방');
+  const d=new Date(),ts=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
+  XLSX.writeFile(wb,'처방_'+ts+'.xlsx');showToast('📊 엑셀 저장됨');
+}
+function downloadOrdersTemplate(){
+  const aoa=[['세트명','적응증','제외조건','약품코드','약품명(함량)','1회량','단위','횟수','일수','용법'],
+    ['요통-신경병증 기본','요추 HNP/협착 + 방사통, VAS 5-7','신부전, 75세 이상 감량','A01234','뉴론틴캡슐 300mg','1','C','3','7','식후 30분'],
+    ['요통-신경병증 기본','','','A05678','울트라셋정 37.5/325','1','T','2','7','식후'],
+    ['급성 요통 단기','급성 요통, 방사통 없음','위궤양','A02222','낙센정 500mg','1','T','2','5','식후']];
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=[{wch:18},{wch:28},{wch:20},{wch:10},{wch:26},{wch:6},{wch:5},{wch:5},{wch:5},{wch:12}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'약속처방');XLSX.writeFile(wb,'약속처방_양식.xlsx');
+  showToast('📥 양식 다운로드 — 채워서 다시 올리면 됩니다');
+}
+// 엑셀 양식(세트명/적응증/제외조건/코드/약품명/1회량/단위/횟수/일수/용법) → 텍스트 세트 블록으로 변환
+function ordersAoaToText(aoa){
+  if(!aoa.length)return '';
+  const head=aoa[0].map(c=>String(c||'').trim());
+  const isTpl=head[0]&&head[0].includes('세트')&&head.some(h=>h.includes('약품'));
+  if(!isTpl)return aoa.map(r=>r.map(c=>String(c??'').trim()).join('\t')).join('\n');
+  const sets={},order=[];
+  for(const r of aoa.slice(1)){
+    const c=r.map(x=>String(x??'').trim());if(!c.some(Boolean))continue;
+    const name=c[0];if(!name)continue;
+    if(!sets[name]){sets[name]={ind:c[1],exc:c[2],lines:[]};order.push(name);}
+    if(c[1]&&!sets[name].ind)sets[name].ind=c[1];if(c[2]&&!sets[name].exc)sets[name].exc=c[2];
+    if(c[3]||c[4])sets[name].lines.push(c.slice(3,10).join('\t'));
+  }
+  return order.map(n=>`## ${n} | ${sets[n].ind||''} | ${sets[n].exc||''}\n${sets[n].lines.join('\n')}`).join('\n\n');
+}
+async function handleOrdersFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const st=document.getElementById('pfOrdersFileStatus');
+  st.textContent='읽는 중...';st.style.color='var(--accent)';
+  try{
+    let text='';
+    const ext=file.name.split('.').pop().toLowerCase();
+    if(ext==='xlsx'||ext==='xls'){
+      const buf=await file.arrayBuffer();const wb=XLSX.read(buf,{type:'array'});
+      wb.SheetNames.forEach(n=>{const aoa=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''});text+=ordersAoaToText(aoa)+'\n\n';});
+    } else { text=await file.text(); }
+    if(!text.trim()){st.textContent='⚠️ 파일 내용 없음';st.style.color='#f59e0b';return;}
+    const el2=document.getElementById('pf-orders');const existing=el2.value.trim();
+    el2.value=(existing?existing+'\n\n':'')+text.trim();
+    st.textContent='✅ '+file.name+' 추가됨 — 💾 저장 누르세요';st.style.color='var(--green)';
+    updateProfileSummary();showToast('✅ 약속처방 추가됨');
+  }catch(err){st.textContent='❌ '+err.message;st.style.color='#ef4444';}
+  finally{e.target.value='';}
 }
 
 // 약제/수가 파일 업로드
@@ -905,7 +1074,7 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal){
   const langInst=langMode==='bilingual'?'\n언어: 한글+영어 병기':'\n언어: 영어 약어 위주, S는 한글';
   const profileCtx=getProfileContext();
   const imgNote=medImages.length?'\n\n첨부된 MRI/CT 영상이 있습니다. 영상 소견을 분석하여 O(Objective)와 A(Assessment)에 반영해주세요. 영상에서 관찰되는 이상 소견을 구체적으로 기술하세요.':'';
-  const sysPrompt=SOURCE_OF_TRUTH+(SOAP_PROMPTS[detailLevel]||SOAP_PROMPTS.normal)+langInst+imgNote+(profileCtx?'\n\n의사/병원 정보: '+profileCtx:'');
+  const sysPrompt=SOURCE_OF_TRUTH+(SOAP_PROMPTS[detailLevel]||SOAP_PROMPTS.normal)+langInst+imgNote+(profileCtx?'\n\n의사/병원 정보: '+profileCtx:'')+rxPromptRule();
   const userMsg=`다음 진료 내용을 SOAP으로 변환해줘:\n\n${inputText}`;
 
   if(prov.apiType==='anthropic'){
@@ -959,8 +1128,15 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal){
     }
     // Cerebras: GPT-OSS는 reasoning 끄기, Qwen 3.8은 기본 xhigh라 반드시 낮춰야 함
     if(provKey==='cerebras'){
-      body.reasoning_effort=modelInfo.m.includes('qwen')?'low':'none';
-      body.reasoning_format='hidden';
+      // 2026-09 Cerebras 문서: gpt-oss는 low/medium/high만(none 불가, hidden 가능), qwen-3.8은 none 가능 + hidden 미지원
+      if(modelInfo.m.includes('qwen')){body.reasoning_effort='none';}
+      else{body.reasoning_effort='low';body.reasoning_format='hidden';}
+      body.max_tokens=6000; // reasoning 토큰이 max_tokens에 포함됨
+    }
+    // Groq: gpt-oss는 low, qwen3.6은 reasoning 끄기 (Groq 전용 reasoning_format)
+    if(provKey==='groq'){
+      if(modelInfo.m.includes('gpt-oss')){body.reasoning_effort='low';body.max_tokens=6000;}
+      else if(modelInfo.m.includes('qwen')){body.reasoning_effort='none';body.reasoning_format='hidden';}
     }
     // Groq: thinking 모델 대응 (system prompt에 직접 지시)
     if(provKey==='groq'&&(modelInfo.m.includes('qwen')||modelInfo.m.includes('llama-4'))){
@@ -969,8 +1145,10 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal){
     const r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)},TIMEOUT.text,signal);
     const d=await r.json();if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
     // <think> 태그 제거 (reasoning 모델 대응)
-    let result=d.choices?.[0]?.message?.content||'';
+    const msg=d.choices?.[0]?.message||{};
+    let result=(typeof msg.content==='string'?msg.content:Array.isArray(msg.content)?msg.content.map(x=>x.text||'').join('\n'):'')||'';
     result=result.replace(/<think>[\s\S]*?<\/think>/g,'').trim();
+    if(!result&&d.choices?.[0]?.finish_reason==='length')throw new Error('reasoning이 토큰 한도 소진 — max_tokens 부족');
     if(!result)throw new Error('빈 응답 (reasoning 파라미터 확인 필요)');
     return result;
   }
@@ -995,8 +1173,9 @@ function parseSOAP(text){
 
 // AI 출력은 신뢰할 수 없는 외부 입력 → innerHTML 금지, textContent로만 삽입
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
-function renderSOAPBlocks(text){
-  const s=parseSOAP(text),labels={S:'Subjective',O:'Objective',A:'Assessment',P:'Plan'};
+function renderSOAPBlocks(text,mid){
+  const split=splitRxTable(text);
+  const s=parseSOAP(split.soap),labels={S:'Subjective',O:'Objective',A:'Assessment',P:'Plan'};
   const frag=document.createDocumentFragment();
   const warn=el('div','',"⚠️ AI가 생성한 초안입니다. 반드시 의사의 검토 후 EMR에 입력하세요.");
   warn.style.cssText='background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:5px;padding:6px 10px;margin-bottom:10px;font-size:10px;color:#f59e0b';
@@ -1007,6 +1186,7 @@ function renderSOAPBlocks(text){
     b.appendChild(el('div','soap-txt',(s[k]||'확인 필요').trim()));
     frag.appendChild(b);
   }
+  if(split.rows)frag.appendChild(renderRxTable(split.rows,mid));
   return frag;
 }
 function renderError(container,msg){container.replaceChildren(el('div','err-box','❌ '+msg));}
@@ -1065,7 +1245,7 @@ async function runAll(){
     if(runId!==currentRunId)return; // 늦게 돌아온 이전 환자 응답 → 폐기
     const body=document.getElementById('body_'+model.id);if(!body)return;
     if(err){fail++;renderError(body,err.message);}
-    else{ok++;body.replaceChildren(renderSOAPBlocks(result));document.getElementById('copy_'+model.id).disabled=false;window._cardMap[model.id].result=result;}
+    else{ok++;body.replaceChildren(renderSOAPBlocks(result,model.id));document.getElementById('copy_'+model.id).disabled=false;window._cardMap[model.id].result=result;}
     done++;fill.style.width=(done/total*100)+'%';
   }));
   if(runId!==currentRunId)return;
@@ -1556,3 +1736,4 @@ init();
 </script>
 </body>
 </html>
+
