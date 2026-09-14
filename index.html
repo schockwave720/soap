@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v33 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v34 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -11,7 +11,7 @@
   --accent:#00b4d8;--green:#06d6a0;--text:#e2e8f0;--dim:#64748b;
   --s:#60a5fa;--o:#34d399;--a:#f59e0b;--p:#f472b6;
   --cerebras:#00d4aa;--gemini:#4285f4;--groq:#f55036;
-  --deepseek:#0066ff;--xai:#1da1f2;--openai:#10a37f;--anthropic:#d97706;
+  --deepseek:#0066ff;--xai:#1da1f2;--openai:#10a37f;--anthropic:#d97706;--openrouter:#6366f1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
@@ -53,6 +53,8 @@ details.card>summary::-webkit-details-marker{display:none}
 .prov-xai .prov-hdr{background:linear-gradient(135deg,#1da1f2,#0d8ecf)}
 .prov-openai .prov-hdr{background:linear-gradient(135deg,#10a37f,#1a7f64)}
 .prov-anthropic .prov-hdr{background:linear-gradient(135deg,#d97706,#b45309)}
+.prov-openrouter .prov-hdr{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.tag-vis{background:#0ea5e9;color:#fff}.tag-free{background:#22c55e;color:#000}
 .model-cb{display:inline-flex;align-items:center;gap:2px;padding:2px 5px;background:var(--surface2);border-radius:3px;cursor:pointer;font-size:10px;border:1.5px solid transparent;white-space:nowrap}
 .model-cb:hover{background:#475569}
 .model-cb.sel{border-color:var(--green);background:rgba(6,214,160,.15)}
@@ -171,7 +173,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v33</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v34</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -333,6 +335,7 @@ R00123	L-spine AP/Lat	Y	1	회	1	1
           <option value="xai">xAI</option>
           <option value="deepseek">DeepSeek</option>
           <option value="cerebras">Cerebras</option>
+          <option value="openrouter">OpenRouter</option>
         </select>
         <input type="text" class="api-inp" id="customModelId" placeholder="모델 ID (예: gpt-5.6-terra)" style="flex:1;font-size:9px;min-width:100px">
         <button class="btn-sm" onclick="addCustomModel()" style="font-size:9px;white-space:nowrap">➕ 추가</button>
@@ -546,13 +549,12 @@ const PROVIDERS = {
     {id:'grq-gptoss20',name:'GPT-OSS 20B (1000t/s)',m:'openai/gpt-oss-20b',tag:'fast'},
   ]},
   deepseek:{name:'💰 DeepSeek',color:'deepseek',apiType:'openai',baseUrl:'https://api.deepseek.com/v1',keyId:'deepseek',models:[
-    {id:'ds-v4p',name:'V4 Pro',m:'deepseek-v4-pro',tag:'best'},
-    {id:'ds-v4f',name:'V4 Flash',m:'deepseek-v4-flash',tag:'fast'},
-    {id:'ds-v4v',name:'V4 Flash Vision (MRI)',m:'deepseek-v4-flash-vision-exp',tag:'new'},
+    {id:'ds-flash',name:'V4.1 Flash (9/10·비전)',m:'deepseek-flash',tag:'best',vis:true},
+    {id:'ds-v4p',name:'V4 Pro 0813',m:'deepseek-v4-pro',tag:'hot'},
   ]},
   xai:{name:'🤖 xAI (Grok)',color:'xai',apiType:'openai',baseUrl:'https://api.x.ai/v1',keyId:'xai',models:[
-    {id:'grk45',name:'Grok 4.5',m:'grok-4.5',tag:'best'},
-    {id:'grk43',name:'Grok 4.3',m:'grok-4.3',tag:'hot'},
+    {id:'grk46',name:'Grok 4.6 (8/12)',m:'grok-4.6',tag:'best'},
+    {id:'grk45',name:'Grok 4.5',m:'grok-4.5',tag:'hot'},
     {id:'grk41n',name:'Grok 4.1 Fast',m:'grok-4-1-fast-non-reasoning',tag:'fast'},
   ]},
   openai:{name:'🤖 OpenAI',color:'openai',apiType:'openai',baseUrl:'https://api.openai.com/v1',keyId:'openai',models:[
@@ -569,6 +571,30 @@ const PROVIDERS = {
   ]},
 };
 
+// OpenRouter — 2026-07-20 ~ 09-11 출시분 중 SOAP 작성에 쓸 만하고 가격 합리적인 20종. 가격은 $/1M in/out
+PROVIDERS.openrouter={name:'🌐 OpenRouter',color:'openrouter',apiType:'openai',baseUrl:'https://openrouter.ai/api/v1',keyId:'openrouter',models:[
+  {id:'or-dsv41f',name:'DeepSeek V4.1 Flash (9/10) $0.15/0.6',m:'deepseek/deepseek-v4.1-flash',tag:'best',vis:true,re:true},
+  {id:'or-sante',name:'Ling 3.0 Flash Santé 의료특화 무료 (9/4)',m:'inclusionai/ling-3.0-flash-sante:free',tag:'free'},
+  {id:'or-gem38f',name:'Gemini 3.8 Flash (9/2) $0.75/3.75',m:'google/gemini-3.8-flash',tag:'hot',vis:true,re:true},
+  {id:'or-qw38f',name:'Qwen3.8 Flash (8/26) $0.15/0.47',m:'qwen/qwen3.8-flash',tag:'fast',vis:true},
+  {id:'or-glm53f',name:'GLM 5.3 Flash (8/26) $0.15/0.5',m:'z-ai/glm-5.3-flash',tag:'fast',vis:true,re:true},
+  {id:'or-glm53',name:'GLM 5.3 (8/16) $1.1/3.4',m:'z-ai/glm-5.3',tag:'hot',re:true},
+  {id:'or-grk46',name:'Grok 4.6 (8/12) $2/6',m:'x-ai/grok-4.6',tag:'best',vis:true,re:true},
+  {id:'or-dsv4p',name:'DeepSeek V4 Pro 0813 $0.58/1.7',m:'deepseek/deepseek-v4-pro-0813',tag:'hot',re:true},
+  {id:'or-qw38max',name:'Qwen3.8 Max 0902 $2/6',m:'qwen/qwen3.8-max-0902',tag:'best',vis:true,re:true},
+  {id:'or-qw3827',name:'Qwen3.8 27B (8/14) $0.21/2.55',m:'qwen/qwen3.8-27b',tag:'new',vis:true,re:true},
+  {id:'or-muse13',name:'Meta Muse Spark 1.3 (9/2) $1.25/4.25',m:'meta/muse-spark-1.3',tag:'new',vis:true,re:true},
+  {id:'or-glim30',name:'Meta Muse Glimmer 30B (8/10) $0.35/1.5',m:'meta/muse-glimmer-30b',tag:'fast',vis:true,re:true},
+  {id:'or-fugumax',name:'Sakana Fugu Max (9/11) $2/6',m:'sakana/fugu-max',tag:'new',vis:true,re:true},
+  {id:'or-merc25',name:'Inception Mercury 2.5 초고속 (9/8) $0.04/0.15',m:'inception/mercury-2.5',tag:'fast',re:true},
+  {id:'or-hy4',name:'Tencent Hy4 preview (8/27) $0.83/2.5',m:'tencent/hy4-preview',tag:'new',re:true},
+  {id:'or-luna',name:'GPT-5.6 Luna $0.2/1.2',m:'openai/gpt-5.6-luna',tag:'fast',vis:true,re:true},
+  {id:'or-son5',name:'Claude Sonnet 5 (8/10) $2/10',m:'anthropic/claude-sonnet-5',tag:'hot',vis:true,re:true},
+  {id:'or-solar4',name:'Upstage Solar Pro 4 한국산 (8/10) $0.09/0.36',m:'upstage/solar-pro4',tag:'fast'},
+  {id:'or-seed21',name:'ByteDance Seed 2.1 Turbo (8/10) $0.5/2.5',m:'bytedance-seed/seed-2-1-turbo',tag:'new',vis:true},
+  {id:'or-ling30',name:'Ling 3.0 Flash 초저가 (7/23) $0.02/0.06',m:'inclusionai/ling-3.0-flash',tag:'fast'},
+]};
+
 const API_KEYS_CONFIG = [
   {id:'openai',label:'🤖 OpenAI (GPT-6 + Transcribe + Image)',placeholder:'sk-...'},
   {id:'anthropic',label:'🧠 Claude',placeholder:'sk-ant-...'},
@@ -577,6 +603,7 @@ const API_KEYS_CONFIG = [
   {id:'xai',label:'🤖 xAI (Grok)',placeholder:'xai-...'},
   {id:'deepseek',label:'💰 DeepSeek',placeholder:'sk-...'},
   {id:'cerebras',label:'⚡ Cerebras',placeholder:'csk-...'},
+  {id:'openrouter',label:'🌐 OpenRouter (최신 20종)',placeholder:'sk-or-...'},
   {id:'novelai',label:'🎨 NovelAI',placeholder:'pst-...'},
 ];
 
@@ -781,7 +808,7 @@ function saveKey(id,val){
 function renderModels(){
   document.getElementById('modelList').innerHTML=Object.entries(PROVIDERS).map(([k,p])=>`
     <div class="provider prov-${p.color}"><div class="prov-hdr" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'flex':'none'"><span>${p.name}</span><span class="cnt">${p.models.length}</span></div>
-    <div class="prov-body">${p.models.map(m=>`<label class="model-cb" data-pid="${k}" data-mid="${m.id}"><input type="checkbox" value="${m.id}" onchange="updCount()">${m.name}${m.tag?`<span class="tag tag-${m.tag}">${m.tag==='best'?'★':m.tag==='hot'?'🔥':m.tag==='fast'?'⚡':'NEW'}</span>`:''}</label>`).join('')}</div></div>`).join('');
+    <div class="prov-body">${p.models.map(m=>`<label class="model-cb" data-pid="${k}" data-mid="${m.id}"><input type="checkbox" value="${m.id}" onchange="updCount()">${m.name}${m.tag?`<span class="tag tag-${m.tag}">${m.tag==='best'?'★':m.tag==='hot'?'🔥':m.tag==='fast'?'⚡':m.tag==='free'?'FREE':'NEW'}</span>`:''}${m.vis?'<span class="tag tag-vis">👁</span>':''}</label>`).join('')}</div></div>`).join('');
   updCount();
 }
 
@@ -1135,7 +1162,8 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal){
     const hdrs={'Content-Type':'application/json','Authorization':`Bearer ${key}`};
     const userContent=[];
     // 비전 지원: openai, xai 전체 / deepseek은 vision 모델만
-    const supportsVision=['openai','xai'].includes(provKey)||(provKey==='deepseek'&&modelInfo.m.includes('vision'));
+    const supportsVision=['openai','xai'].includes(provKey)||!!modelInfo.vis;
+    if(provKey==='openrouter'){hdrs['HTTP-Referer']='https://schockwave720.github.io/soap-note/';hdrs['X-Title']='SOAP Maker';}
     if(medImages.length && supportsVision){
       medImages.forEach(img=>{userContent.push({type:'image_url',image_url:{url:`data:${img.mimeType};base64,${img.base64}`,detail:'high'}});});
       userContent.push({type:'text',text:userMsg});
@@ -1158,6 +1186,11 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal){
       if(modelInfo.m.includes('qwen')){body.reasoning_effort='none';}
       else{body.reasoning_effort='low';body.reasoning_format='hidden';}
       body.max_tokens=6000; // reasoning 토큰이 max_tokens에 포함됨
+    }
+    // OpenRouter: 통합 reasoning 파라미터 — 최소 effort + 출력에서 제외, reasoning 토큰 대비 max_tokens 여유
+    if(provKey==='openrouter'){
+      body.max_tokens=8000;
+      body.reasoning=modelInfo.re?{effort:'low',exclude:true}:{exclude:true};
     }
     // Groq: gpt-oss는 low, qwen3.6은 reasoning 끄기 (Groq 전용 reasoning_format)
     if(provKey==='groq'){
