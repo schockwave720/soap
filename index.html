@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v38 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v38 · 메트로 키입력 수정 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -978,18 +978,13 @@ function splitRxTable(raw){
 function renderRxTable(rows,mid){
   const wrap=el('div','rx-wrap');wrap.id='rx_'+mid;
   const hdr=el('div','rx-hdr');
-  hdr.appendChild(el('span','','📦 처방 주문표 · '+rows.length+'행 · 셀 클릭 수정 · 열 순서 = 메트로 처방N'));
+  hdr.appendChild(el('span','','📦 처방 주문표 · '+rows.length+'행 · 셀 클릭 수정 · 선택한 행만 복사'));
   const btns=el('div','rx-btns');
-  const b0=el('button','btn-copy','🏥 메트로 붙여넣기용');b0.title='메트로 처방N 그리드 70열 순서 · 헤더 없이 데이터만';b0.addEventListener('click',()=>copyRx(mid,'metro'));
-  const bm=el('button','btn-sm','🤖 매크로용');bm.title='AutoHotkey 입력용: 처방코드·처방명(대조용)·수량·횟수·日·용법코드';bm.addEventListener('click',()=>copyRx(mid,'macro'));
-  const b1=el('button','btn-sm','📋 TSV');b1.addEventListener('click',()=>copyRx(mid,'tsv'));
-  const b2=el('button','btn-sm','📋 코드만');b2.addEventListener('click',()=>copyRx(mid,'codes'));
-  const b3=el('button','btn-sm','📊 엑셀');b3.title='메트로 헤더 포함 xlsx';b3.addEventListener('click',()=>downloadRx(mid));
-  const sel=document.createElement('select');sel.className='api-inp';sel.style.cssText='width:auto;font-size:9px;padding:2px 4px';sel.title='붙여넣기 시작 열 보정';
-  [['-1','처방코드부터 (처방묶음 제외)'],['0','처방묶음부터'],['1','E부터 (빈칸 1개 추가)']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});
-  sel.value=localStorage.getItem('soap_metro_offset')||'-1';
-  sel.addEventListener('change',()=>{localStorage.setItem('soap_metro_offset',sel.value);showToast('메트로 열 보정: '+sel.options[sel.selectedIndex].textContent);});
-  btns.append(sel,b0,bm,b1,b2,b3);hdr.appendChild(btns);wrap.appendChild(hdr);
+  const bm=el('button','btn-copy','⌨ 코드 입력용 복사');bm.title='AHK v4 목록: F8 코드 입력 → Enter 직접 → 정상 조회 대조 후 F9. 수량·횟수·일수·용법은 직접 입력';bm.addEventListener('click',()=>copyRx(mid,'macro'));
+  const b1=el('button','btn-sm','📋 표 TSV');b1.title='표 보관·대조용. 메트로 붙여넣기 등록용이 아닙니다.';b1.addEventListener('click',()=>copyRx(mid,'tsv'));
+  const b2=el('button','btn-sm','📋 코드만');b2.title='코드 문자열 확인용. AHK 불러오기는 [코드 입력용 복사]를 사용하세요.';b2.addEventListener('click',()=>copyRx(mid,'codes'));
+  const b3=el('button','btn-sm','📊 엑셀');b3.title='처방 표 보관·대조용. 메트로 임포트 규격은 확인되지 않았습니다.';b3.addEventListener('click',()=>downloadRx(mid));
+  btns.append(bm,b1,b2,b3);hdr.appendChild(btns);wrap.appendChild(hdr);
   if(!rows.length){wrap.appendChild(el('div','rx-empty','처방 없음 (RX_TABLE: NONE)'));return wrap;}
   const tbl=el('table','rx-tbl');
   const thead=el('thead');const trh=el('tr');trh.appendChild(el('th','','✓'));RX_COLS.forEach(c=>trh.appendChild(el('th','',c)));thead.appendChild(trh);tbl.appendChild(thead);
@@ -1002,7 +997,7 @@ function renderRxTable(rows,mid){
     tb.appendChild(tr);
   });
   tbl.appendChild(tb);wrap.appendChild(tbl);
-  const g=el('div','rx-empty','메트로 이관: ① 자주 쓰는 세트는 메트로 [약속처방]에 등록해 두고 클릭 → ② 나머지는 [🤖 매크로용] 복사 후 처방코드 셀에서 Ctrl+Alt+V (한 행씩 확인, F8=다음) → ③ F5 처방등록은 직접');
+  const g=el('div','rx-empty','메트로 코드 입력 시험: 기존 매크로 종료 → v4 실행 → 1행만 선택해 [코드 입력용 복사] → 메트로 빈 코드 셀에서 Ctrl+Alt+V로 목록 불러오기 → F8로 코드만 입력 → Enter 직접 → 코드·약품명·함량 확인 후 F9. 수량·횟수·일수·용법과 최종 등록은 직접 합니다. Ctrl+V로는 처방이 등록되지 않습니다.');
   g.style.cssText='padding:5px 10px;font-size:9px;color:var(--dim);border-top:1px dashed var(--border)';wrap.appendChild(g);return wrap;
 }
 function getRxRows(mid){
@@ -1010,17 +1005,50 @@ function getRxRows(mid){
   return [...wrap.querySelectorAll('tbody tr')].filter(tr=>tr.querySelector('input[type=checkbox]')?.checked)
     .map(tr=>[...tr.querySelectorAll('td[contenteditable]')].map(td=>td.textContent.replace(/[\t\n]+/g,' ').trim()));
 }
-function copyRx(mid,mode){
-  const rows=getRxRows(mid);if(!rows.length){showToast('⚠️ 선택된 처방 행 없음');return;}
+// Macro output carries expected values; v4 types only the code.
+// This validates transport shape, not drug identity or clinical appropriateness.
+function metroKeyRows(rows){
+  if(!Array.isArray(rows)||rows.length<1||rows.length>50)throw new Error('처음에는 1행만 선택하세요. 코드 입력 목록은 1~50행입니다.');
+  const seen=new Set();
+  return rows.map((r,i)=>{
+    if(!Array.isArray(r)||r.length!==RX_COLS.length)throw new Error((i+1)+'행의 열 수가 맞지 않습니다.');
+    const fields=[r[2],r[3],r[5],r[7],r[8],r[9]].map(v=>String(v??''));
+    if(fields.some(v=>v!==v.trim()||/[\x00-\x1f\x7f]/.test(v)))throw new Error((i+1)+'행에 공백 또는 제어문자가 있습니다.');
+    if(!/^[A-Za-z0-9._/-]{1,64}$/.test(fields[0]))throw new Error((i+1)+'행의 처방코드가 없거나 형식이 다릅니다. 원외·코드 없는 항목은 직접 처리하고 선택을 해제하세요.');
+    if(!fields[1])throw new Error((i+1)+'행에 대조할 처방명이 없습니다.');
+    const key=fields[0].toUpperCase();
+    if(seen.has(key))throw new Error((i+1)+'행의 코드가 중복됩니다. 중복이 필요한지 직접 확인하세요.');
+    seen.add(key);
+    return fields;
+  });
+}
+function buildMetroKeyPayload(rows){
+  return ['METRO_RX_KEYS_V4','code\tname\tquantity\tfrequency\tdays\tusage',...metroKeyRows(rows).map(r=>r.join('\t'))].join('\n');
+}
+async function copyRx(mid,mode){
+  const rows=getRxRows(mid);
   let t;
-  if(mode==='codes')t=rows.map(r=>r[2]||r[3]).filter(Boolean).join('\n');
-  else if(mode==='macro')t=rows.filter(r=>r[2]).map(r=>[r[2],r[3]||'',r[5]||'1',r[7]||'1',r[8]||'1',r[9]||''].join('\t')).join('\n');
-  else if(mode==='metro'){
-    const off=parseInt(localStorage.getItem('soap_metro_offset')||'-1');
-    t=rows.map(r=>{let m=rxToMetroRow(r);if(off<0)m=m.slice(-off);else if(off>0)m=new Array(off).fill('').concat(m);return m.join('\t');}).join('\n');
+  try{
+    if(!rows.length)throw new Error('선택된 처방 행이 없습니다.');
+    if(mode==='macro')t=buildMetroKeyPayload(rows);
+    else if(mode==='codes')t=metroKeyRows(rows).map(r=>r[0]).join('\n');
+    else if(mode==='metro')throw new Error('직접 붙여넣기 경로를 사용하지 않습니다. [코드 입력용 복사]를 선택하세요.');
+    else t=RX_COLS.join('\t')+'\n'+rows.map(r=>r.join('\t')).join('\n');
+  }catch(e){
+    // Invalidate stale macro payload on failure; never silently skip a row.
+    if(mode==='macro'||mode==='codes'){
+      try{await navigator.clipboard.writeText('METRO_RX_KEYS_V4_INVALID');}
+      catch(_){alert('복사 중단. 클립보드에 이전 자료가 남아 있을 수 있습니다. 매크로 목록을 불러오지 마세요.');}
+    }
+    showToast('⚠️ 복사 중단: '+e.message);return;
   }
-  else t=RX_COLS.join('\t')+'\n'+rows.map(r=>r.join('\t')).join('\n');
-  navigator.clipboard.writeText(t).then(()=>showToast(mode==='codes'?'✅ 처방코드 '+rows.length+'개 복사':mode==='macro'?'🤖 매크로용 복사 — 메트로 처방코드 셀 클릭 후 Ctrl+Alt+V':mode==='metro'?'🏥 메트로 형식 '+rows.length+'행 복사 — 처방N 첫 셀 클릭 후 Ctrl+V':'✅ TSV '+rows.length+'행 복사'));
+  try{
+    await navigator.clipboard.writeText(t);
+    showToast(mode==='macro'?'⌨ '+rows.length+'행 준비 — 메트로에서 Ctrl+Alt+V로 불러오기 · F8 코드만 · Enter 직접 · F9 대조 확인':mode==='codes'?'코드 문자열 '+rows.length+'개 복사 (매크로 불러오기용 아님)':'표 TSV '+rows.length+'행 복사 (보관·대조용)');
+  }catch(e){
+    showToast('⚠️ 복사 실패: 브라우저의 클립보드 권한을 확인하세요.');
+    alert('복사에 실패했습니다. 클립보드에 이전 자료가 남아 있을 수 있으니 매크로 목록을 불러오지 마세요.');
+  }
 }
 function downloadRx(mid){
   const rows=getRxRows(mid);if(!rows.length){showToast('⚠️ 선택된 처방 행 없음');return;}
