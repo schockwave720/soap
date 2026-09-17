@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v39 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v39.3 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -110,7 +110,9 @@ textarea::placeholder{color:var(--dim)}
 .soap-block.o{border-color:var(--o);background:rgba(52,211,153,.05)}
 .soap-block.a{border-color:var(--a);background:rgba(245,158,11,.06)}
 .soap-block.p{border-color:var(--p);background:rgba(244,114,182,.06)}
-.soap-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1.5px;margin-bottom:4px}
+.soap-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1.5px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
+.soap-copy{font-family:'Noto Sans KR',sans-serif;font-size:9px;letter-spacing:0;padding:2px 8px;border-radius:3px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--text);cursor:pointer}
+.soap-copy:hover{border-color:var(--accent);color:var(--accent)}
 .soap-block.s .soap-lbl{color:var(--s)}.soap-block.o .soap-lbl{color:var(--o)}
 .soap-block.a .soap-lbl{color:var(--a)}.soap-block.p .soap-lbl{color:var(--p)}
 .soap-txt{font-size:11.5px;line-height:1.7;white-space:pre-wrap}
@@ -176,7 +178,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v39</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v39.3</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -430,8 +432,8 @@ MRI 찍고 가바펜틴 시작하려고 함.
         <span style="font-size:10px;color:var(--dim)">⏱ 자동종료:</span>
         <select class="api-inp" id="recAutoStop" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="180">3분</option>
-          <option value="300" selected>5분 (기본)</option>
-          <option value="420">7분</option>
+          <option value="300">5분</option>
+          <option value="420" selected>7분 (기본)</option>
           <option value="600">10분</option>
           <option value="0">끄기</option>
         </select>
@@ -631,7 +633,7 @@ function getKey(id){ return apiKeys[id] || localStorage.getItem('soap_key_'+id) 
 const SOURCE_OF_TRUTH=`SOURCE-OF-TRUTH RULE (overrides every rule below):
 Use ONLY facts explicitly present in the consultation input, attached images, or the physician profile.
 NEVER invent symptoms, pertinent negatives, physical exam findings, measurements, grades, angles, dates, medications, doses, allergies, lab values, imaging findings, or ICD codes.
-If a section or item is not supported by the input, OMIT IT SILENTLY. Never write "not provided", "not mentioned", "not assessed", "not examined", "unknown", "N/A", "없음", "확인 필요" or any sentence saying something was not done or not stated. Never list pertinent negatives the physician did not actually state. A short honest note beats a complete fabricated one.
+If a section or item is not supported by the input, OMIT IT SILENTLY. Never write "not provided", "not mentioned", "not assessed", "not examined", "no findings documented", "unknown", "N/A", "없음", "확인 필요", "기재 없음", "소견 없음", "시행하지 않음", "정보 없음" or ANY sentence or parenthetical note saying that an exam, image, lab, history item or section was not done, not recorded or not available. If O has nothing, output the "O:" header line alone and move on. Never list pertinent negatives the physician did not actually state. A short honest note beats a complete fabricated one.
 ICD-10: include only when the diagnosis is explicitly stated or unambiguous; otherwise omit the code.
 Format requests below (e.g. "full PE", "reference ranges", "canal compromise %") describe what to include WHEN PRESENT — they are not permission to fabricate.
 
@@ -1262,9 +1264,9 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
     // Cerebras: GPT-OSS는 reasoning 끄기, Qwen 3.8은 기본 xhigh라 반드시 낮춰야 함
     if(provKey==='cerebras'){
       // 2026-09 Cerebras 문서: gpt-oss는 low/medium/high만(none 불가, hidden 가능), qwen-3.8은 none 가능 + hidden 미지원
-      if(modelInfo.m.includes('qwen')){body.reasoning_effort='none';}
+      if(modelInfo.m.includes('qwen')){body.reasoning_effort='none';messages[0].content+='\n\n/no_think';}
       else{body.reasoning_effort='low';body.reasoning_format='hidden';}
-      body.max_tokens=6000; // reasoning 토큰이 max_tokens에 포함됨
+      body.max_tokens=8000; // reasoning 토큰이 max_tokens에 포함됨
     }
     // DeepSeek V4/V4.1: 기본이 thinking(high) → 2000토큰을 추론에 다 씀. SOAP은 non-thinking으로 충분·빠름·저렴
     if(provKey==='deepseek'){
@@ -1272,6 +1274,8 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
       body.reasoning_effort='none';
       body.max_tokens=6000;
     }
+    // xAI Grok 4.5/4.6: 추론 기본 high, 끌 수 없음 → low로 (SOAP엔 충분, 응답시간 수 배 단축)
+    if(provKey==='xai'&&/grok-4\.[5-9]/.test(modelInfo.m)){body.reasoning_effort='low';body.max_tokens=6000;}
     // Meta Muse Spark: reasoning 항상 켜짐(끌 수 없음, minimal~xhigh). 추론 토큰이 출력에 과금·포함되므로 여유
     if(provKey==='meta'){body.reasoning_effort='minimal';body.max_tokens=8000;}
     // OpenRouter: 통합 reasoning 파라미터 — 최소 effort + 출력에서 제외, reasoning 토큰 대비 max_tokens 여유
@@ -1288,8 +1292,15 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
     if(provKey==='groq'&&(modelInfo.m.includes('qwen')||modelInfo.m.includes('llama-4'))){
       messages[0].content+='\n\nIMPORTANT: Do NOT use <think> tags. Respond with the SOAP note directly.';
     }
-    const r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)},TIMEOUT.text,signal);
-    const d=await r.json();if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
+    let r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)},TIMEOUT.text,signal);
+    let d=await r.json();
+    // Cerebras Qwen: 'none'이 거부되거나 빈 응답이면 low + parsed로 1회 재시도
+    if(provKey==='cerebras'&&modelInfo.m.includes('qwen')&&(d.error||!(d.choices?.[0]?.message?.content||'').trim())){
+      body.reasoning_effort='low';body.reasoning_format='parsed';
+      r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)},TIMEOUT.text,signal);
+      d=await r.json();
+    }
+    if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
     // <think> 태그 제거 (reasoning 모델 대응)
     const msg=d.choices?.[0]?.message||{};
     let result=(typeof msg.content==='string'?msg.content:Array.isArray(msg.content)?msg.content.map(x=>x.text||'').join('\n'):'')||'';
@@ -1325,8 +1336,10 @@ function renderSOAPBlocks(text,mid){
   const frag=document.createDocumentFragment();
   for(const k of ['S','O','A','P']){
     const b=el('div','soap-block '+k.toLowerCase());
-    b.appendChild(el('div','soap-lbl',k+' · '+labels[k]));
-    b.appendChild(el('div','soap-txt',(s[k]||'확인 필요').trim()));
+    const lbl=el('div','soap-lbl');lbl.appendChild(el('span','',k+' · '+labels[k]));
+    const cb=el('button','soap-copy','📋 '+k+' 복사');cb.title=k+' 본문만 복사 (헤더 없음)';
+    cb.addEventListener('click',()=>copySection(mid,k));lbl.appendChild(cb);b.appendChild(lbl);
+    const tx=el('div','soap-txt',(s[k]||'').trim());tx.dataset.sec=k;b.appendChild(tx);
     frag.appendChild(b);
   }
   if(split.rows)frag.appendChild(renderRxTable(split.rows,mid));
@@ -1400,7 +1413,7 @@ async function runAll(){
     const bwrap=el('div','');bwrap.style.cssText='display:flex;gap:4px';
     const rx=el('button','btn-sm','💊 처방도 알려줘');rx.id='rx_'+model.id+'_btn';rx.disabled=true;rx.title='약속처방 세트에서 이 환자에게 맞는 처방을 이 모델이 골라줌';
     rx.addEventListener('click',()=>requestRx(model.id));
-    const cp=el('button','btn-copy','📋 EMR 복사');cp.id='copy_'+model.id;cp.disabled=true;
+    const cp=el('button','btn-copy','📋 전체 복사');cp.id='copy_'+model.id;cp.disabled=true;cp.title='S·O·A·P 본문을 빈 줄로 구분해 한 번에 (라벨 없음)';
     cp.addEventListener('click',()=>copyCard(model.id));
     bwrap.append(rx,cp);hdr.appendChild(bwrap);card.appendChild(hdr);
     const body=el('div','result-body');body.id='body_'+model.id;
@@ -1449,14 +1462,21 @@ function newPatient(){
   showToast('🆕 새 환자 준비 완료');
 }
 
+// 섹션 본문(항목당 한 줄) — 헤더·"Subjective" 같은 라벨은 절대 안 들어감
+function sectionText(mid,k){
+  const t=document.querySelector('#body_'+mid+' .soap-txt[data-sec="'+k+'"]')?.textContent||'';
+  return t.split('\n').map(x=>x.trim()).filter(Boolean).join('\n');
+}
+function copySection(mid,k){
+  const t=sectionText(mid,k);
+  if(!t){showToast('⚠️ '+k+' 비어 있음');return;}
+  navigator.clipboard.writeText(t).then(()=>showToast('📋 '+k+' 복사 — EMR '+k+' 칸에 붙여넣기'));
+}
+// 전체 복사: 네 단락을 빈 줄로 구분, 라벨 없음
 function copyCard(mid){
-  const blocks=document.getElementById('body_'+mid).querySelectorAll('.soap-block');
-  if(!blocks.length)return;
-  let t='';['S','O','A','P'].forEach((k,i)=>{
-    const body=(blocks[i]?.querySelector('.soap-txt')?.textContent||'').split('\n').map(x=>x.trim()).filter(Boolean).join('\n');
-    t+=`${k}:\n${body}\n\n`;
-  });
-  navigator.clipboard.writeText(t.trim()).then(()=>showToast('✅ EMR 복사 — 항목별 한 줄씩'));
+  const parts=['S','O','A','P'].map(k=>sectionText(mid,k));
+  if(!parts.some(Boolean))return;
+  navigator.clipboard.writeText(parts.join('\n\n').trim()).then(()=>showToast('✅ 전체 복사 — 단락 사이 빈 줄, 라벨 없음'));
 }
 
 // ===== IMAGE GENERATION =====
