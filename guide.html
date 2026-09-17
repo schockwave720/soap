@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비누제조기 사용 설명서 v2.0 | SOAP Maker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap');
+:root{--bg:#080d1a;--surface:#0f1525;--surface2:#161d30;--border:#1e3050;--accent:#00b4d8;--green:#06d6a0;--text:#e2e8f0;--dim:#64748b;--guri:#0ea5e9;--warn:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.8}
+.wrap{max-width:820px;margin:0 auto;padding:24px 20px}
+.back{display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-size:12px;text-decoration:none;margin-bottom:16px;padding:4px 10px;border:1px solid var(--border);border-radius:16px}
+.back:hover{border-color:var(--accent);background:rgba(0,180,216,.08)}
+h1{font-size:24px;font-weight:700;margin-bottom:4px}
+h1 span{color:var(--guri)}
+.ver{font-size:11px;color:var(--dim);margin-bottom:24px}
+h2{font-size:17px;font-weight:700;color:var(--accent);margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:14px;font-weight:600;color:var(--green);margin:20px 0 8px}
+p,li{font-size:13px;line-height:1.9}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{margin-bottom:4px}
+a{color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.card-accent{border-color:rgba(14,165,233,.3);background:rgba(14,165,233,.06)}
+.card-green{border-color:rgba(6,214,160,.3);background:rgba(6,214,160,.06)}
+.card-warn{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.06)}
+table{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:12px}
+th{background:var(--surface2);padding:8px;text-align:left;font-weight:600;font-size:11px;color:var(--accent);border-bottom:1px solid var(--border)}
+td{padding:7px 8px;border-bottom:1px solid rgba(30,48,80,.5);vertical-align:top}
+tr:hover{background:rgba(255,255,255,.02)}
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
+.tag-free{background:rgba(6,214,160,.15);color:var(--green)}
+.tag-paid{background:rgba(245,158,11,.12);color:#f59e0b}
+.tag-rec{background:rgba(14,165,233,.15);color:var(--guri)}
+.tag-vis{background:rgba(14,165,233,.2);color:#7dd3fc}
+.highlight{background:rgba(6,214,160,.08);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 8px 8px 0;margin:8px 0 16px;font-size:13px}
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:1px 5px;border-radius:3px;font-size:11px}
+pre{font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:11px;line-height:1.7;overflow-x:auto;margin:6px 0 12px;white-space:pre}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:24px}
+.toc a{text-decoration:none;display:block;padding:3px 0;font-size:12px;color:var(--text)}
+.toc a:hover{color:var(--accent)}
+.price-zero{color:var(--green);font-weight:700}
+.footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--dim);text-align:center}
+.new{display:inline-block;background:#a855f7;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="./index.html" class="back">← 비누제조기로 돌아가기</a>
+
+<h1>🧼 <span>비누제조기</span> 사용 설명서</h1>
+<p class="ver">v2.0 · 2026년 9월 17일 · 앱 버전 v40 기준</p>
+
+<div class="toc">
+  <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px">📋 목차</div>
+  <a href="#what">1. 비누제조기가 뭔가요?</a>
+  <a href="#start">2. 시작하기 (5분 가이드)</a>
+  <a href="#flow">3. 진료실 실제 흐름 — 녹음에서 EMR까지</a>
+  <a href="#models">4. AI 모델 고르기 & 턴당 비용</a>
+  <a href="#stt">5. 음성인식(STT) 엔진</a>
+  <a href="#rx">6. 약속처방 세트 & 💊 처방 버튼</a>
+  <a href="#soap">7. SOAP이 이렇게 나옵니다 (작성 규칙)</a>
+  <a href="#img">8. MRI 첨부 · 이미지 생성</a>
+  <a href="#emr">9. EMR(메트로) 연동 — 되는 것, 안 되는 것</a>
+  <a href="#mic">10. 진료실 마이크</a>
+  <a href="#faq">11. 자주 묻는 질문</a>
+  <a href="#log">12. 변경 이력</a>
+</div>
+
+<!-- 1 -->
+<h2 id="what">1. 비누제조기가 뭔가요?</h2>
+<p>환자와 나눈 대화(녹음·녹취록·메모)를 넣으면 AI가 <strong>SOAP 노트</strong>로 바꿔주고, 원하면 <strong>약속처방 세트에서 처방까지 골라주는</strong> 웹앱입니다. 서버가 없습니다 — 브라우저 하나로 끝나고, API 키와 프로필은 내 PC에만 저장됩니다.</p>
+
+<div class="card card-accent">
+  <p>✅ 8개 회사 + OpenRouter 20종 = <strong>50여 개 AI</strong>를 동시에 돌려서 비교<br>
+  ✅ <strong>S·O·A·P 단락별 복사 버튼</strong> → EMR 칸에 한 단락씩 붙여넣기<br>
+  ✅ SOAP 먼저, 처방은 <strong>💊 처방도 알려줘</strong> 버튼을 눌렀을 때만<br>
+  ✅ 내 약속처방 세트 · 구비약물 · 진료 철학 반영<br>
+  ✅ MRI/CT 캡처 첨부 → 영상 인식 모델이 O·A에 반영<br>
+  ✅ 각 모델 옆에 <strong>SOAP 1회 예상 비용(≈₩)</strong> 표시</p>
+</div>
+
+<!-- 2 -->
+<h2 id="start">2. 시작하기 (5분이면 끝)</h2>
+
+<h3>① 접속</h3>
+<div class="highlight">
+  <strong>https://schockwave720.github.io/soap/</strong><br>
+  Chrome · Edge 권장. 즐겨찾기 해두세요. 마이크 녹음은 이 주소(HTTPS)에서만 됩니다.
+</div>
+
+<h3>② API 키 입력 (처음 1회)</h3>
+<p>전부 넣을 필요 없습니다. <strong>아래 셋이면 녹음부터 SOAP까지 거의 공짜</strong>로 됩니다.</p>
+<table>
+  <tr><th>키</th><th>발급처</th><th>가격</th><th>용도</th></tr>
+  <tr><td><strong>Groq</strong></td><td>console.groq.com</td><td><span class="tag tag-free">무료 티어</span></td><td>⭐ 음성인식(Whisper Turbo) + 텍스트 AI</td></tr>
+  <tr><td><strong>DeepSeek</strong></td><td>platform.deepseek.com</td><td><span class="tag tag-paid">₩1/턴</span></td><td>⭐ SOAP 품질·가격 최강 (V4.1 Flash, 영상 인식)</td></tr>
+  <tr><td><strong>Gemini</strong></td><td>aistudio.google.com</td><td><span class="tag tag-paid">선불</span></td><td>3.8 Flash 텍스트 + Transcribe + NanoBanana 이미지</td></tr>
+  <tr><td>Cerebras</td><td>cloud.cerebras.ai</td><td><span class="tag tag-free">무료 티어</span></td><td>초고속 텍스트 (GPT-OSS 120B 3000t/s)</td></tr>
+  <tr><td>OpenAI</td><td>platform.openai.com</td><td><span class="tag tag-paid">유료</span></td><td>GPT-6 Astra · GPT-5.6 · GPT Image 2.5 · Transcribe</td></tr>
+  <tr><td>Claude / xAI / Meta / OpenRouter / NovelAI</td><td colspan="3">쓸 사람만</td></tr>
+</table>
+
+<div class="card">
+  <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px">발급 방법 (Groq 예시 — 다른 곳도 거의 같음)</div>
+  <ol>
+    <li>console.groq.com → 구글 계정 로그인</li>
+    <li>API Keys → Create API Key</li>
+    <li><code>gsk_...</code> 복사 → 비누제조기 Groq 칸에 붙여넣기</li>
+    <li>✓ 표시 뜨면 끝. 보이지 않는 특수문자가 섞여도 자동으로 걸러냅니다.</li>
+  </ol>
+</div>
+
+<h3>③ 프로필</h3>
+<p>진료과 드롭다운 선택 → 전공·환자군·지시사항 자동 채움 → 진료 철학, 약제, <strong>약속처방 세트</strong>(6장) 입력 → 💾 전체 저장.</p>
+
+<h3>④ 첫 변환</h3>
+<ol>
+  <li>모델은 <strong>아무것도 체크돼 있지 않습니다.</strong> 원하는 것만 체크 (처음엔 DeepSeek V4.1 Flash + Gemini 3.8 Flash 둘이면 충분)</li>
+  <li>진료 내용 입력 — 타이핑 / 🎙 녹음 / 🎵 파일 / 📄 문서</li>
+  <li><strong>🧼 SOAP 변환 시작</strong> (Ctrl+Enter)</li>
+  <li>결과 카드에서 <strong>📋 S 복사 → 메트로 S칸</strong> … 순서로</li>
+</ol>
+
+<!-- 3 -->
+<h2 id="flow">3. 진료실 실제 흐름 — 녹음에서 EMR까지</h2>
+<div class="card card-green">
+  <ol style="margin:0">
+    <li><strong>🆕 새 환자</strong> 버튼 — 이전 환자 텍스트·MRI·결과 싹 지움 (키·프로필은 유지)</li>
+    <li>🎙 녹음 탭 → 큰 원 버튼 탭 → 진료 → 다시 탭 (기본 7분 자동종료, 30초 전 카운트다운)</li>
+    <li>Groq Whisper Turbo가 3~5초 안에 텍스트로 → <strong>🧼 자동 SOAP</strong>이 켜져 있으면 바로 변환까지</li>
+    <li>카드에서 마음에 드는 모델 결과 골라 <strong>S 복사 → O 복사 → A 복사 → P 복사</strong> (라벨 없이 본문만, 항목당 한 줄)</li>
+    <li>처방이 필요하면 <strong>💊 처방도 알려줘</strong> → 약속처방 세트에서 골라 표로 → 메트로엔 코드 보고 직접 입력</li>
+  </ol>
+</div>
+<p style="font-size:12px;color:var(--dim)">💡 녹음할 때 "보존치료 두 달 했고, 주사 두 번, 엄지발가락 힘 4점" 처럼 <strong>기간·횟수·등급을 입으로 말해두면</strong> A에 심사 논거 문장이 자동으로 만들어집니다. 말 안 한 건 AI가 지어내지 않습니다 (7장).</p>
+
+<!-- 4 -->
+<h2 id="models">4. AI 모델 고르기 & 턴당 비용</h2>
+<p>모델 옆 <code>≈₩</code> 태그 = SOAP 1회 예상 비용. 가정: 입력 2,500토큰(프롬프트+프로필+진료내용) + 출력 700토큰, ₩1,380/$. 추론(reasoning) 모델은 숨은 추론 토큰 때문에 실제가 조금 더 나옵니다. 2026년 9월 가격.</p>
+
+<table>
+  <tr><th>모델</th><th>SOAP 1회</th><th>특징</th></tr>
+  <tr style="background:rgba(6,214,160,.04)"><td><strong>DeepSeek V4.1 Flash</strong> <span class="tag tag-vis">👁</span></td><td class="price-zero">≈₩1.1</td><td>⭐ 9/10 출시. 이 가격에 이 품질은 반칙. 영상 인식</td></tr>
+  <tr style="background:rgba(6,214,160,.04)"><td><strong>Groq GPT-OSS 120B</strong></td><td class="price-zero">≈₩1.2</td><td>무료 티어, 500t/s</td></tr>
+  <tr style="background:rgba(6,214,160,.04)"><td><strong>Cerebras GPT-OSS 120B</strong></td><td class="price-zero">≈₩1.9</td><td>무료 티어, 3000t/s — 1초 컷</td></tr>
+  <tr><td>GPT-5.6 Luna</td><td>≈₩1.8</td><td>OpenAI 최저가 프론티어</td></tr>
+  <tr><td>Grok 4.1 Fast</td><td>≈₩1.2</td><td>xAI 비추론 — 일상 SOAP용</td></tr>
+  <tr><td>Gemini 3.8 Flash</td><td>≈₩6</td><td>9/2 출시, 균형형</td></tr>
+  <tr><td>Muse Spark 1.3 <span class="tag tag-vis">👁</span></td><td>≈₩8</td><td>Meta 9/2 출시, 추론 항상 켜짐</td></tr>
+  <tr><td>Claude Haiku 4.5</td><td>≈₩8</td><td></td></tr>
+  <tr><td>Grok 4.5 / 4.6</td><td>≈₩13</td><td>추론 모델. 4.6은 느림 — MRI 볼 때만</td></tr>
+  <tr><td>Gemini 3.1 Pro · GPT-5.6 Terra · Claude Sonnet 5</td><td>≈₩17~18</td><td></td></tr>
+  <tr><td>GPT-5.6 Sol</td><td>≈₩33</td><td></td></tr>
+  <tr><td>Claude Opus 5</td><td>≈₩41</td><td></td></tr>
+  <tr><td>GPT-6 Astra · Claude Fable 5.1</td><td>≈₩83</td><td>최상위. SOAP엔 과분</td></tr>
+</table>
+
+<div class="highlight"><strong>하루 40명 기준:</strong> DeepSeek Flash ≈ 44원/일 · Gemini 3.8 Flash ≈ 240원/일 · GPT-6 Astra ≈ 3,300원/일. 실사용 비교에서 Flash급이 Astra급보다 못 쓰는 경우가 거의 없습니다. 비싼 게 잘 쓰는 게 아닙니다.</div>
+
+<h3>🌐 OpenRouter (키 하나로 20종)</h3>
+<p>OpenRouter 섹션은 접혀 있습니다 — 헤더 클릭하면 펼쳐집니다. 7~9월 출시 최신 모델만, 이름에 <code>$입력/출력</code> 가격이 붙어 있습니다.</p>
+<ul>
+  <li><strong>Ling 3.0 Flash Santé</strong> — 의료·헬스 특화, 무료. 단 OpenRouter 설정에서 "free 모델 학습 허용"을 꺼두세요.</li>
+  <li>GLM 5.3 Flash · Qwen3.8 Flash · Solar Pro 4(한국 업스테이지) · Mercury 2.5 — 전부 ₩1 안팎</li>
+  <li>Sonnet 5 · Grok 4.6 · Qwen3.8 Max · Fugu Max — 상위급도 ₩13~18</li>
+</ul>
+
+<h3>🔧 Custom 모델</h3>
+<p>목록에 없는 새 모델은 프로바이더 고르고 모델 ID만 치면 추가됩니다. 브라우저에 저장.</p>
+
+<!-- 5 -->
+<h2 id="stt">5. 음성인식(STT) 엔진</h2>
+<table>
+  <tr><th>엔진</th><th>키</th><th>5분 1건</th><th>언제</th></tr>
+  <tr style="background:rgba(6,214,160,.04)"><td><strong>🚀 Groq Whisper Turbo</strong></td><td>Groq</td><td class="price-zero">≈₩5</td><td>⭐ 기본. 216배속, 무료 티어</td></tr>
+  <tr><td>🚀 Groq Whisper V3</td><td>Groq</td><td>≈₩13</td><td>더 정밀하게 듣고 싶을 때</td></tr>
+  <tr><td>💎 Gemini 3.5 Transcribe</td><td>Gemini</td><td>저가</td><td>진료과별 <strong>의학용어 사전</strong> 100개를 실어 보냄 — 약 이름·술기명 오인식 줄어듦</td></tr>
+  <tr><td>💎 Gemini 3.5 Transcribe 화자분리</td><td>Gemini</td><td>저가</td><td>"화자1: / 화자2:" 로 의사·환자 구분</td></tr>
+  <tr><td>🤖 GPT-Transcribe</td><td>OpenAI</td><td>유료</td><td>OpenAI 최신 STT</td></tr>
+  <tr><td>🤖 GPT-4o Transcribe 화자분리</td><td>OpenAI</td><td>유료</td><td>화자분리 대안</td></tr>
+  <tr><td>🤖 Whisper-1</td><td>OpenAI</td><td>≈₩41</td><td>백업</td></tr>
+</table>
+<div class="card card-warn">
+  <p style="font-size:12px"><strong>💡 약 이름이 이상하게 나올 때:</strong> STT가 약 이름을 엉뚱한 음절로 뭉갤 수 있습니다. v40부터 AI는 <strong>또렷하게 식별되는 약 이름만</strong> 쓰고, 뭉개진 건 "기존 복용 약물 지속 중" 한 줄로 처리합니다. 약 이름이 중요하면 Gemini Transcribe(의학용어 사전)를 쓰세요.</p>
+  <p style="font-size:12px;margin-top:4px"><strong>💡 녹음 파일은 변환 후 즉시 지웁니다.</strong> Gemini Transcribe는 구글 서버에 잠시 올렸다가 결과가 오면 성공·실패 관계없이 삭제 요청을 보냅니다.</p>
+</div>
+
+<!-- 6 -->
+<h2 id="rx">6. 약속처방 세트 & 💊 처방 버튼</h2>
+<p>기본 실행은 <strong>SOAP만</strong> 만듭니다. 처방 프롬프트 자체를 보내지 않아서 빠르고 쌉니다. 처방이 필요할 때 카드의 <strong>💊 처방도 알려줘</strong>를 누르면 <em>그 모델이</em> 등록된 세트에서 이 환자 것을 골라 표로 보여줍니다. 세트가 없으면 등록하라고 알려주고 멈춥니다.</p>
+
+<h3>세트 등록 형식</h3>
+<pre>## 세트명 | 적응증(언제 쓰는지) | 제외조건(선택)
+처방코드	처방명	급여	수량	단위	횟수	日	용법코드	용법
+
+## 요통-신경병증 기본 | 요추 HNP/협착 + 방사통, VAS 5-7 | 신부전, 75세 이상 감량
+M1119147	가벨린정75mg	Y	1	T	2	7	PC	식후30분
+M1232263	케이캡정25mg	Y	1	T	1	7	AC	식전</pre>
+<ul>
+  <li>빈 줄로 세트 구분, 탭 또는 <code>|</code>로 열 구분, 모르는 칸은 비워둠</li>
+  <li><strong>가장 확실한 방법:</strong> 메트로 이전처방 화면에서 행을 복사해 이 칸에 붙여넣기. 메트로 형식(<code>0 | | 코드 | 처방명 | …</code>)을 자동으로 알아보고 등록형식으로 바꿔줍니다. 위에 <code>## 세트명 |</code> 줄만 얹으면 끝. 코드가 메트로 것 그대로라 AI가 헛코드를 낼 수 없습니다.</li>
+  <li>📥 엑셀 양식 받기 → 채워서 📁 파일 선택으로 올려도 됩니다.</li>
+</ul>
+
+<h3>처방 표에서 할 수 있는 것</h3>
+<ul>
+  <li>셀 클릭해서 수정, 체크 해제로 행 제외</li>
+  <li><strong>⌨ 코드 입력용 복사</strong> — 코드·처방명·수량·횟수·日·용법 (매크로용, 9장)</li>
+  <li>📋 표 TSV / 📋 코드만 / 📊 엑셀 (메트로 열 순서 시트 포함)</li>
+  <li>노란 행 = 세트에 없는 <strong>원외</strong> 항목. 비고에 "확인필요"가 뜨면 신기능·알레르기 같은 정보가 없어서 AI가 판단을 보류한 것</li>
+</ul>
+
+<!-- 7 -->
+<h2 id="soap">7. SOAP이 이렇게 나옵니다 (v40 작성 규칙)</h2>
+<table>
+  <tr><th>단락</th><th>규칙</th></tr>
+  <tr><td><strong>S</strong></td><td>한글. 진단·계획에 걸리는 진술만. 인사·보험·잡담·반복 삭제. <strong>과거력·알레르기·약물은 구체적으로 있을 때만</strong> — "없음/불명/확인 안 됨" 줄은 절대 안 씀. CC:·HPI:·PMHx: 같은 소제목 없음.</td></tr>
+  <tr><td><strong>O</strong></td><td><strong>영어 의학용어 전용.</strong> <code>SLR Rt (+) 30°</code>, <code>motor G4/5 Rt EHL</code>, <code>MRI L4-5 central HNP with Rt L5 root compression</code>. 쓸 게 없으면 헤더만. "검사 안 함/소견 없음" 같은 문장 금지.</td></tr>
+  <tr><td><strong>A</strong></td><td>병명 딱지가 아니라 <strong>진단 + due to 원인 + consistent with 소견</strong> 인과 문장. 그리고 형이 말한 사실이 있으면 <strong>심사관이 읽는 논거 한 줄</strong>: 수술 적응(보존치료 기간·무반응, 이전 주사, 근력 등급, 영상-증상 일치, 기능 제한), MRI 적응(신경학적 징후 동반 방사통, red flag, 6주 이상 보존치료 불응), 시술(레벨·측·실패한 이전 단계). <strong>말 안 한 사실은 지어내지 않음.</strong></td></tr>
+  <tr><td><strong>P</strong></td><td>오더 수준만: 약 이름/계열, 검사, 시술(레벨·측), F/U. <strong>용량·횟수·일수·용법 없음</strong> — 그건 💊 처방 표에서.</td></tr>
+  <tr><td>공통</td><td>항목당 한 줄, 단락 사이 빈 줄, 불릿·번호·별표 없음, 면책·"의사 확인 요망" 류 문구 없음. 복사하면 EMR에 그대로 줄이 떨어짐.</td></tr>
+</table>
+<p style="font-size:12px;color:var(--dim)">간략 / 보통 / 상세 세 단계와 영어위주 / 한영병기(A·P에 한글 병기)를 고를 수 있습니다. O는 어느 모드든 영어.</p>
+
+<!-- 8 -->
+<h2 id="img">8. MRI 첨부 · 이미지 생성</h2>
+<h3>🩻 MRI/CT 첨부</h3>
+<p>PACS 화면 캡처(png/jpg/webp)를 여러 장 올리면 <span class="tag tag-vis">👁</span> 표시된 모델이 영상을 읽어 O·A에 반영합니다. DICOM 원본은 안 됩니다. 영상 인식: OpenAI 전체, Grok 전체, Claude, Gemini, DeepSeek V4.1 Flash, Cerebras Qwen 3.8, Meta Muse Spark, OpenRouter 👁 모델.</p>
+
+<h3>🖼️ 의료 이미지 생성 (기본 꺼짐)</h3>
+<p>SOAP 뒤에 진단명 기반 교육용 그림을 만듭니다. 엔진은 기본 미선택이고, "SOAP 완료 후 자동 생성" 체크도 꺼져 있습니다. 필요할 때 엔진 체크 → 🖼️ 버튼.</p>
+<table>
+  <tr><th>엔진</th><th>키</th><th>비고</th></tr>
+  <tr><td>🍌 NanoBanana 2 / 2 Lite / Pro(4K) / OG</td><td>Gemini</td><td>장당 60~200원대. OG(2.5)는 2026-10-16 종료 예정</td></tr>
+  <tr><td>🤖 GPT Image 2.5 Flare / Sunburst</td><td>OpenAI</td><td>Sunburst가 상위</td></tr>
+  <tr><td>⚡ Grok Imagine / Pro</td><td>xAI</td><td>브라우저 직접 호출 — CORS로 막히면 사용 불가 (프록시 없음, 키 보호 때문)</td></tr>
+  <tr><td>🎨 NovelAI V5 Full / V4.5 Full</td><td>NovelAI</td><td>구독형</td></tr>
+</table>
+
+<!-- 9 -->
+<h2 id="emr">9. EMR(메트로) 연동 — 되는 것, 안 되는 것</h2>
+<div class="card card-warn">
+  <p style="font-size:12px"><strong>결론부터:</strong> 메트로 처방창에 <strong>Ctrl+V로 처방을 넣는 건 안 됩니다.</strong> 2026년 9월 실제 시험 결과입니다.</p>
+</div>
+<ul>
+  <li>메트로 처방N 그리드는 글자를 붙여넣어도 화면에만 칠해질 뿐 내부 처방 행이 생기지 않습니다. E 체크박스도 안 먹고 F5 등록도 "선택된 처방 없음". 다중행 붙여넣기 자체가 없습니다.</li>
+  <li>손으로 코드를 치고 Enter를 누르는 것만 약품 조회를 태웁니다.</li>
+  <li>그래서 <strong>SOAP 텍스트는 단락별 복사 → 차트 칸 붙여넣기</strong>(잘 됨), <strong>처방은 표를 보고 직접 입력</strong>이 현재 표준 흐름입니다.</li>
+  <li>키 입력 매크로(AutoHotkey)는 만들어 두었으나 병원 PC 권한(관리자 실행) 문제로 검증하지 못했습니다. 다시 시도할 때는 AHK를 관리자 권한으로 실행하는 것부터 확인해야 합니다.</li>
+  <li>자주 쓰는 세트는 <strong>메트로 자체 약속처방 탭</strong>에 등록해 두는 게 가장 빠릅니다. 비누제조기는 "세트 3번 + 케이캡 추가"라는 결론을 주는 역할.</li>
+</ul>
+
+<!-- 10 -->
+<h2 id="mic">10. 진료실 마이크</h2>
+<p>의사·환자 양쪽을 잡으려면 360° 스피커폰이 필요합니다. 일반 마이크는 의사 소리만 잡습니다.</p>
+<table>
+  <tr><th>제품</th><th>가격</th><th>핵심</th></tr>
+  <tr style="background:rgba(14,165,233,.06)"><td><strong>Jabra Speak2 55 UC</strong></td><td>~25만원</td><td>4마이크 360°, USB·BT, 260g. <span class="tag tag-rec">실사용 중</span></td></tr>
+  <tr><td>Jabra Speak2 75</td><td>~40만원</td><td>큰 진료실</td></tr>
+  <tr><td>Anker PowerConf</td><td>~10만원</td><td>가성비 6마이크</td></tr>
+</table>
+<p style="font-size:12px;color:var(--dim)">녹음 전 환자에게 구두로 알리고, 거부하면 타이핑 입력으로. 성명·주민번호 같은 식별정보는 입력하지 않습니다.</p>
+
+<!-- 11 -->
+<h2 id="faq">11. 자주 묻는 질문</h2>
+
+<div class="card"><p><strong>Q: 모델을 체크했는데 "빈 응답"이 나와요</strong></p><p>추론(reasoning) 모델이 생각만 하다 토큰을 다 쓴 경우입니다. v39~40에서 Cerebras·Groq·DeepSeek·Grok·OpenRouter 전부 추론을 낮추거나 껐고, Cerebras Qwen은 자동 재시도합니다. 그래도 나오면 그 모델은 빼고 다른 걸 쓰세요.</p></div>
+
+<div class="card"><p><strong>Q: Grok 4.6이 너무 느려요</strong></p><p>정상입니다. 추론을 끌 수 없는 모델이라 low로 낮춰도 10초 안팎. 일상 SOAP은 Grok 4.1 Fast(₩1.2)나 DeepSeek Flash로.</p></div>
+
+<div class="card"><p><strong>Q: "Your prepayment credits are depleted"</strong></p><p>Gemini 선불 크레딧 소진. ai.studio/projects 에서 충전. DeepSeek·OpenAI도 잔액 소진 시 비슷한 문구가 뜹니다.</p></div>
+
+<div class="card"><p><strong>Q: "The model does not exist"</strong></p><p>모델이 폐기된 것. 목록은 9월 기준으로 정리했지만 AI 회사들이 두 달에 한 번씩 갈아치웁니다. Custom 모델 칸에 새 ID를 넣어 쓰세요.</p></div>
+
+<div class="card"><p><strong>Q: 환자 데이터가 저장되나요?</strong></p><p>이 앱은 아무것도 저장하지 않습니다. 텍스트는 선택한 AI 회사 API로 전송돼 SOAP이 만들어지고 끝. 새 환자 버튼이나 새로고침이면 사라집니다. 녹음 파일도 변환 직후 삭제. 다만 어느 AI 회사에 보내는지는 본인이 고르는 것이니, 병원 정책에 맞는 회사만 체크하세요. 식별정보(이름·주민번호·연락처)는 애초에 넣지 않습니다.</p></div>
+
+<div class="card"><p><strong>Q: 다른 의사에게 주소를 알려주면 내 API 키가 새나요?</strong></p><p>아닙니다. 키는 각자 PC 브라우저(localStorage)에만 저장됩니다. 서버가 없으니 어디로도 전송되지 않습니다. 단, 같은 PC·같은 브라우저를 공유하면 키도 공유되니 Chrome 프로필을 나누세요.</p></div>
+
+<div class="card"><p><strong>Q: 아내(가정의학과·요양병원)도 쓸 수 있나요?</strong></p><p>네. 진료과 프리셋에 가정의학과가 있고(욕창·연하·낙상·다약제 검토 지시 포함), STT 의학용어 사전도 과별로 바뀝니다. 본인 PC에서 키만 따로 넣으면 됩니다.</p></div>
+
+<div class="card"><p><strong>Q: 뤼튼 같은 국산 무료 AI는?</strong></p><p>뤼튼은 개발자 API가 없어서 외부 앱에서 못 씁니다. 대신 <strong>업스테이지 Solar Pro 4</strong>(한국)가 OpenRouter에 있습니다 — ₩1 미만.</p></div>
+
+<!-- 12 -->
+<h2 id="log">12. 변경 이력 (요약)</h2>
+<table>
+  <tr><th>버전</th><th>날짜</th><th>핵심</th></tr>
+  <tr><td>v40.1</td><td>9/17</td><td>O 영어 전용, A 인과 진단 + 심사 논거, P는 오더 수준만, 부정 병력 줄 금지, STT 뭉개진 약 이름 무시</td></tr>
+  <tr><td>v39.x</td><td>9/17</td><td>SOAP 먼저·처방은 💊 버튼, 단락별 복사, 항목당 한 줄, 면책 문구 제거, 턴당 비용 태그, Meta Muse Spark, Grok 4.6 추론 low, 녹음 7분</td></tr>
+  <tr><td>v34~38</td><td>9/13~14</td><td>OpenRouter 20종, DeepSeek V4.1 Flash·Grok 4.6, 기본 미선택, 약속처방 세트·메트로 행 자동 변환, 메트로 붙여넣기 시험(실패)·매크로</td></tr>
+  <tr><td>v30 이전</td><td>4~9월</td><td>Gemini 3.5 Transcribe(의학용어 사전·화자분리), GPT-Transcribe, 진료과 프리셋, 새 환자 버튼, 실행 잠금(이전 환자 응답 폐기), 이미지 엔진 10종, 사업계획서</td></tr>
+</table>
+
+<div class="footer">
+  🧼 비누제조기 v40 · 설명서 v2.0 · 2026-09-17<br>
+  <a href="https://github.com/schockwave720/soap" style="color:var(--accent)">github.com/schockwave720/soap</a> · <a href="./index.html" style="color:var(--accent)">← 비누제조기로 돌아가기</a>
+</div>
+
+</div>
+</body>
+</html>
