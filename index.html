@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v41 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v41.1 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -178,7 +178,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v41</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v41.1</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -853,8 +853,8 @@ function init() {
   if(deptSel) deptSel.addEventListener('change',function(){applyDeptPreset(this.value);});
   ['newPatientBtn','newPatientBtn2'].forEach(id=>document.getElementById(id)?.addEventListener('click',newPatient));
   // Nari 설정: 기본값(추정) + localStorage
-  const nariDefaults={nariUrl:'https://api.narilabs.com/v1/audio/transcriptions',nariModel:'nari-qwen3-asr-1.7b',nariModelFast:'nari-qwen3-asr-1.7b-fast'};
-  Object.entries(nariDefaults).forEach(([id,def])=>{const e=document.getElementById(id);if(!e)return;e.value=localStorage.getItem('soap_'+id)||def;e.addEventListener('input',()=>localStorage.setItem('soap_'+id,e.value.trim()));});
+  const nariDefaults={nariUrl:'https://api.narilabs.com/v1/audio/transcriptions',nariModel:'qwen3-asr:free',nariModelFast:'qwen3-asr-fast:free'};
+  Object.entries(nariDefaults).forEach(([id,def])=>{const e=document.getElementById(id);if(!e)return;let v=localStorage.getItem('soap_'+id)||def;if(/^nari-qwen3-asr/.test(v))v=def;e.value=v;e.addEventListener('input',()=>localStorage.setItem('soap_'+id,e.value.trim()));});
 }
 
 function renderApiKeys() {
