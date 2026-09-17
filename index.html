@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="nari-bridge-token" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v41.4 · Nari 연결 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v42 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -124,7 +124,25 @@ textarea::placeholder{color:var(--dim)}
 .empty-state{padding:50px 20px;text-align:center;color:var(--dim);font-size:12px;line-height:2}
 .toast{position:fixed;bottom:20px;right:20px;background:var(--green);color:#080d1a;padding:8px 16px;border-radius:6px;font-size:11px;font-weight:700;opacity:0;transform:translateY(6px);transition:all .3s;z-index:999;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
-.rec-zone{display:flex;flex-direction:column;align-items:center;padding:20px 0}
+.rec-zone{display:flex;flex-direction:column;align-items:center;padding:14px 0 8px}
+.stt-pick{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:8px}
+.stt-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);font-size:10.5px;cursor:pointer;color:var(--text);transition:all .15s;white-space:nowrap}
+.stt-chip:hover{border-color:var(--accent)}
+.stt-chip.sel{border-color:var(--green);background:rgba(6,214,160,.15);color:var(--green);font-weight:700}
+.stt-chip small{font-size:8.5px;color:var(--dim);font-weight:400}
+.stt-chip.sel small{color:var(--green);opacity:.8}
+.stt-more{font-size:9px;color:var(--dim);cursor:pointer;text-decoration:underline dotted;align-self:center}
+.rec-status{display:flex;align-items:center;gap:6px;justify-content:center;font-size:10px;margin:2px 0 6px;min-height:16px}
+.rec-status .led{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.rec-status.ok .led{background:var(--green);box-shadow:0 0 6px var(--green)}
+.rec-status.bad .led{background:#ef4444;box-shadow:0 0 6px #ef4444}
+.rec-status.wait .led{background:#eab308;animation:blink .8s infinite}
+.rec-flow{display:flex;gap:0;justify-content:center;margin-top:8px;font-size:9px;color:var(--dim)}
+.rec-flow span{padding:3px 8px;border:1px solid var(--border);background:var(--surface2)}
+.rec-flow span:first-child{border-radius:10px 0 0 10px}.rec-flow span:last-child{border-radius:0 10px 10px 0}
+.rec-flow span.on{color:var(--text);border-color:var(--accent);background:rgba(0,180,216,.12)}
+.rec-flow span.done{color:var(--green);border-color:rgba(6,214,160,.4)}
+.rec-opts{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:6px;font-size:10px;color:var(--dim);flex-wrap:wrap}
 .rec-btn{width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;box-shadow:0 0 20px rgba(0,180,216,.15)}
 .rec-btn:hover{border-color:#fff;box-shadow:0 0 28px rgba(0,180,216,.35)}
 .rec-btn.recording{border-color:#ef4444;box-shadow:0 0 32px rgba(239,68,68,.4);animation:recPulse 1.5s ease-in-out infinite}
@@ -179,7 +197,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v41.4 · Nari 연결</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v42</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -422,49 +440,48 @@ MRI 찍고 가바펜틴 시작하려고 함.
 🚀 Ctrl+Enter = 바로 SOAP 변환"></textarea>
     </div>
     <div class="input-pane" id="pane-rec">
-      <div style="font-size:9px;color:var(--dim);text-align:center;margin-bottom:2px">HTTPS 또는 이 PC의 중계 앱에서 녹음 가능 · <span id="recMimeInfo"></span></div>
-      <div style="display:flex;align-items:center;gap:4px;justify-content:center;margin-bottom:6px">
-        <span style="font-size:10px;color:var(--dim)">🎤 STT 엔진:</span>
-        <select class="api-inp" id="sttEngine" style="width:auto;font-size:10px;padding:4px 8px">
-          <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
-          <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
-          <option value="nari">🌸 Nari Qwen3-ASR 1.7B (PC 중계)</option>
-          <option value="nari-fast">🌸 Nari Qwen3-ASR 1.7B Fast (PC 중계)</option>
-          <option value="or-asr">🌐 OpenRouter Qwen3-ASR 0.6B</option>
-          <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
-          <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
-          <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
-          <option value="gpt4o-dia">🤖 GPT-4o Transcribe (화자분리)</option>
-          <option value="openai">🤖 OpenAI Whisper-1</option>
-        </select>
+      <!-- 1) 어떤 귀로 들을까 -->
+      <div style="font-size:10px;color:var(--dim);text-align:center;margin-bottom:4px">① 음성인식 엔진 — 하나만 고르면 됩니다</div>
+      <div class="stt-pick" id="sttPick">
+        <label class="stt-chip sel" data-eng="groq-turbo" title="무료 티어 · 5분 ≈ ₩5 · 제일 빠름">🚀 Groq Turbo <small>기본·무료</small></label>
+        <label class="stt-chip" data-eng="nari-fast" title="이 PC의 중계창(start_windows.cmd)이 켜져 있어야 함 · 무료 베타">🌸 Nari 1.7B <small>PC 중계·무료베타</small></label>
+        <label class="stt-chip" data-eng="gemini-tx" title="진료과별 의학용어 사전 100개를 같이 보냄 · 약 이름에 강함">💎 Gemini <small>의학용어 사전</small></label>
+        <label class="stt-chip" data-eng="gemini-tx-dia" title="화자1/화자2로 의사·환자 구분">💎 Gemini <small>화자분리</small></label>
+        <span class="stt-more" id="sttMoreBtn">더 보기 ▾</span>
       </div>
-      <details style="margin:0 auto 6px;max-width:520px;font-size:10px;color:var(--dim)" open>
-        <summary style="cursor:pointer;text-align:center">🌸 Nari 연결</summary>
-        <div style="margin-top:6px;line-height:1.7;text-align:center">
-          압축을 푼 폴더에서 <b>start_windows.cmd</b>를 실행해 열리는 화면을 사용하세요.<br>
-          Nari 키는 실행창에 입력합니다. 기존 Groq 등은 위쪽 API 키를 사용합니다.<br>
-          <button type="button" class="api-inp" onclick="checkNariBridge()" style="cursor:pointer">연결 확인</button>
-          <span id="nariBridgeStatus" role="status" aria-live="polite">연결 확인 전</span><br>
-          최대 20분 · 녹음 종료 후 전사 · Fast $0.12/시간, Standard $0.06/시간
-        </div>
-      </details>
-      <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="font-size:10px;color:var(--dim)">⏱ 자동종료:</span>
-        <select class="api-inp" id="recAutoStop" style="width:auto;font-size:10px;padding:4px 8px">
-          <option value="180">3분</option>
-          <option value="300">5분</option>
-          <option value="420" selected>7분 (기본)</option>
-          <option value="600">10분</option>
-          <option value="0">끄기</option>
-        </select>
-        <label style="font-size:10px;color:var(--dim);display:flex;align-items:center;gap:3px;cursor:pointer">
-          <input type="checkbox" id="autoSoapCheck" checked style="accent-color:var(--green)"> 🧼 자동 SOAP
-        </label>
+      <div class="stt-pick" id="sttPickMore" style="display:none">
+        <label class="stt-chip" data-eng="groq-v3" title="Groq 고정밀 · 5분 ≈ ₩13">🚀 Groq V3 <small>고정밀</small></label>
+        <label class="stt-chip" data-eng="nari" title="Nari 표준 (Fast보다 느리고 반값)">🌸 Nari 표준 <small>PC 중계</small></label>
+        <label class="stt-chip" data-eng="or-asr" title="같은 계열 0.6B · OpenRouter 키">🌐 OpenRouter Qwen3-ASR <small>0.6B</small></label>
+        <label class="stt-chip" data-eng="gpt-tx" title="OpenAI 최신 STT">🤖 GPT-Transcribe</label>
+        <label class="stt-chip" data-eng="gpt4o-dia" title="OpenAI 화자분리">🤖 GPT-4o <small>화자분리</small></label>
+        <label class="stt-chip" data-eng="openai" title="구형 백업">🤖 Whisper-1</label>
       </div>
+      <select id="sttEngine" style="display:none">
+        <option value="groq-turbo" selected>Groq Turbo</option><option value="groq-v3">Groq V3</option>
+        <option value="nari">Nari</option><option value="nari-fast">Nari Fast</option><option value="or-asr">OpenRouter ASR</option>
+        <option value="gemini-tx">Gemini</option><option value="gemini-tx-dia">Gemini 화자분리</option>
+        <option value="gpt-tx">GPT-Transcribe</option><option value="gpt4o-dia">GPT-4o 화자분리</option><option value="openai">Whisper-1</option>
+      </select>
+      <!-- 2) 준비 상태 한 줄 -->
+      <div class="rec-status" id="recStatus"><span class="led"></span><span id="recStatusTxt">준비 확인 중…</span><button type="button" class="btn-sm" id="nariRecheck" style="display:none;font-size:9px;padding:2px 8px" onclick="refreshRecStatus()">다시 확인</button></div>
+      <span id="nariBridgeStatus" style="display:none"></span>
+      <!-- 3) 큰 버튼 -->
       <div class="rec-zone">
         <div class="rec-btn" id="recBtn" onclick="toggleRecord()"><div class="rec-dot"></div></div>
-        <div class="rec-lbl" id="recLabel">탭하여 녹음 시작</div>
+        <div class="rec-lbl" id="recLabel">② 눌러서 녹음 시작 → 진료 → 다시 눌러서 끝</div>
         <div class="rec-time" id="recTimer">00:00</div>
+      </div>
+      <!-- 4) 진행 흐름 -->
+      <div class="rec-flow" id="recFlow"><span id="rf1">녹음</span><span id="rf2">음성인식</span><span id="rf3">SOAP</span></div>
+      <div class="rec-opts">
+        <label style="display:flex;align-items:center;gap:4px">⏱ 자동종료
+          <select class="api-inp" id="recAutoStop" style="width:auto;font-size:10px;padding:3px 6px">
+            <option value="180">3분</option><option value="300">5분</option><option value="420" selected>7분</option><option value="600">10분</option><option value="0">끄기</option>
+          </select>
+        </label>
+        <label style="display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="autoSoapCheck" checked style="accent-color:var(--green)"> 끝나면 바로 SOAP</label>
+        <span id="recMimeInfo" style="display:none"></span>
       </div>
       <div class="stt-pipeline" id="sttPipe1">
         <div class="stt-step" id="stt1a"><div class="stt-dot"></div>음성인식 중...</div>
@@ -824,6 +841,44 @@ function buildSttPrompt(sttEng){
   return out.join(', ');
 }
 
+// ===== 녹음 탭 UX: 칩 선택 · 준비 LED · 진행 흐름 =====
+const STT_NEEDS={ 'groq-turbo':'groq','groq-v3':'groq','nari':'nari','nari-fast':'nari','or-asr':'openrouter','gemini-tx':'gemini','gemini-tx-dia':'gemini','gpt-tx':'openai','gpt4o-dia':'openai','openai':'openai' };
+function initSttChips(){
+  const sel=document.getElementById('sttEngine');if(!sel)return;
+  const saved=localStorage.getItem('soap_stt_engine');if(saved&&[...sel.options].some(o=>o.value===saved))sel.value=saved;
+  const chips=[...document.querySelectorAll('.stt-chip')];
+  const paint=()=>{chips.forEach(c=>c.classList.toggle('sel',c.dataset.eng===sel.value));const s2=document.getElementById('sttEngine2');if(s2)s2.value=sel.value;};
+  chips.forEach(c=>c.addEventListener('click',()=>{sel.value=c.dataset.eng;localStorage.setItem('soap_stt_engine',sel.value);paint();refreshRecStatus();
+    if(!c.closest('#sttPick')){/* 더보기에서 골랐으면 열어둠 */}}));
+  paint();
+  const more=document.getElementById('sttMoreBtn'),box=document.getElementById('sttPickMore');
+  if(more&&box){more.addEventListener('click',()=>{const open=box.style.display==='none';box.style.display=open?'flex':'none';more.textContent=open?'접기 ▴':'더 보기 ▾';});
+    if(chips.some(c=>c.classList.contains('sel')&&c.closest('#sttPickMore'))){box.style.display='flex';more.textContent='접기 ▴';}}
+  refreshRecStatus();
+}
+function setRecStatus(kind,text,showRecheck){
+  const el=document.getElementById('recStatus'),t=document.getElementById('recStatusTxt'),b=document.getElementById('nariRecheck');
+  if(!el)return;el.className='rec-status '+kind;if(t)t.textContent=text;if(b)b.style.display=showRecheck?'inline-block':'none';
+}
+async function refreshRecStatus(){
+  const eng=document.getElementById('sttEngine')?.value||'groq-turbo';
+  const need=STT_NEEDS[eng]||'openai';
+  if(need==='nari'){
+    setRecStatus('wait','Nari 중계 확인 중…',false);
+    try{await ensureNariBridge();setRecStatus('ok','Nari 중계 연결됨 — 녹음하면 됩니다',true);}
+    catch(e){setRecStatus('bad',e.message,true);}
+    return;
+  }
+  const label=STT_KEY_LABEL[need]||need;
+  if(getKey(need))setRecStatus('ok',label+' 키 확인 — 녹음하면 됩니다',false);
+  else setRecStatus('bad',label+' API 키가 없습니다 — 위 🔑 카드에 입력하세요',false);
+}
+function recFlow(stage){ // 0 idle,1 recording,2 stt,3 soap,4 done
+  const ids=['rf1','rf2','rf3'];
+  ids.forEach((id,i)=>{const e=document.getElementById(id);if(!e)return;e.className=stage>i+1?'done':stage===i+1?'on':'';});
+  if(stage===4)ids.forEach(id=>document.getElementById(id)?.classList.add('done'));
+}
+
 // ===== 설정 내보내기/가져오기 (localStorage soap_* 전체) =====
 function exportSettings(){
   const data={};
@@ -877,6 +932,8 @@ function init() {
   const deptSel=document.getElementById('deptSelect');
   if(deptSel) deptSel.addEventListener('change',function(){applyDeptPreset(this.value);});
   ['newPatientBtn','newPatientBtn2'].forEach(id=>document.getElementById(id)?.addEventListener('click',newPatient));
+  initSttChips();
+  document.getElementById('sttEngine2')?.addEventListener('change',e=>{const sel=document.getElementById('sttEngine');if(sel){sel.value=e.target.value;localStorage.setItem('soap_stt_engine',sel.value);document.querySelectorAll('.stt-chip').forEach(c=>c.classList.toggle('sel',c.dataset.eng===sel.value));}});
   // Nari credentials live in the local bridge, not in browser storage.
   if(location.hostname==='127.0.0.1') checkNariBridge();
 }
@@ -893,7 +950,7 @@ function renderApiKeys() {
   });
 }
 
-function saveKey(id,val){
+function saveKey(id,val){setTimeout(refreshRecStatus,50);
   val=val.replace(/[\s\u200b\u200c\u200d\ufeff\u00a0]/g,'').trim();
   if(val.length>5){apiKeys[id]=val;localStorage.setItem('soap_key_'+id,val);document.getElementById('key_'+id).value=val;document.getElementById('st_'+id).textContent='✓';document.getElementById('st_'+id).className='api-st ok';}
   else{delete apiKeys[id];localStorage.removeItem('soap_key_'+id);document.getElementById('st_'+id).textContent='미입력';document.getElementById('st_'+id).className='api-st no';}
@@ -1496,7 +1553,7 @@ async function runAll(){
   if(runId!==currentRunId)return;
   isRunning=false;runAbort=null;
   btn.disabled=false;btn.textContent='🧼 SOAP 변환 시작!';
-  showToast(`✅ ${ok} 성공 · ❌ ${fail} 실패`);
+  showToast(`✅ ${ok} 성공 · ❌ ${fail} 실패`);recFlow(4);
   if(ok){
     buildImagePrompt();
     document.getElementById('imgSection').style.display='block';
@@ -1517,7 +1574,7 @@ function newPatient(){
   document.getElementById('imgResults').replaceChildren();
   document.getElementById('imgSection').style.display='none';
   document.getElementById('progressFill').style.width='0%';
-  ['sttPipe1','sttPipe2'].forEach(id=>document.getElementById(id)?.classList.remove('show'));
+  ['sttPipe1','sttPipe2'].forEach(id=>document.getElementById(id)?.classList.remove('show'));recFlow(0);
   ['stt1a','stt1b','stt2a','stt2b'].forEach(id=>{const e=document.getElementById(id);if(e)e.className='stt-step';});
   const btn=document.getElementById('goBtn');btn.disabled=false;btn.textContent='🧼 SOAP 변환 시작!';
   showToast('🆕 새 환자 준비 완료');
@@ -1765,9 +1822,9 @@ async function startRecording(){
       const autoSoap=document.getElementById('autoSoapCheck')?.checked||false;
       runWhisper(blob,'recording.'+ext,'sttPipe1','stt1a','stt1b',sttEng,autoSoap);
     };
-    mediaRecorder.start(1000);isRecording=true;recSeconds=0;
+    mediaRecorder.start(1000);isRecording=true;recSeconds=0;recFlow(1);
     document.getElementById('recBtn').classList.add('recording');
-    document.getElementById('recLabel').textContent='탭하여 중지';
+    document.getElementById('recLabel').textContent='녹음 중 — 끝나면 다시 누르세요';
     document.getElementById('recTimer').classList.add('show');
     recInterval=setInterval(updateRecTimer,1000);
   }catch(err){showToast('⚠️ 마이크 접근 실패 — HTTPS 필요');}
@@ -1777,7 +1834,7 @@ function stopRecording(){
   if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();
   isRecording=false;clearInterval(recInterval);
   document.getElementById('recBtn').classList.remove('recording');document.getElementById('recBtn').classList.add('processing');
-  document.getElementById('recLabel').textContent='처리 중...';document.getElementById('recTimer').classList.remove('show');
+  document.getElementById('recLabel').textContent='음성인식 중…';document.getElementById('recTimer').classList.remove('show');recFlow(2);
 }
 
 async function handleFileUpload(e){
@@ -1895,6 +1952,7 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
     transcript=(transcript||'').trim();
     if(!transcript)throw new Error(cfg.label+': 인식된 텍스트 없음');
     s1.className='stt-step done';s2.className='stt-step done';
+    recFlow(autoSoap?3:4);
     document.getElementById('inputTxt').value=transcript;switchInput('text');
     showToast('✅ '+cfg.label+' 음성인식 완료!');
     // 자동 SOAP 실행
@@ -1903,7 +1961,7 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
       setTimeout(()=>runAll(),500);
     }
   }catch(err){showToast('❌ '+err.message);s1.className='stt-step';s2.className='stt-step';}
-  finally{document.getElementById('recBtn')?.classList.remove('processing');document.getElementById('recLabel').textContent='탭하여 녹음 시작';}
+  finally{document.getElementById('recBtn')?.classList.remove('processing');document.getElementById('recLabel').textContent='② 눌러서 녹음 시작 → 진료 → 다시 눌러서 끝';}
 }
 
 
