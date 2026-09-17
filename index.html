@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v40.1 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v41 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -178,7 +178,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v40.1</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v41</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -421,6 +421,9 @@ MRI 찍고 가바펜틴 시작하려고 함.
         <select class="api-inp" id="sttEngine" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
           <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
+          <option value="nari">🌸 Nari Qwen3-ASR (무료 베타·한국 회사)</option>
+          <option value="nari-fast">🌸 Nari Qwen3-ASR Fast (40ms)</option>
+          <option value="or-asr">🌐 OpenRouter Qwen3-ASR</option>
           <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
           <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
           <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
@@ -428,6 +431,17 @@ MRI 찍고 가바펜틴 시작하려고 함.
           <option value="openai">🤖 OpenAI Whisper-1</option>
         </select>
       </div>
+      <details style="margin:0 auto 6px;max-width:520px;font-size:9px;color:var(--dim)">
+        <summary style="cursor:pointer;text-align:center">🌸 Nari Labs 설정 (app.narilabs.com 대시보드의 값으로 맞추세요)</summary>
+        <div style="display:grid;grid-template-columns:1fr;gap:3px;margin-top:4px">
+          <input type="text" class="api-inp" id="nariUrl" placeholder="엔드포인트 URL" style="font-size:9px">
+          <div style="display:flex;gap:3px">
+            <input type="text" class="api-inp" id="nariModel" placeholder="모델 ID (표준)" style="font-size:9px">
+            <input type="text" class="api-inp" id="nariModelFast" placeholder="모델 ID (Fast)" style="font-size:9px">
+          </div>
+          <div>OpenAI Whisper 호환 형식(multipart, file+model+language)으로 보냅니다. 404가 뜨면 URL·모델 ID를 대시보드 예제와 맞추세요.</div>
+        </div>
+      </details>
       <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="font-size:10px;color:var(--dim)">⏱ 자동종료:</span>
         <select class="api-inp" id="recAutoStop" style="width:auto;font-size:10px;padding:4px 8px">
@@ -457,6 +471,9 @@ MRI 찍고 가바펜틴 시작하려고 함.
         <select class="api-inp" id="sttEngine2" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
           <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
+          <option value="nari">🌸 Nari Qwen3-ASR (무료 베타·한국 회사)</option>
+          <option value="nari-fast">🌸 Nari Qwen3-ASR Fast (40ms)</option>
+          <option value="or-asr">🌐 OpenRouter Qwen3-ASR</option>
           <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
           <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
           <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
@@ -621,7 +638,8 @@ const API_KEYS_CONFIG = [
   {id:'xai',label:'🤖 xAI (Grok)',placeholder:'xai-...'},
   {id:'deepseek',label:'💰 DeepSeek',placeholder:'sk-...'},
   {id:'cerebras',label:'⚡ Cerebras',placeholder:'csk-...'},
-  {id:'openrouter',label:'🌐 OpenRouter (최신 20종)',placeholder:'sk-or-...'},
+  {id:'openrouter',label:'🌐 OpenRouter (최신 20종 + Qwen3-ASR STT)',placeholder:'sk-or-...'},
+  {id:'nari',label:'🌸 Nari Labs (Qwen3-ASR STT · 무료 베타)',placeholder:'nari_...'},
   {id:'meta',label:'🟦 Meta Muse Spark (api.meta.ai)',placeholder:'meta_...'},
   {id:'novelai',label:'🎨 NovelAI',placeholder:'pst-...'},
 ];
@@ -834,6 +852,9 @@ function init() {
   const deptSel=document.getElementById('deptSelect');
   if(deptSel) deptSel.addEventListener('change',function(){applyDeptPreset(this.value);});
   ['newPatientBtn','newPatientBtn2'].forEach(id=>document.getElementById(id)?.addEventListener('click',newPatient));
+  // Nari 설정: 기본값(추정) + localStorage
+  const nariDefaults={nariUrl:'https://api.narilabs.com/v1/audio/transcriptions',nariModel:'nari-qwen3-asr-1.7b',nariModelFast:'nari-qwen3-asr-1.7b-fast'};
+  Object.entries(nariDefaults).forEach(([id,def])=>{const e=document.getElementById(id);if(!e)return;e.value=localStorage.getItem('soap_'+id)||def;e.addEventListener('input',()=>localStorage.setItem('soap_'+id,e.value.trim()));});
 }
 
 function renderApiKeys() {
@@ -1695,8 +1716,8 @@ function updateRecTimer(){
 }
 
 // STT 엔진 → 필요한 키
-function sttKeyFor(eng){ return eng.startsWith('groq')?'groq':eng.startsWith('gemini')?'gemini':'openai'; }
-const STT_KEY_LABEL={groq:'Groq',gemini:'Gemini',openai:'OpenAI'};
+function sttKeyFor(eng){ return eng.startsWith('groq')?'groq':eng.startsWith('gemini')?'gemini':eng.startsWith('nari')?'nari':eng.startsWith('or-')?'openrouter':'openai'; }
+const STT_KEY_LABEL={groq:'Groq',gemini:'Gemini',openai:'OpenAI',nari:'Nari Labs',openrouter:'OpenRouter'};
 
 async function toggleRecord(){if(isRecording)stopRecording();else startRecording();}
 async function startRecording(){
@@ -1805,6 +1826,9 @@ const STT_CONFIG={
   'openai':{url:'https://api.openai.com/v1/audio/transcriptions',model:'whisper-1',label:'OpenAI Whisper',fmt:'text'},
   'gpt-tx':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-transcribe',label:'GPT-Transcribe',fmt:'json'},
   'gpt4o-dia':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-4o-transcribe-diarize',label:'GPT-4o Transcribe 화자분리',fmt:'diarized_json'},
+  'nari':{label:'Nari Qwen3-ASR',nari:true,fast:false,fmt:'json'},
+  'nari-fast':{label:'Nari Qwen3-ASR Fast',nari:true,fast:true,fmt:'json'},
+  'or-asr':{label:'OpenRouter Qwen3-ASR',openrouter:true,model:'qwen/qwen3-asr-0.6b'},
   'gemini-tx':{label:'Gemini 3.5 Transcribe',gemini:true,diarize:false},
   'gemini-tx-dia':{label:'Gemini 3.5 Transcribe 화자분리',gemini:true,diarize:true},
 };
@@ -1820,6 +1844,17 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
     let transcript='';
     if(cfg.gemini){
       transcript=await runGeminiTranscribe(blob,filename,key,cfg.diarize);
+    } else if(cfg.openrouter){
+      transcript=await runOpenRouterASR(blob,filename,key,cfg.model);
+    } else if(cfg.nari){
+      const url=(document.getElementById('nariUrl')?.value||'').trim();
+      const model=(document.getElementById(cfg.fast?'nariModelFast':'nariModel')?.value||'').trim();
+      if(!url||!model)throw new Error('Nari 설정(URL·모델 ID)을 입력하세요');
+      const fd=new FormData();fd.append('file',blob,filename);fd.append('model',model);fd.append('language','ko');fd.append('response_format','json');
+      const r=await fetchWithTimeout(url,{method:'POST',headers:{'Authorization':'Bearer '+key},body:fd},TIMEOUT.stt);
+      if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(cfg.label+' '+r.status+': '+(e.error?.message||e.message||r.statusText)+(r.status===404?' — 🌸 Nari 설정의 URL/모델 ID 확인':''));}
+      const ct=r.headers.get('content-type')||'';
+      if(ct.includes('json')){const j=await r.json();transcript=j.text||j.transcript||'';}else transcript=await r.text();
     } else {
       const ext=filename.split('.').pop().toLowerCase();
       const ok=['mp3','mp4','mpeg','mpga','m4a','wav','webm','ogg','flac'];
@@ -1850,6 +1885,19 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
     }
   }catch(err){showToast('❌ '+err.message);s1.className='stt-step';s2.className='stt-step';}
   finally{document.getElementById('recBtn')?.classList.remove('processing');document.getElementById('recLabel').textContent='탭하여 녹음 시작';}
+}
+
+// OpenRouter STT: JSON + base64 (multipart 아님)
+async function runOpenRouterASR(blob,filename,key,model){
+  if(!key)throw new Error('OpenRouter 키 필요');
+  const ext=(filename.split('.').pop()||'webm').toLowerCase();
+  const fmtMap={webm:'webm',mp3:'mp3',wav:'wav',m4a:'m4a',mp4:'mp4',ogg:'ogg',flac:'flac',mpeg:'mp3',mpga:'mp3'};
+  const b64=await fileToBase64(blob);
+  const body={model,input_audio:{data:b64,format:fmtMap[ext]||'webm'},language:'ko',response_format:'json'};
+  const r=await fetchWithTimeout('https://openrouter.ai/api/v1/audio/transcriptions',{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json','HTTP-Referer':'https://schockwave720.github.io/soap/','X-Title':'SOAP Maker'},body:JSON.stringify(body)},TIMEOUT.stt);
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||j.error)throw new Error('OpenRouter ASR: '+(j.error?.message||r.status));
+  return j.text||'';
 }
 
 // 화자별 세그먼트 → "화자1: ..." 줄로 병합
