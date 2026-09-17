@@ -2,8 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="nari-bridge-token" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v41.1 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v41.4 · Nari 연결 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -178,7 +179,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v41.1</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v41.4 · Nari 연결</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -200,6 +201,12 @@ textarea::placeholder{color:var(--dim)}
       <span style="color:var(--dim)">• 음성인식(녹음)은 <b>Groq</b> · <b>Gemini</b> · <b>OpenAI</b> 키 중 하나면 됩니다.</span><br>
       <span style="color:var(--dim)">• Groq Whisper = 초고속 무료 · Gemini 3.5 Transcribe = 의학용어 사전 + 화자분리.</span><br>
       <span style="color:var(--dim)">• 나머지는 사용할 AI만 입력하면 됩니다. 전부 입력할 필요 없어요.</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+      <button class="btn-sm" onclick="exportSettings()">📤 설정 내보내기</button>
+      <button class="btn-sm" onclick="document.getElementById('settingsFile').click()">📥 설정 가져오기</button>
+      <input type="file" id="settingsFile" accept=".json" style="display:none" onchange="importSettings(event)">
+      <span style="font-size:9px;color:var(--dim)">API 키 + 프로필 + 약속처방 + 커스텀 모델을 파일 하나로. GitHub Pages ↔ Nari 중계 페이지(127.0.0.1) 사이에 옮길 때 사용</span>
     </div>
     <div class="api-wrap" id="apiWrap"></div>
   </div>
@@ -415,15 +422,15 @@ MRI 찍고 가바펜틴 시작하려고 함.
 🚀 Ctrl+Enter = 바로 SOAP 변환"></textarea>
     </div>
     <div class="input-pane" id="pane-rec">
-      <div style="font-size:9px;color:var(--dim);text-align:center;margin-bottom:2px">HTTPS 환경 필요 (GitHub Pages) · <span id="recMimeInfo"></span></div>
+      <div style="font-size:9px;color:var(--dim);text-align:center;margin-bottom:2px">HTTPS 또는 이 PC의 중계 앱에서 녹음 가능 · <span id="recMimeInfo"></span></div>
       <div style="display:flex;align-items:center;gap:4px;justify-content:center;margin-bottom:6px">
         <span style="font-size:10px;color:var(--dim)">🎤 STT 엔진:</span>
         <select class="api-inp" id="sttEngine" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
           <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
-          <option value="nari">🌸 Nari Qwen3-ASR (무료 베타·한국 회사)</option>
-          <option value="nari-fast">🌸 Nari Qwen3-ASR Fast (40ms)</option>
-          <option value="or-asr">🌐 OpenRouter Qwen3-ASR</option>
+          <option value="nari">🌸 Nari Qwen3-ASR 1.7B (PC 중계)</option>
+          <option value="nari-fast">🌸 Nari Qwen3-ASR 1.7B Fast (PC 중계)</option>
+          <option value="or-asr">🌐 OpenRouter Qwen3-ASR 0.6B</option>
           <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
           <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
           <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
@@ -431,15 +438,14 @@ MRI 찍고 가바펜틴 시작하려고 함.
           <option value="openai">🤖 OpenAI Whisper-1</option>
         </select>
       </div>
-      <details style="margin:0 auto 6px;max-width:520px;font-size:9px;color:var(--dim)">
-        <summary style="cursor:pointer;text-align:center">🌸 Nari Labs 설정 (app.narilabs.com 대시보드의 값으로 맞추세요)</summary>
-        <div style="display:grid;grid-template-columns:1fr;gap:3px;margin-top:4px">
-          <input type="text" class="api-inp" id="nariUrl" placeholder="엔드포인트 URL" style="font-size:9px">
-          <div style="display:flex;gap:3px">
-            <input type="text" class="api-inp" id="nariModel" placeholder="모델 ID (표준)" style="font-size:9px">
-            <input type="text" class="api-inp" id="nariModelFast" placeholder="모델 ID (Fast)" style="font-size:9px">
-          </div>
-          <div>OpenAI Whisper 호환 형식(multipart, file+model+language)으로 보냅니다. 404가 뜨면 URL·모델 ID를 대시보드 예제와 맞추세요.</div>
+      <details style="margin:0 auto 6px;max-width:520px;font-size:10px;color:var(--dim)" open>
+        <summary style="cursor:pointer;text-align:center">🌸 Nari 연결</summary>
+        <div style="margin-top:6px;line-height:1.7;text-align:center">
+          압축을 푼 폴더에서 <b>start_windows.cmd</b>를 실행해 열리는 화면을 사용하세요.<br>
+          Nari 키는 실행창에 입력합니다. 기존 Groq 등은 위쪽 API 키를 사용합니다.<br>
+          <button type="button" class="api-inp" onclick="checkNariBridge()" style="cursor:pointer">연결 확인</button>
+          <span id="nariBridgeStatus" role="status" aria-live="polite">연결 확인 전</span><br>
+          최대 20분 · 녹음 종료 후 전사 · Fast $0.12/시간, Standard $0.06/시간
         </div>
       </details>
       <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
@@ -471,9 +477,9 @@ MRI 찍고 가바펜틴 시작하려고 함.
         <select class="api-inp" id="sttEngine2" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="groq-turbo" selected>🚀 Groq Whisper Turbo (초고속·추천)</option>
           <option value="groq-v3">🚀 Groq Whisper V3 (고정밀)</option>
-          <option value="nari">🌸 Nari Qwen3-ASR (무료 베타·한국 회사)</option>
-          <option value="nari-fast">🌸 Nari Qwen3-ASR Fast (40ms)</option>
-          <option value="or-asr">🌐 OpenRouter Qwen3-ASR</option>
+          <option value="nari">🌸 Nari Qwen3-ASR 1.7B (PC 중계)</option>
+          <option value="nari-fast">🌸 Nari Qwen3-ASR 1.7B Fast (PC 중계)</option>
+          <option value="or-asr">🌐 OpenRouter Qwen3-ASR 0.6B</option>
           <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
           <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
           <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI 최신)</option>
@@ -639,7 +645,6 @@ const API_KEYS_CONFIG = [
   {id:'deepseek',label:'💰 DeepSeek',placeholder:'sk-...'},
   {id:'cerebras',label:'⚡ Cerebras',placeholder:'csk-...'},
   {id:'openrouter',label:'🌐 OpenRouter (최신 20종 + Qwen3-ASR STT)',placeholder:'sk-or-...'},
-  {id:'nari',label:'🌸 Nari Labs (Qwen3-ASR STT · 무료 베타)',placeholder:'nari_...'},
   {id:'meta',label:'🟦 Meta Muse Spark (api.meta.ai)',placeholder:'meta_...'},
   {id:'novelai',label:'🎨 NovelAI',placeholder:'pst-...'},
 ];
@@ -819,6 +824,26 @@ function buildSttPrompt(sttEng){
   return out.join(', ');
 }
 
+// ===== 설정 내보내기/가져오기 (localStorage soap_* 전체) =====
+function exportSettings(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('soap_'))data[k]=localStorage.getItem(k);}
+  const blob=new Blob([JSON.stringify({app:'soap-maker',exported:new Date().toISOString(),data},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='soap_settings.json';document.body.appendChild(a);a.click();a.remove();
+  showToast('📤 설정 파일 저장됨 (API 키 포함 — 남에게 보내지 마세요)');
+}
+async function importSettings(e){
+  const f=e.target.files[0];if(!f)return;
+  try{
+    const j=JSON.parse(await f.text());
+    const data=j.data||j;let n=0;
+    for(const [k,v] of Object.entries(data)){if(k.startsWith('soap_')&&typeof v==='string'){localStorage.setItem(k,v);n++;}}
+    showToast('📥 설정 '+n+'개 적용 — 새로고침합니다');
+    setTimeout(()=>location.reload(),900);
+  }catch(err){showToast('❌ 설정 파일 읽기 실패: '+err.message);}
+  finally{e.target.value='';}
+}
+
 // ===== INIT =====
 function init() {
   renderApiKeys(); renderModels(); renderCustomModels(); loadProfile();
@@ -852,9 +877,8 @@ function init() {
   const deptSel=document.getElementById('deptSelect');
   if(deptSel) deptSel.addEventListener('change',function(){applyDeptPreset(this.value);});
   ['newPatientBtn','newPatientBtn2'].forEach(id=>document.getElementById(id)?.addEventListener('click',newPatient));
-  // Nari 설정: 기본값(추정) + localStorage
-  const nariDefaults={nariUrl:'https://api.narilabs.com/v1/audio/transcriptions',nariModel:'qwen3-asr:free',nariModelFast:'qwen3-asr-fast:free'};
-  Object.entries(nariDefaults).forEach(([id,def])=>{const e=document.getElementById(id);if(!e)return;let v=localStorage.getItem('soap_'+id)||def;if(/^nari-qwen3-asr/.test(v))v=def;e.value=v;e.addEventListener('input',()=>localStorage.setItem('soap_'+id,e.value.trim()));});
+  // Nari credentials live in the local bridge, not in browser storage.
+  if(location.hostname==='127.0.0.1') checkNariBridge();
 }
 
 function renderApiKeys() {
@@ -1723,7 +1747,8 @@ async function toggleRecord(){if(isRecording)stopRecording();else startRecording
 async function startRecording(){
   const sttEng=document.getElementById('sttEngine')?.value||'groq-turbo';
   const needKey=sttKeyFor(sttEng);
-  if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' API Key 필요');return;}
+  if(needKey==='nari'){try{await ensureNariBridge();}catch(e){showToast('⚠️ '+e.message);return;}}
+  else if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' API Key 필요');return;}
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:16000,channelCount:1,echoCancellation:true,noiseSuppression:true}});
     const mimes=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4','audio/mpeg'];
@@ -1759,7 +1784,8 @@ async function handleFileUpload(e){
   const file=e.target.files[0];if(!file)return;
   const sttEng=document.getElementById('sttEngine2')?.value||'groq-turbo';
   const needKey=sttKeyFor(sttEng);
-  if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' Key 필요');e.target.value='';return;}
+  if(needKey==='nari'){try{await ensureNariBridge();}catch(err){showToast('⚠️ '+err.message);e.target.value='';return;}}
+  else if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' Key 필요');e.target.value='';return;}
   if(file.size>25*1024*1024){showToast('⚠️ 25MB 초과');e.target.value='';return;}
   document.getElementById('uploadBox').classList.add('processing');
   document.getElementById('uploadText').textContent='처리 중: '+file.name;
@@ -1847,14 +1873,7 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
     } else if(cfg.openrouter){
       transcript=await runOpenRouterASR(blob,filename,key,cfg.model);
     } else if(cfg.nari){
-      const url=(document.getElementById('nariUrl')?.value||'').trim();
-      const model=(document.getElementById(cfg.fast?'nariModelFast':'nariModel')?.value||'').trim();
-      if(!url||!model)throw new Error('Nari 설정(URL·모델 ID)을 입력하세요');
-      const fd=new FormData();fd.append('file',blob,filename);fd.append('model',model);fd.append('language','ko');fd.append('response_format','json');
-      const r=await fetchWithTimeout(url,{method:'POST',headers:{'Authorization':'Bearer '+key},body:fd},TIMEOUT.stt);
-      if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(cfg.label+' '+r.status+': '+(e.error?.message||e.message||r.statusText)+(r.status===404?' — 🌸 Nari 설정의 URL/모델 ID 확인':''));}
-      const ct=r.headers.get('content-type')||'';
-      if(ct.includes('json')){const j=await r.json();transcript=j.text||j.transcript||'';}else transcript=await r.text();
+      transcript=await runNariBridge(blob,cfg.fast);
     } else {
       const ext=filename.split('.').pop().toLowerCase();
       const ok=['mp3','mp4','mpeg','mpga','m4a','wav','webm','ogg','flac'];
@@ -1885,6 +1904,75 @@ async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
     }
   }catch(err){showToast('❌ '+err.message);s1.className='stt-step';s2.className='stt-step';}
   finally{document.getElementById('recBtn')?.classList.remove('processing');document.getElementById('recLabel').textContent='탭하여 녹음 시작';}
+}
+
+
+// Nari uses an authenticated server-side WebSocket; this page talks to its local bridge.
+async function ensureNariBridge(){
+  if(location.protocol!=='http:' || location.hostname!=='127.0.0.1')
+    throw new Error('Nari는 start_windows.cmd로 열린 화면에서 사용하세요');
+  const token=document.querySelector('meta[name="nari-bridge-token"]')?.content;
+  if(!token)throw new Error('중계 프로그램이 연 화면이 아닙니다. start_windows.cmd를 실행하세요');
+  let r;
+  try{r=await fetchWithTimeout('/api/status',{cache:'no-store'},5000);}
+  catch(e){throw new Error('PC 중계에 연결되지 않습니다. 실행창이 열려 있는지 확인하세요');}
+  const data=await r.json();
+  if(!r.ok||data.service!=='soap-nari-local-v41.3')throw new Error('Nari 중계 프로그램 버전을 확인하세요');
+  if(!data.key_configured)throw new Error('중계 실행창에서 Nari 키를 등록하세요');
+  return token;
+}
+async function checkNariBridge(){
+  const out=document.getElementById('nariBridgeStatus');
+  if(out)out.textContent='확인 중…';
+  try{await ensureNariBridge();if(out)out.textContent='연결됨 · 실제 음성 시험 필요';}
+  catch(e){if(out)out.textContent=e.message;}
+}
+async function nariWav(blob){
+  let ctx;
+  try{
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const decoded=await ctx.decodeAudioData(await blob.arrayBuffer());
+    if(!decoded.length||decoded.duration>1200)throw new Error('Nari 녹음은 0초 초과, 최대 20분입니다');
+    const frames=Math.ceil(decoded.duration*16000);
+    const offline=new OfflineAudioContext(1,frames,16000);
+    const source=offline.createBufferSource();source.buffer=decoded;
+    source.connect(offline.destination);source.start();
+    const mono=(await offline.startRendering()).getChannelData(0);
+    const bytes=new ArrayBuffer(44+mono.length*2),v=new DataView(bytes);
+    const str=(at,t)=>{for(let i=0;i<t.length;i++)v.setUint8(at+i,t.charCodeAt(i));};
+    str(0,'RIFF');v.setUint32(4,36+mono.length*2,true);str(8,'WAVE');str(12,'fmt ');
+    v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+    v.setUint32(24,16000,true);v.setUint32(28,32000,true);v.setUint16(32,2,true);
+    v.setUint16(34,16,true);str(36,'data');v.setUint32(40,mono.length*2,true);
+    for(let i=0;i<mono.length;i++){let x=Math.max(-1,Math.min(1,mono[i]));v.setInt16(44+2*i,x<0?x*32768:x*32767,true);}
+    return new Blob([bytes],{type:'audio/wav'});
+  }catch(e){
+    if(e.message?.includes('최대 20분'))throw e;
+    throw new Error('브라우저가 이 오디오를 변환하지 못했습니다. WAV·MP3 파일로 다시 시도하세요');
+  }finally{if(ctx)await ctx.close();}
+}
+async function runNariBridge(blob,fast){
+  const token=await ensureNariBridge();
+  const wav=await nariWav(blob);
+  const model=fast?'qwen3-asr-fast':'qwen3-asr';
+  let r;
+  try{r=await fetchWithTimeout('/api/nari/transcribe?model='+encodeURIComponent(model),{
+    method:'POST',headers:{'Content-Type':'audio/wav','X-Bridge-Token':token},body:wav
+  },510000);}catch(e){throw new Error('Nari 연결이 끊겼거나 시간이 초과됐습니다. 중계 실행창을 확인하세요');}
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok||!d.ok){
+    if(d.partial_text){document.getElementById('inputTxt').value=d.partial_text;switchInput('text');}
+    const messages={INVALID_API_KEY:'Nari 키 인증 실패',INSUFFICIENT_CREDITS:'Nari 크레딧 부족',
+      FORBIDDEN:'Nari 계정 사용 권한 확인 필요',BUSY:'다른 전사가 끝난 뒤 다시 시도하세요',
+      RATE_LIMITED:'Nari 호출 한도 초과',LOCAL_TIMEOUT:'Nari 응답 시간 초과',
+      INVALID_MODEL:'Nari 모델 ID 오류',INVALID_WAV:'오디오 형식 또는 길이 오류'};
+    const reason=messages[d.error]||d.message||d.error||('중계 HTTP '+r.status);
+    const message=reason+(d.partial_text?' · 완료된 일부 텍스트만 보존됨':'');
+    const status=document.getElementById('nariBridgeStatus');if(status)status.textContent=message;
+    throw new Error(message);
+  }
+  const status=document.getElementById('nariBridgeStatus');if(status)status.textContent='Nari 전사 완료';
+  return d.text||'';
 }
 
 // OpenRouter STT: JSON + base64 (multipart 아님)
