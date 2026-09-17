@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>구리센트럴 비누제조기 v39.3 | SOAP Maker</title>
+<title>구리센트럴 비누제조기 v40 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -178,7 +178,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v39.3</span></h1>
+  <h1>🧼 구리센트럴 <span>비누제조기</span> <span style="font-size:11px;color:var(--dim);font-weight:400">v40</span></h1>
   <p class="sub">음성·텍스트·문서·영상자료 등 다양한 입력 → Multi-AI SOAP 자동 작성 · 의료 이미지 생성 · MRI/CT 분석 반영</p>
   <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
     <a href="./guide.html" style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.3);border-radius:16px;color:var(--accent);font-size:11px;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,180,216,.25)'" onmouseout="this.style.background='rgba(0,180,216,.1)'">📖 사용 설명서</a>
@@ -648,6 +648,19 @@ EMR FORMAT (mandatory, overrides any format hint above):
 - No bullets, dashes, asterisks, numbering, markdown, or bold. No sub-labels such as CC:, HPI:, PMHx:, PSHx:, P/I, P/Hx, ROS:, Meds:, Allergy:, Dx:, DDx:, Rx:, F/U: — just write the content line.
 - One blank line between sections.
 - No preamble, no closing remarks, no disclaimers, no "consult/refer to physician", no "recommend physician review", no "for reference only".`;
+
+// 임상 스타일 규칙 — 모든 프롬프트 뒤에 붙음 (O 영어, A 인과 진단 + 심사기준 논거, S 잡담 제거)
+const CLINICAL_STYLE=`
+
+CLINICAL STYLE (mandatory):
+S — Keep only statements that bear on the diagnosis or the plan. Drop chatter, greetings, insurance talk, repeated or trivial remarks, unrelated life details. Korean allowed in S.
+O — ENGLISH medical terminology ONLY. No Korean in O. Standard abbreviations and grading: SLR Rt (+) 30°, motor G4/5 Rt EHL, hypoesthesia L5 dermatome, DTR knee 2+/2+, ankle 1+/2+, Spurling (+), gait, ROM, VAS. Imaging as: modality, level, finding, grade (e.g. MRI L4-5 central HNP with Rt L5 root compression; L4-5 severe central stenosis, ligamentum flavum hypertrophy; L4 on L5 grade I spondylolisthesis).
+A — Not a bare label. Write the diagnosis WITH its cause and the link to symptoms, in the form "<diagnosis>, due to / secondary to <structural cause>, consistent with <key S/O findings>". English preferred. Then, when the input supports it, add an explicit reviewer-ready rationale line for each major decision:
+  • Surgical indication (severe HNP, severe stenosis, spondylolisthesis with instability): state in review-criteria language the qualifying facts that are present — duration of conservative treatment without improvement, prior injection/physiotherapy, objective neurologic deficit (motor weakness with grade, sensory change, bowel/bladder), imaging-symptom concordance at the same level/side, functional limitation (walking distance, work/ADL), VAS. Example: "Surgical indication: Rt L5 radiculopathy with EHL weakness G4, MRI L4-5 HNP concordant, 8 weeks conservative tx incl. TFESI ×2 without improvement, VAS 8, ADL limited."
+  • MRI / advanced imaging order: state the indication in insurance-review terms present in the input — radiculopathy with neurologic sign, red flag (trauma, cancer hx, fever, weight loss, cauda equina), progressive deficit, symptoms persisting ≥6 weeks despite conservative treatment, preoperative evaluation, change of clinical picture. Example: "MRI L-spine indicated: radicular pain with SLR (+) and L5 hypoesthesia, persisting 6 weeks despite medication and physiotherapy."
+  • Injection / procedure: level, side, indication, failed prior step.
+Use ONLY facts present in the input for these rationales. Never invent duration, grades, prior treatment or deficits. If the qualifying facts are absent, write the diagnosis and cause without the rationale line — do not pad.
+P — Concrete orders. Drug + dose + frequency + duration, test name, procedure with level/side, F/U interval. English preferred.`;
 
 const SOAP_PROMPTS = {
   brief:`You are a medical documentation AI for a specialist physician.
@@ -1203,11 +1216,11 @@ async function fetchWithTimeout(url,opts,ms,signal,retry=1){
 async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,override){
   const prov=PROVIDERS[provKey],key=getKey(prov.keyId);
   if(!key)throw new Error(`${prov.name} API 키 없음`);
-  const langInst=langMode==='bilingual'?'\n언어: 한글+영어 병기':'\n언어: 영어 약어 위주, S는 한글';
+  const langInst=langMode==='bilingual'?'\n언어: S는 한글, O는 영어 전용, A/P는 영어 위주에 필요 시 한글 병기':'\n언어: S는 한글, O·A·P는 영어 의학용어';
   const profileCtx=getProfileContext();
   const useImg=!override&&medImages.length;
   const imgNote=useImg?'\n\n첨부된 MRI/CT 영상이 있습니다. 영상 소견을 분석하여 O(Objective)와 A(Assessment)에 반영해주세요. 영상에서 관찰되는 이상 소견을 구체적으로 기술하세요.':'';
-  let sysPrompt=SOURCE_OF_TRUTH+(SOAP_PROMPTS[detailLevel]||SOAP_PROMPTS.normal)+langInst+imgNote+(profileCtx?'\n\n의사/병원 정보: '+profileCtx:'')+EMR_FORMAT;
+  let sysPrompt=SOURCE_OF_TRUTH+(SOAP_PROMPTS[detailLevel]||SOAP_PROMPTS.normal)+langInst+imgNote+(profileCtx?'\n\n의사/병원 정보: '+profileCtx:'')+CLINICAL_STYLE+EMR_FORMAT;
   let userMsg=`다음 진료 내용을 SOAP으로 변환해줘:\n\n${inputText}`;
   if(override){sysPrompt=override.sys;userMsg=override.user;}
 
