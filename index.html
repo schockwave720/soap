@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>비누제조기 Personal v46 · Nari | SOAP Maker</title>
+<title>비누제조기 Personal v47 · Nari | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -222,8 +222,8 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v46 · 🌸 Nari · 🔄 자동 갱신</span></h1>
-  <p class="sub">신경외과 개인용 · 🌸 Nari 실시간 자막 STT + 환자 설명 TTS · <span id="bridgeBadge" class="nari-badge off">중계 확인 중…</span></p>
+  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v47 · 🌸 Nari · 🔄 자동 갱신</span></h1>
+  <p class="sub">신경외과 개인용 · 🌸 Nari 실시간 자막 STT · <span id="bridgeBadge" class="nari-badge off">중계 확인 중…</span></p>
   <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
     <button id="newPatientBtn" class="btn-new" title="이전 환자의 입력·영상·결과를 지우고 다음 환자 준비 (API 키·프로필은 유지)">🆕 새 환자</button>
     <a href="./guide.html" class="btn-link">📖 사용 설명서</a>
@@ -373,24 +373,6 @@ textarea::placeholder{color:var(--dim)}
   </div>
 </div>
 
-<!-- 🌸 Nari 음성 (TTS) -->
-<div class="card">
-  <div class="card-hdr"><span class="card-title">🌸 Nari 음성 (환자 설명 읽어주기)</span><span style="font-size:9px;color:var(--dim)" id="ttsHdrInfo">중계 필요</span></div>
-  <div class="card-body">
-    <div style="font-size:10px;color:var(--dim);margin-bottom:6px;line-height:1.5">SOAP 결과마다 <b style="color:var(--text)">🗣 환자 설명</b> 버튼 → 쉬운 한국어 설명문을 만들고, 아래 목소리로 읽어줍니다. 글자당 과금: 표준 $5/1M자 (500자 ≈ ₩3.5).</div>
-    <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
-      <select class="api-inp" id="ttsVoice" style="width:auto;flex:1;min-width:140px;font-size:10px;padding:4px 6px"><option value="">목소리 — 중계 연결 후 자동</option></select>
-      <button class="btn-sm" onclick="loadNariVoices(true)" title="목소리 목록 다시 받기">↻</button>
-    </div>
-    <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-top:6px">
-      <label class="detail-opt sel" data-tts="qwen3-tts"><input type="radio" name="ttsModel" value="qwen3-tts" checked> 표준 $5</label>
-      <label class="detail-opt" data-tts="qwen3-tts-fast"><input type="radio" name="ttsModel" value="qwen3-tts-fast"> Fast $10</label>
-      <button class="btn-sm" onclick="ttsTest()" style="margin-left:auto">🔈 테스트</button>
-    </div>
-    <div id="ttsStatus" style="font-size:9px;color:var(--dim);margin-top:5px;min-height:12px"></div>
-  </div>
-</div>
-
 <!-- ② 진료 입력 -->
 <div class="card card-input">
   <div class="card-hdr"><span class="card-title">② 진료 내용 입력</span><span style="font-size:9px;color:rgba(255,255,255,.7)">세 가지 중 편한 방법으로</span></div>
@@ -424,7 +406,7 @@ textarea::placeholder{color:var(--dim)}
       <div class="stt-pick" id="sttPickMore" style="display:none">
         <label class="stt-chip" data-eng="gemini-tx-dia" title="화자1/화자2로 의사·환자 구분">💎 Gemini <small>화자분리</small></label>
         <label class="stt-chip" data-eng="gpt-tx" title="OpenAI 최신 STT">🤖 GPT-Transcribe</label>
-        <label class="stt-chip" data-eng="gpt4o-dia" title="OpenAI 화자분리">🤖 GPT-4o <small>화자분리</small></label>
+        <label class="stt-chip" data-eng="gpt4o-dia" title="OpenAI 화자분리">🤖 GPT <small>화자분리</small></label>
         <label class="stt-chip" data-eng="openai" title="구형 백업">🤖 Whisper-1</label>
         <label class="stt-chip" data-eng="or-asr" title="OpenRouter 키 필요 · 0.6B">🌐 Qwen3-ASR <small>OpenRouter</small></label>
       </div>
@@ -465,10 +447,10 @@ textarea::placeholder{color:var(--dim)}
         <select class="api-inp" id="sttEngine2" style="width:auto;font-size:10px;padding:4px 8px">
           <option value="nari-fast" selected>🌸 Nari Qwen3-ASR Fast (PC 중계)</option>
           <option value="nari">🌸 Nari Qwen3-ASR 표준 (PC 중계 · 반값)</option>
-          <option value="gemini-tx">💎 Gemini 3.5 Transcribe (의학용어 사전)</option>
-          <option value="gemini-tx-dia">💎 Gemini 3.5 Transcribe (화자분리)</option>
+          <option value="gemini-tx">💎 Gemini Transcribe (의학용어 사전)</option>
+          <option value="gemini-tx-dia">💎 Gemini Transcribe (화자분리)</option>
           <option value="gpt-tx">🤖 GPT-Transcribe (OpenAI)</option>
-          <option value="gpt4o-dia">🤖 GPT-4o Transcribe (화자분리)</option>
+          <option value="gpt4o-dia">🤖 GPT Transcribe (화자분리)</option>
           <option value="openai">🤖 OpenAI Whisper-1</option>
           <option value="or-asr">🌐 OpenRouter Qwen3-ASR</option>
         </select>
@@ -1334,10 +1316,7 @@ async function runAll(){
     badge.appendChild(pv);hdr.appendChild(badge);
     const cp=el('button','btn-copy','📋 전체 복사');cp.id='copy_'+model.id;cp.disabled=true;cp.title='S·O·A·P 본문을 빈 줄로 구분해 한 번에 (라벨 없음)';
     cp.addEventListener('click',()=>copyCard(model.id));
-    hdr.appendChild(cp);
-    const ex=el('button','btn-tts','🗣 환자 설명');ex.id='explain_'+model.id;ex.disabled=true;ex.title='이 SOAP을 환자용 쉬운 한국어 설명문으로 → 🌸 Nari 목소리로 읽어주기';
-    ex.addEventListener('click',()=>genExplain(model.id));hdr.appendChild(ex);
-    card.appendChild(hdr);
+    hdr.appendChild(cp);card.appendChild(hdr);
     const body=el('div','result-body');body.id='body_'+model.id;
     const lb=el('div','loading-box');lb.appendChild(el('div','spinner'));
     const lt=el('div','',model.name+' 변환 중...');lt.style.cssText='font-size:10px;color:var(--dim)';lb.appendChild(lt);
@@ -1352,7 +1331,7 @@ async function runAll(){
     if(runId!==currentRunId)return; // 늦게 돌아온 이전 환자 응답 → 폐기
     const body=document.getElementById('body_'+model.id);if(!body)return;
     if(err){fail++;renderError(body,err.message);}
-    else{ok++;body.replaceChildren(renderSOAPBlocks(result,model.id));document.getElementById('copy_'+model.id).disabled=false;const exb=document.getElementById('explain_'+model.id);if(exb)exb.disabled=false;window._cardMap[model.id].result=result;}
+    else{ok++;body.replaceChildren(renderSOAPBlocks(result,model.id));document.getElementById('copy_'+model.id).disabled=false;window._cardMap[model.id].result=result;}
     done++;fill.style.width=(done/total*100)+'%';
   }));
   if(runId!==currentRunId)return;
@@ -1374,7 +1353,7 @@ function newPatient(){
   if(runAbort){runAbort.abort(new DOMException('new patient','AbortError'));}
   currentRunId++;isRunning=false;runAbort=null;
   if(isRecording)stopRecording();
-  ttsStop();lastRec=null;const rb=document.getElementById('reSttBtn');if(rb)rb.style.display='none';
+  lastRec=null;const rb=document.getElementById('reSttBtn');if(rb)rb.style.display='none';
   const lbx=document.getElementById('liveBox');if(lbx)lbx.style.display='none';const ltx=document.getElementById('liveTxt');if(ltx)ltx.replaceChildren();
   document.getElementById('inputTxt').value='';
   medImages=[];renderMedImgPreview();
@@ -1671,11 +1650,12 @@ function renderMedImgPreview(){
 function removeMedImg(i){medImages.splice(i,1);renderMedImgPreview();}
 
 // ===== STT (엔진 디스패치) =====
+let STT_GEMINI_MODEL='gemini-3.5-transcribe';
 const STT_CONFIG={
   'nari-fast':{label:'Nari Qwen3-ASR Fast',nari:true,model:'qwen3-asr-fast'},
   'nari':{label:'Nari Qwen3-ASR',nari:true,model:'qwen3-asr'},
-  'gemini-tx':{label:'Gemini 3.5 Transcribe',gemini:true,diarize:false},
-  'gemini-tx-dia':{label:'Gemini 3.5 Transcribe 화자분리',gemini:true,diarize:true},
+  'gemini-tx':{label:'Gemini Transcribe',gemini:true,diarize:false},
+  'gemini-tx-dia':{label:'Gemini Transcribe 화자분리',gemini:true,diarize:true},
   'gpt-tx':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-transcribe',label:'GPT-Transcribe',fmt:'json'},
   'gpt4o-dia':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-4o-transcribe-diarize',label:'GPT-4o Transcribe 화자분리',fmt:'diarized_json'},
   'openai':{url:'https://api.openai.com/v1/audio/transcriptions',model:'whisper-1',label:'OpenAI Whisper',fmt:'text'},
@@ -1756,7 +1736,7 @@ function mergeSpeakerLines(items){
   return lines.join('\n');
 }
 
-// ===== Gemini 3.5 Transcribe (Files API 업로드 → Interactions API) =====
+// ===== Gemini Transcribe (Files API 업로드 → Interactions API) =====
 async function geminiUploadFile(blob,mime,key){
   const base='https://generativelanguage.googleapis.com';
   const start=await fetch(`${base}/upload/v1beta/files?key=${key}`,{method:'POST',headers:{
@@ -1800,7 +1780,7 @@ async function runGeminiTranscribe(blob,filename,key,diarize){
   const tc={language_codes:['ko-KR']};
   if(diarize)tc.mode={type:'verbatim',diarization_mode:'speaker'};
   else tc.custom_vocabulary=getSttVocab(); // 화자분리와 동시 사용 불가
-  const body={model:'gemini-3.5-transcribe',input:[{type:'audio',uri:file.uri,mime_type:file.mimeType||mime}],generation_config:{transcription_config:tc}};
+  const body={model:STT_GEMINI_MODEL,input:[{type:'audio',uri:file.uri,mime_type:file.mimeType||mime}],generation_config:{transcription_config:tc}};
   let d;
   try{
     const r=await fetchWithTimeout('https://generativelanguage.googleapis.com/v1beta/interactions',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(body)},TIMEOUT.stt);
@@ -1846,13 +1826,10 @@ async function ensureNariBridge(){
 }
 function setBridgeBadge(ok,msg){const b=document.getElementById('bridgeBadge');if(!b)return;b.className='nari-badge '+(ok?'on':'off');b.textContent=ok?'🌸 Nari 중계 연결됨':(msg||'중계 없음 — GitHub Pages 모드');}
 async function initNari(){
-  const b=document.getElementById('bridgeBadge');if(b)b.addEventListener('click',()=>{refreshRecStatus();loadNariVoices(true);});
+  const b=document.getElementById('bridgeBadge');if(b)b.addEventListener('click',()=>refreshRecStatus());
   document.getElementById('recStatus')?.addEventListener('click',refreshRecStatus);
-  const vs=document.getElementById('ttsVoice');if(vs)vs.addEventListener('change',()=>localStorage.setItem('soap_tts_voice',vs.value));
-  document.querySelectorAll('input[name="ttsModel"]').forEach(r=>r.addEventListener('change',()=>{localStorage.setItem('soap_tts_model',r.value);loadNariVoices(true);}));
-  const savedModel=localStorage.getItem('soap_tts_model');if(savedModel){const r=document.querySelector(`input[name="ttsModel"][value="${savedModel}"]`);if(r){r.checked=true;document.querySelectorAll('label[data-tts]').forEach(l=>l.classList.toggle('sel',l.dataset.tts===savedModel));}}
-  try{await ensureNariBridge();loadNariVoices(false);}
-  catch(e){NARI.ok=false;setBridgeBadge(false,nariHere()?'중계 연결 안 됨 — 클릭해서 재확인':'중계 없음 — GitHub Pages 모드');const h=document.getElementById('ttsHdrInfo');if(h)h.textContent='중계 연결 후 사용 가능';}
+  try{await ensureNariBridge();}
+  catch(e){NARI.ok=false;setBridgeBadge(false,nariHere()?'중계 연결 안 됨 — 클릭해서 재확인':'중계 없음 — GitHub Pages 모드');}
 }
 function nariHdr(extra){return Object.assign({'X-Bridge-Token':NARI.token||''},extra||{});}
 
@@ -1977,84 +1954,6 @@ function finishLive(text,note){
   if(autoSoap&&!hadError){showToast('🧼 자동 SOAP 변환 시작...');setTimeout(()=>runAll(),500);}
 }
 
-// ── TTS: 목소리 목록 · 재생 · 저장 ──
-const TTS={audio:null,url:null,lastText:''};
-function ttsModel(){return document.querySelector('input[name="ttsModel"]:checked')?.value||'qwen3-tts';}
-async function loadNariVoices(force){
-  const sel=document.getElementById('ttsVoice'),st=document.getElementById('ttsStatus'),h=document.getElementById('ttsHdrInfo');if(!sel)return;
-  if(!NARI.ok){try{await ensureNariBridge();}catch(e){if(st)st.textContent=e.message;return;}}
-  if(st)st.textContent='목소리 목록 받는 중…';
-  try{
-    const r=await fetchWithTimeout('/api/nari/voices?model='+encodeURIComponent(ttsModel()),{headers:nariHdr(),cache:'no-store'},30000);
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok)throw new Error(nariErrMsg(d.error,d.message));
-    const list=(d.data||[]).slice().sort((a,b)=>(a.language==='ko'?0:1)-(b.language==='ko'?0:1)||String(a.display_name).localeCompare(String(b.display_name)));
-    const saved=localStorage.getItem('soap_tts_voice')||'';
-    sel.replaceChildren();
-    list.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent=(v.language==='ko'?'🇰🇷 ':'')+(v.display_name||v.id)+' · '+(v.language||'')+' · '+(v.gender||'');sel.appendChild(o);});
-    if(!list.length){const o=document.createElement('option');o.value='';o.textContent='목소리 없음';sel.appendChild(o);}
-    const pick=list.find(v=>v.id===saved)||list.find(v=>v.language==='ko')||list[0];
-    if(pick){sel.value=pick.id;localStorage.setItem('soap_tts_voice',pick.id);}
-    const ko=list.filter(v=>v.language==='ko').length;
-    if(st)st.textContent=`${list.length}개 (한국어 ${ko}개) · ${ttsModel()}`;if(h)h.textContent='연결됨';
-  }catch(e){if(st)st.textContent='❌ '+e.message;}
-}
-function ttsStop(){if(TTS.audio){try{TTS.audio.pause();}catch(e){}TTS.audio=null;}document.querySelectorAll('.btn-tts.playing').forEach(b=>{b.classList.remove('playing');b.textContent='🔊 듣기';});}
-async function nariSpeak(text,statusEl,btn){
-  ttsStop();
-  const voice=document.getElementById('ttsVoice')?.value||'';
-  if(!voice){showToast('⚠️ 🌸 Nari 음성 카드에서 목소리를 고르세요');return null;}
-  if(!text.trim()){showToast('⚠️ 읽을 내용이 없습니다');return null;}
-  if(statusEl)statusEl.textContent='🌸 Nari 음성 만드는 중… ('+text.length+'자)';
-  if(btn){btn.disabled=true;}
-  try{
-    const r=await fetchWithTimeout('/api/nari/speech',{method:'POST',headers:nariHdr({'Content-Type':'application/json'}),body:JSON.stringify({model:ttsModel(),voice,text})},240000);
-    if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(nariErrMsg(d.error,d.message));}
-    const blob=await r.blob();
-    if(TTS.url)URL.revokeObjectURL(TTS.url);TTS.url=URL.createObjectURL(blob);TTS.lastText=text;
-    const a=new Audio(TTS.url);TTS.audio=a;
-    a.onended=()=>{if(btn){btn.classList.remove('playing');btn.textContent='🔊 듣기';}if(statusEl)statusEl.textContent='재생 끝 · '+text.length+'자';};
-    a.play().catch(()=>{});
-    if(btn){btn.classList.add('playing');btn.textContent='⏹ 정지';}
-    if(statusEl)statusEl.textContent='▶ 재생 중 · '+Math.round(blob.size/48000)+'초 · '+text.length+'자 ≈ ₩'+(text.length*(ttsModel()==='qwen3-tts'?5:10)/1e6*1380).toFixed(1);
-    return blob;
-  }catch(e){if(statusEl)statusEl.textContent='❌ '+e.message;showToast('❌ '+e.message);return null;}
-  finally{if(btn)btn.disabled=false;}
-}
-async function ttsTest(){const st=document.getElementById('ttsStatus');await nariSpeak('안녕하세요. 비누제조기 나리 음성 테스트입니다. 허리 디스크는 시간이 약입니다.',st,null);}
-
-// ── 🗣 환자 설명: SOAP → 쉬운 한국어 낭독문 → Nari 로 읽기 ──
-const EXPLAIN_SYS=`당신은 방금 진료를 마친 주치의이며, 지금 진료실에서 환자(또는 보호자)에게 직접 말합니다. 아래 SOAP 노트를 바탕으로 구두 설명을 한국어로 씁니다.
-규칙:
-1. 존댓말. 따뜻하지만 군더더기 없이. 300~600자, 소리 내어 읽으면 60~90초.
-2. 순서: 무엇이 문제인지(진단) → 왜 이 검사·치료인지 → 앞으로 할 것(약·검사·주사·수술·생활수칙) → 이런 증상이 생기면 바로 와야 하는 것 → 다음 방문.
-3. 의학 용어는 쉬운 말로 풀어 말한다. 영문 약어·영어 단어 금지(예: "L4-5"는 "허리 네 번째와 다섯 번째 뼈 사이", "MRI"는 "자기공명 촬영, 엠알아이", "NSAID"는 "소염진통제").
-4. SOAP에 없는 사실은 절대 만들지 않는다. 약 이름은 SOAP에 있는 것만, 용량·횟수는 말하지 않는다. SOAP에 없는 항목은 그냥 건너뛴다.
-5. 출력은 낭독용 순수 문장만. 제목·번호·기호·괄호·마크다운·줄머리 기호 금지. 숫자는 읽기 자연스럽게(예: "6주"→"육 주", "8점"→"팔 점").`;
-async function genExplain(mid){
-  const c=window._cardMap?.[mid];if(!c||!c.result){showToast('⚠️ 먼저 SOAP 결과가 있어야 합니다');return;}
-  const body=document.getElementById('body_'+mid);if(!body)return;
-  let blk=body.querySelector('.explain-block');
-  if(!blk){blk=el('div','explain-block');body.appendChild(blk);}
-  blk.replaceChildren(el('div','explain-lbl','🗣 환자 설명 · '+c.model.name+' 작성 중…'));
-  const btn=document.getElementById('explain_'+mid);if(btn)btn.disabled=true;
-  try{
-    const soap=['S','O','A','P'].map(k=>k+': '+sectionText(mid,k)).join('\n\n');
-    const text=(await callAPI(c.pid,c.model,'','normal','en',null,{sys:EXPLAIN_SYS,user:'SOAP 노트:\n\n'+soap+'\n\n환자에게 말하듯 설명문만 출력.'})).replace(/[*#_`>]+/g,'').trim();
-    blk.replaceChildren();
-    const lbl=el('div','explain-lbl');lbl.appendChild(el('span','','🗣 환자 설명 (수정 가능 · '+c.model.name+')'));
-    const st=el('span','');st.style.cssText='font-size:9px;color:var(--dim);font-weight:400';lbl.appendChild(st);blk.appendChild(lbl);
-    const ta=el('textarea','explain-ta');ta.value=text;blk.appendChild(ta);
-    const btns=el('div','explain-btns');
-    const play=el('button','btn-tts','🔊 듣기');play.addEventListener('click',()=>{if(play.classList.contains('playing')){ttsStop();st.textContent='정지';return;}nariSpeak(ta.value,st,play);});
-    const save=el('button','btn-sm','💾 WAV 저장');save.addEventListener('click',async()=>{let blob=null;if(TTS.url&&TTS.lastText===ta.value){blob=await (await fetch(TTS.url)).blob();}else{blob=await nariSpeak(ta.value,st,play);}if(!blob)return;const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='환자설명_'+new Date().toISOString().slice(0,16).replace(/[-:T]/g,'')+'.wav';document.body.appendChild(a);a.click();a.remove();});
-    const cp=el('button','btn-sm','📋 복사');cp.addEventListener('click',()=>navigator.clipboard.writeText(ta.value).then(()=>showToast('📋 환자 설명 복사')));
-    const re=el('button','btn-sm','↻ 다시 쓰기');re.addEventListener('click',()=>genExplain(mid));
-    btns.append(play,save,cp,re);blk.appendChild(btns);
-  }catch(e){blk.replaceChildren(el('div','err-box','❌ 환자 설명 실패: '+e.message));}
-  finally{if(btn)btn.disabled=false;}
-}
-
 // ===== 🔄 모델 자동 갱신 (v46) =====
 // 각 회사 /models 로 "지금 실제로 있는 모델"을 받고, OpenRouter 카탈로그(키 불필요)로 가격·출시일·비전·추론 여부를 붙인 뒤
 // 회사마다 ★best(최상위) 🔥hot(중간) ⚡fast(경량) 3종을 자동으로 고른다. 실패한 회사는 이전 목록 유지.
@@ -2063,6 +1962,7 @@ const LIVE_KEY='soap_models_live';
 const NOT_CHAT=/(realtime|audio|tts|transcri|whisper|embed|rerank|moderation|image|imagen|veo|sora|video|vision-only|search|codex|computer|robotic|guard|learnlm|gemma|instruct|distill|live|native|batch|deep-research|dall)/i;
 const OR_PINNED=['inclusionai/ling-3.0-flash-sante:free'];   // 카탈로그에 남아 있으면 항상 포함 (의료 특화 무료)
 let OR_CATALOG=null;                                           // id → OpenRouter 모델 정보
+const RAW={};                                                  // 이번 갱신에서 받은 원시 /models 응답
 function normId(x){return String(x||'').toLowerCase().replace(/^.*\//,'').replace(/[.]/g,'-').replace(/-\d{8}$|-\d{4}-\d{2}-\d{2}$|-latest$|-preview$/,'');}
 function verOf(id){const m=String(id).match(/(\d+(?:\.\d+)?)/);return m?parseFloat(m[1]):0;}
 function slug(pid,m){return pid+'_'+String(m).replace(/[^a-z0-9]+/gi,'_').toLowerCase();}
@@ -2123,7 +2023,7 @@ const MODEL_FETCHERS={
     return list;
   },
   async openai(key){
-    const j=await getJSON('https://api.openai.com/v1/models',{'Authorization':'Bearer '+key});
+    const j=await getJSON('https://api.openai.com/v1/models',{'Authorization':'Bearer '+key});RAW.openai=j;
     let ids=(j.data||[]).filter(e=>/^gpt-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-\d{4}-\d{2}-\d{2}$|chat-latest|preview/.test(e.id));
     const top=Math.max(...ids.map(e=>verOf(e.id)));ids=ids.filter(e=>verOf(e.id)===top);
     const list=decorate('openai',['openai'],ids.map(e=>({m:e.id,created:e.created,vis:true})));
@@ -2139,7 +2039,7 @@ const MODEL_FETCHERS={
     return list.sort((a,b)=>['fast','hot','best'].indexOf(a.tag)-['fast','hot','best'].indexOf(b.tag));
   },
   async gemini(key){
-    const j=await getJSON('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key='+encodeURIComponent(key));
+    const j=await getJSON('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key='+encodeURIComponent(key));RAW.gemini=j;
     const ms=(j.models||[]).filter(e=>(e.supportedGenerationMethods||[]).includes('generateContent')).map(e=>({id:e.name.replace(/^models\//,''),dn:e.displayName||''}))
       .filter(e=>/^gemini-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-exp|thinking|-\d{3,}$/.test(e.id));
     const tier=id=>/flash-lite/.test(id)?'fast':/flash/.test(id)?'hot':/pro/.test(id)?'best':null,pick={};
@@ -2171,11 +2071,47 @@ const MODEL_FETCHERS={
     return pick3(list);
   },
 };
+// STT 엔진 자동 선정: 같은 /models 응답에서 음성인식 모델만 골라 최신으로
+function sizeOf(id){const m=String(id).match(/(\d+(?:\.\d+)?)b\b/i);return m?parseFloat(m[1]):0;}
+function pickStt(){
+  const out={};
+  if(RAW.openai){
+    const ids=(RAW.openai.data||[]).map(e=>({id:e.id,c:e.created||0})).filter(e=>!/preview|realtime|latest/.test(e.id));
+    const tx=ids.filter(e=>/transcribe(-\d+(\.\d+)?)?$/.test(e.id)&&!/mini|nano/.test(e.id)).sort((a,b)=>b.c-a.c||verOf(b.id.replace(/^gpt-\d+o?/,''))-verOf(a.id.replace(/^gpt-\d+o?/,''))||a.id.length-b.id.length);
+    const dia=ids.filter(e=>/transcribe(-\d+(\.\d+)?)?-diarize$/.test(e.id)).sort((a,b)=>b.c-a.c||a.id.length-b.id.length);
+    if(tx[0])out['gpt-tx']=tx[0].id;if(dia[0])out['gpt4o-dia']=dia[0].id;
+  }
+  if(RAW.gemini){
+    const ids=(RAW.gemini.models||[]).map(e=>String(e.name||'').replace(/^models\//,'')).filter(id=>/^gemini-[\d.]+-transcribe/.test(id)&&!/exp/.test(id));
+    const best=ids.sort((a,b)=>verOf(b)-verOf(a)||(/preview/.test(a)?1:0)-(/preview/.test(b)?1:0)||a.length-b.length)[0];
+    if(best)out['gemini-tx']=best;
+  }
+  if(OR_CATALOG){
+    const c=Object.values(OR_CATALOG).filter(e=>(e.architecture?.input_modalities||[]).includes('audio')&&/asr|transcri|whisper|speech|stt/i.test(e.id)&&!/:|preview|exp/.test(e.id)&&(e.architecture?.output_modalities||['text']).includes('text'))
+      .sort((a,b)=>(b.created||0)-(a.created||0)||sizeOf(b.id)-sizeOf(a.id));
+    if(c[0])out['or-asr']=c[0].id;
+  }
+  return out;
+}
+const STT_BASE_LABEL={'gpt-tx':'GPT-Transcribe','gpt4o-dia':'GPT Transcribe 화자분리','or-asr':'OpenRouter ASR','gemini-tx':'Gemini Transcribe','gemini-tx-dia':'Gemini Transcribe 화자분리'};
+function applyLiveStt(){
+  const st=loadLive()?.stt||{};
+  if(st['gpt-tx']&&STT_CONFIG['gpt-tx'])STT_CONFIG['gpt-tx'].model=st['gpt-tx'];
+  if(st['gpt4o-dia']&&STT_CONFIG['gpt4o-dia'])STT_CONFIG['gpt4o-dia'].model=st['gpt4o-dia'];
+  if(st['or-asr']&&STT_CONFIG['or-asr'])STT_CONFIG['or-asr'].model=st['or-asr'];
+  if(st['gemini-tx'])STT_GEMINI_MODEL=st['gemini-tx'];
+  const cur={'gpt-tx':STT_CONFIG['gpt-tx']?.model,'gpt4o-dia':STT_CONFIG['gpt4o-dia']?.model,'or-asr':STT_CONFIG['or-asr']?.model,'gemini-tx':STT_GEMINI_MODEL,'gemini-tx-dia':STT_GEMINI_MODEL};
+  Object.entries(cur).forEach(([k,v])=>{if(!v)return;const short=String(v).replace(/^.*\//,'');
+    if(STT_CONFIG[k])STT_CONFIG[k].label=STT_BASE_LABEL[k]+' ('+short+')';
+    document.querySelectorAll(`.stt-chip[data-eng="${k}"]`).forEach(c=>{if(!c.dataset.t0)c.dataset.t0=c.title||'';c.title=(c.dataset.t0?c.dataset.t0+' · ':'')+'모델: '+short;});
+    document.querySelectorAll(`#sttEngine2 option[value="${k}"]`).forEach(o=>{if(!o.dataset.t0)o.dataset.t0=o.textContent;o.textContent=o.dataset.t0+' ['+short+']';});});
+  return cur;
+}
 async function refreshModels(manual){
   const btn=document.getElementById('refreshModelsBtn'),info=document.getElementById('modelRefreshInfo');
   if(btn){btn.textContent='⏳ 갱신 중';btn.style.pointerEvents='none';}
   const prev=loadLive()||{providers:{}};const prevIds={};Object.entries(PROVIDERS).forEach(([pid,p])=>prevIds[pid]=p.models.map(m=>m.m));
-  const result={ts:Date.now(),providers:{}};const errs=[];let added=0,gone=0;
+  const result={ts:Date.now(),providers:{}};const errs=[];let added=0,gone=0;Object.keys(RAW).forEach(k=>delete RAW[k]);
   try{ // 1) OpenRouter 카탈로그 먼저 (가격·출시일 출처)
     try{result.providers.openrouter={ok:true,models:await MODEL_FETCHERS.openrouter()};}catch(e){errs.push('OpenRouter: '+e.message);const old=prev.providers?.openrouter;if(old?.ok)result.providers.openrouter=old;}
     // 2) 키 있는 회사만 병렬
@@ -2191,6 +2127,8 @@ async function refreshModels(manual){
       r.models.forEach(m=>{m.isNew=!before.some(b=>normId(b)===normId(m.m));if(m.isNew)added++;});
       gone+=before.filter(b=>!r.models.some(m=>normId(m.m)===normId(b))).length;});
     result.errors=errs;
+    // STT: 새로 받은 응답이 있는 엔진만 갱신, 나머지는 이전 값 유지
+    const stt=Object.assign({},prev.stt||{},pickStt());const sttChanged=Object.keys(stt).filter(k=>(prev.stt||{})[k]!==stt[k]&&(loadLive()||prev.stt)).length;result.stt=stt;
     const fresh=Object.keys(MODEL_FETCHERS).filter(pid=>result.providers[pid]?.ok&&result.providers[pid]!==prev.providers?.[pid]).length;
     if(!fresh){ // 이번에 새로 받은 회사가 하나도 없음(오프라인·키 없음) → 저장 안 함, 다음 접속 때 다시 시도
       if(manual)showToast('❌ 모델 갱신 실패 — '+(errs[0]||'인터넷 또는 API 키 확인'));
@@ -2199,7 +2137,7 @@ async function refreshModels(manual){
     }
     localStorage.setItem(LIVE_KEY,JSON.stringify(result));
     applyLiveModels();renderModels();
-    if(manual||added||gone)showToast(`🔄 모델 갱신 — ${fresh}개 회사 · 신규 ${added} · 퇴출 ${gone}`+(errs.length?` · 실패 ${errs.length}`:''));
+    if(manual||added||gone||sttChanged)showToast(`🔄 모델 갱신 — ${fresh}개 회사 · 신규 ${added} · 퇴출 ${gone}`+(sttChanged?` · STT ${sttChanged}종 갱신`:'')+(errs.length?` · 실패 ${errs.length}`:''));
   }catch(e){showToast('❌ 모델 갱신 실패: '+e.message);if(info)info.textContent='❌ '+e.message;}
   finally{if(btn){btn.textContent='🔄 모델 갱신';btn.style.pointerEvents='';}}
 }
@@ -2209,10 +2147,11 @@ function applyLiveModels(){
   Object.keys(PROVIDERS).forEach(pid=>{const r=live?.providers?.[pid];PROVIDERS[pid].models=(r&&r.ok&&r.models?.length)?r.models:JSON.parse(JSON.stringify(STATIC_PROVIDERS[pid].models));});
   if(live&&OR_CATALOG===null&&live.providers?.openrouter?.ok)OR_CATALOG=OR_CATALOG||{}; // 캐시 플래그
   if(!info)return;
-  if(!live){info.textContent='모델 목록: 내장(2026-09-29 기준) · 🔄 모델 갱신을 누르면 각 회사 최신 목록으로 바뀝니다';return;}
+  if(!live){applyLiveStt();info.textContent='모델 목록: 내장(2026-09-29 기준) · 🔄 모델 갱신을 누르면 각 회사 최신 목록으로 바뀝니다';return;}
   const d=new Date(live.ts),when=`${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
   const okN=Object.values(live.providers||{}).filter(r=>r.ok).length;
-  info.textContent=`갱신 ${when} · ${okN}개 회사 최신 · 24시간마다 자동`+(live.errors?.length?` · ⚠️ ${live.errors.join(' / ')}`:'');
+  const cur=applyLiveStt();const sttTxt=[cur['gpt-tx'],cur['gemini-tx'],cur['or-asr']].filter(Boolean).map(x=>String(x).replace(/^.*\//,'')).join(' · ');
+  info.textContent=`갱신 ${when} · ${okN}개 회사 최신 · STT ${sttTxt} · 24시간마다 자동`+(live.errors?.length?` · ⚠️ ${live.errors.join(' / ')}`:'');
   info.style.color=live.errors?.length?'#f59e0b':'var(--dim)';
 }
 
