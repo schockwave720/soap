@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>비누제조기 Personal 사용 설명서 v3.1 | SOAP Maker</title>
+<title>비누제조기 Personal 사용 설명서 v3.2 | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap');
 :root{--bg:#080d1a;--surface:#0f1525;--surface2:#161d30;--border:#1e3050;--accent:#00b4d8;--green:#06d6a0;--text:#e2e8f0;--dim:#64748b;--guri:#0ea5e9;--warn:#f59e0b}
@@ -50,7 +50,7 @@ pre{font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px
 <a href="./index.html" class="back">← 비누제조기로 돌아가기</a>
 
 <h1>🧼 <span>비누제조기</span> Personal 사용 설명서</h1>
-<p class="ver">v3.1 · 2026년 9월 30일 · 앱 버전 v45 Personal 기준 · 🌸 Nari 개인판 (공용판 설명 + 0장 추가)</p>
+<p class="ver">v3.2 · 2026년 10월 7일 · 앱 버전 v46 Personal 기준 · 🌸 Nari 개인판 + 🔄 모델 자동 갱신</p>
 
 <div class="toc">
   <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px">📋 목차</div>
@@ -214,6 +214,11 @@ pre{font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px
 
 <!-- 6 -->
 <h2 id="models">6. AI 모델 고르기 &amp; 비용</h2>
+<div class="card card-accent">
+  <p><strong>🔄 모델 자동 갱신 (v46).</strong> ① 카드의 <strong>🔄 모델 갱신</strong>을 누르면 키가 들어 있는 회사마다 그 회사 API의 모델 목록을 받아 와서, <strong>★ 최상위 · 🔥 중간 · ⚡ 경량</strong> 3종을 자동으로 다시 고릅니다. 가격·출시일·영상 판독 여부는 OpenRouter 카탈로그(키 불필요)에서 붙입니다. 마지막 갱신 후 24시간이 지나면 접속할 때 알아서 한 번 더 돌고, 새로 들어온 모델에는 <span class="tag tag-new">NEW</span>, 사라진 모델은 목록에서 빠집니다(토스트에 신규·퇴출 수). 고르는 규칙 — OpenAI: 최신 세대(gpt-N) 안에서 가격 상·중·하. Claude: Opus·Sonnet·Haiku 각 최신. Gemini: Pro·Flash·Flash-Lite 각 최신(정식판 우선). Grok: 최신 두 세대 + fast/mini. DeepSeek: 전부. Meta: 버전 높은 순 3개. OpenRouter: 최근 150일·출력 $6/M 이하·회사당 1개 8종 + 무료 2종 + 의료특화(Ling Santé) 고정. 어떤 회사가 조회에 실패하면 그 회사만 직전 목록을 유지하고 위에 ⚠️로 표시합니다. 🔧 직접 추가한 모델은 건드리지 않습니다.</p>
+  <p style="margin-top:4px"><strong>⭐ 추천(가성비) 버튼</strong>도 갱신된 목록에서 회사별 ⚡(없으면 🔥) 하나씩을 고릅니다. <strong>서버 오류(HTTP 5xx)나 파라미터 거부</strong>가 나면 reasoning 옵션을 뺀 최소 요청으로 한 번 자동 재시도합니다 — Muse Spark의 'internal server error' 대응. 그래도 안 되면 🔄 갱신으로 모델 ID가 바뀌었는지 보세요.</p>
+</div>
+
 <p>회사당 2~3개, 싼 것 → 비싼 것 순으로 정리돼 있습니다. 모델 옆 <code>≈₩</code> = SOAP 1회 예상 비용(입력 2,500토큰 + 출력 700토큰, ₩1,380/$ 가정, 2026년 9월 가격). 추론 모델은 숨은 추론 토큰 때문에 실제가 조금 더 나옵니다. <span class="tag tag-vis">👁</span> = 영상·사진 판독 가능.</p>
 <div class="highlight"><strong>처음엔 ⭐ 추천 버튼.</strong> DeepSeek V4.1 Flash + Gemini 3.8 Flash — 키가 있는 것만 체크됩니다. <strong>하루 40명 기준</strong> DeepSeek Flash ≈ 44원/일, Gemini 3.8 Flash ≈ 250원/일, GPT-6 Astra ≈ 3,300원/일. 실사용 비교에서 Flash급이 최상위 모델보다 못 쓰는 경우가 거의 없습니다. 비싼 게 잘 쓰는 게 아닙니다.</div>
 <table>
@@ -352,7 +357,8 @@ pre{font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px
 <h2 id="log">13. 변경 이력 (요약)</h2>
 <table>
   <tr><th>버전</th><th>날짜</th><th>핵심</th></tr>
-  <tr style="background:rgba(232,121,249,.06)"><td><strong>v45 Personal</strong></td><td>9/30</td><td><strong>🌸 Nari 개인판.</strong> PC 중계(bridge.py) 부활 — Nari Qwen3-ASR <strong>실시간 자막</strong>(말하는 동안 표시, 서버 VAD, 의학용어 사전 전달), 파일 전사, 백업 녹음 자동 보관 + 다시 인식. <strong>🗣 환자 설명</strong>: SOAP → 쉬운 한국어 낭독문 → Nari Qwen3-TTS 재생·WAV 저장. 신경외과 기본. Nari 키는 중계만 보관(nari.key). v44(공용판) 기반.</td></tr>
+  <tr style="background:rgba(232,121,249,.06)"><td><strong>v46 Personal</strong></td><td>10/7</td><td><strong>🔄 모델 자동 갱신.</strong> 각 회사 /models + OpenRouter 카탈로그로 ★🔥⚡ 3종 자동 선정, 24시간마다 자동, NEW·퇴출 표시, 실패 회사는 직전 목록 유지. ⭐ 추천 버튼 동적화. 서버 오류·파라미터 거부 시 최소 요청 자동 재시도(Muse Spark 500 대응). GPT-5+/Grok 5+ reasoning 옵션 범위 확장.</td></tr>
+  <tr><td><strong>v45 Personal</strong></td><td>9/30</td><td><strong>🌸 Nari 개인판.</strong> PC 중계(bridge.py) 부활 — Nari Qwen3-ASR <strong>실시간 자막</strong>(말하는 동안 표시, 서버 VAD, 의학용어 사전 전달), 파일 전사, 백업 녹음 자동 보관 + 다시 인식. <strong>🗣 환자 설명</strong>: SOAP → 쉬운 한국어 낭독문 → Nari Qwen3-TTS 재생·WAV 저장. 신경외과 기본. Nari 키는 중계만 보관(nari.key). v44(공용판) 기반.</td></tr>
   <tr><td><strong>v44</strong></td><td>9/29</td><td>병원 공식 배포. Cerebras 완전 삭제, 구버전 키 자동 청소, 모델 최신화(GPT-6 Luna/Sol/Astra, Claude Opus 5.5, Grok 4.7)</td></tr>
   <tr><td><strong>v43</strong></td><td>9/23</td><td><strong>전 진료과 공용판.</strong> 진료과별 작성 규칙(O 항목·A 논거 예시)·예시·용어 사전 전면 정리. 입력 3탭(타이핑·마이크·파일)으로 단순화, 새 환자 버튼 3곳(상단·변환 아래·플로팅). 회사당 2~3개 모델 + OpenRouter 10종. 이미지 생성 엔진 3개(기본 생성 안 함). 영상·사진 판독 범용화(영상만 올리면 판독문). 원내 약품목록 불러오기. Cerebras·Groq·NovelAI·PC 브릿지·약속처방 세트·EMR 자동입력 코드 제거. 설정 카드 자동 접기.</td></tr>
   <tr><td>v39~42</td><td>9/17~22</td><td>O 영어 전용, A 인과 진단 + 심사 논거, P는 오더 수준만, 부정 병력 줄 금지, STT 뭉개진 약 이름 무시, 단락별 복사, 항목당 한 줄, 턴당 비용 태그, 녹음 7분 자동종료</td></tr>
@@ -361,7 +367,7 @@ pre{font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px
 </table>
 
 <div class="footer">
-  🧼 비누제조기 Personal v45 · 설명서 v3.1 · 2026-09-30<br>
+  🧼 비누제조기 Personal v46 · 설명서 v3.2 · 2026-10-07<br>
   <a href="https://github.com/schockwave720/soap" style="color:var(--accent)">github.com/schockwave720/soap</a> · <a href="./index.html" style="color:var(--accent)">← 비누제조기로 돌아가기</a>
 </div>
 
