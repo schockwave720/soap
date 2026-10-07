@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>비누제조기 Personal v45 · Nari | SOAP Maker</title>
+<title>비누제조기 Personal v46 · Nari | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -222,7 +222,7 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v45 · 🌸 Nari</span></h1>
+  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v46 · 🌸 Nari · 🔄 자동 갱신</span></h1>
   <p class="sub">신경외과 개인용 · 🌸 Nari 실시간 자막 STT + 환자 설명 TTS · <span id="bridgeBadge" class="nari-badge off">중계 확인 중…</span></p>
   <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
     <button id="newPatientBtn" class="btn-new" title="이전 환자의 입력·영상·결과를 지우고 다음 환자 준비 (API 키·프로필은 유지)">🆕 새 환자</button>
@@ -326,8 +326,9 @@ textarea::placeholder{color:var(--dim)}
 
 <!-- ① AI 모델 선택 -->
 <div class="card">
-  <div class="card-hdr"><span class="card-title">① SOAP 작성 AI 선택</span><span class="btn-sm" onclick="loadExample()" title="내 진료과 예시 문장을 입력란에 넣습니다">예시 입력</span></div>
+  <div class="card-hdr"><span class="card-title">① SOAP 작성 AI 선택</span><span style="display:flex;gap:4px"><span class="btn-sm" id="refreshModelsBtn" onclick="refreshModels(true)" title="각 회사 API에서 최신 모델 목록을 받아 추천 3종(★🔥⚡)을 자동으로 다시 고릅니다. 24시간 지나면 접속 시 자동">🔄 모델 갱신</span><span class="btn-sm" onclick="loadExample()" title="내 진료과 예시 문장을 입력란에 넣습니다">예시 입력</span></span></div>
   <div class="card-body">
+    <div id="modelRefreshInfo" style="font-size:9px;color:var(--dim);margin:-2px 0 6px;line-height:1.5"></div>
     <div style="font-size:10px;color:var(--dim);margin-bottom:6px;line-height:1.6">체크한 AI가 동시에 SOAP을 써서 비교할 수 있습니다. 처음엔 <b style="color:var(--green)">⭐ 추천</b> 버튼으로 시작하세요.<br>★ 최고성능 · 🔥 인기 · ⚡ 빠름 · 👁 영상·사진 판독 가능 · ≈₩ SOAP 1회 예상 비용</div>
     <div class="sel-bar"><span style="color:var(--dim)">선택된 모델</span><span class="sel-cnt" id="selCnt">0</span></div>
     <div class="qsel">
@@ -890,7 +891,8 @@ function purgeLegacy(){
 // ===== INIT =====
 function init() {
   purgeLegacy();
-  renderApiKeys(); renderModels(); renderCustomModels(); loadProfile();
+  renderApiKeys(); applyLiveModels(); renderModels(); renderCustomModels(); loadProfile();
+  setTimeout(()=>{const live=loadLive();if(!live||Date.now()-live.ts>24*3600*1000)refreshModels(false);},1500);
   document.querySelectorAll('.detail-opt').forEach(opt => {
     opt.addEventListener('click', e => {
       const inp = opt.querySelector('input');
@@ -960,17 +962,21 @@ function saveKey(id,val){setTimeout(refreshRecStatus,50);
 function renderModels(){
   document.getElementById('modelList').innerHTML=Object.entries(PROVIDERS).map(([k,p])=>`
     <div class="provider prov-${p.color}"><div class="prov-hdr" onclick="toggleProv(this)"><span>${p.name}</span><span style="display:flex;gap:4px;align-items:center"><span class="cnt">${p.models.length}</span><span class="arrow">${p.collapsed?'▸':'▾'}</span></span></div>
-    <div class="prov-body" style="${p.collapsed?'display:none':''}">${p.models.map(m=>`<label class="model-cb" data-pid="${k}" data-mid="${m.id}"><input type="checkbox" value="${m.id}" onchange="updCount()">${m.name}${m.tag?`<span class="tag tag-${m.tag}">${m.tag==='best'?'★':m.tag==='hot'?'🔥':m.tag==='fast'?'⚡':m.tag==='free'?'FREE':'NEW'}</span>`:''}${m.vis?'<span class="tag tag-vis">👁</span>':''}${costTag(m)}</label>`).join('')}</div></div>`).join('');
+    <div class="prov-body" style="${p.collapsed?'display:none':''}">${p.models.map(m=>`<label class="model-cb" data-pid="${k}" data-mid="${m.id}"><input type="checkbox" value="${m.id}" onchange="updCount()">${m.name}${m.tag?`<span class="tag tag-${m.tag}">${m.tag==='best'?'★':m.tag==='hot'?'🔥':m.tag==='fast'?'⚡':m.tag==='free'?'FREE':'NEW'}</span>`:''}${m.vis?'<span class="tag tag-vis">👁</span>':''}${m.isNew?'<span class="tag tag-new">NEW</span>':''}${costTag(m)}</label>`).join('')}</div></div>`).join('');
   updCount();
 }
 
 function toggleProv(h){const b=h.nextElementSibling,open=b.style.display==='none';b.style.display=open?'flex':'none';h.querySelector('.arrow').textContent=open?'▾':'▸';}
 function updCount(){document.getElementById('selCnt').textContent=document.querySelectorAll('.model-cb input:checked').length;}
 function hasKeyFor(l){const p=PROVIDERS[l.dataset.pid];return !!(p&&getKey(p.keyId));}
-// ⭐ 추천: 가성비 3개 (DeepSeek V4.1 Flash + Gemini 3.8 Flash + GPT-6 Luna) — 키 있는 것만
+// ⭐ 추천: 키 있는 회사마다 가성비 1개(⚡fast, 없으면 🔥hot) — 갱신된 목록에서 자동으로 고름 (OpenRouter 제외)
 function selRec(){selNone();let n=0;
-  ['ds-flash','gem38f','oai-6l'].forEach(id=>{const l=document.querySelector(`.model-cb[data-mid="${id}"]`);if(!l||!hasKeyFor(l))return;l.querySelector('input').checked=true;n++;});
-  updCount();showToast(n?'⭐ 가성비 추천 '+n+'개 선택':'⚠️ DeepSeek·Gemini·OpenAI 키 중 하나를 먼저 입력하세요');}
+  for(const [pid,p] of Object.entries(PROVIDERS)){
+    if(pid==='openrouter'||!getKey(p.keyId))continue;
+    const m=p.models.find(x=>x.tag==='fast')||p.models.find(x=>x.tag==='hot')||p.models[0];if(!m)continue;
+    const l=document.querySelector(`.model-cb[data-mid="${m.id}"]`);if(!l)continue;l.querySelector('input').checked=true;n++;
+  }
+  updCount();showToast(n?'⭐ 가성비 추천 '+n+'개 선택':'⚠️ API 키를 먼저 입력하세요');}
 function selNone(){document.querySelectorAll('.model-cb input').forEach(c=>c.checked=false);updCount();}
 function selBest(){selNone();document.querySelectorAll('.model-cb').forEach(l=>{if(l.querySelector('.tag-best')&&hasKeyFor(l))l.querySelector('input').checked=true});updCount();}
 function selFast(){selNone();document.querySelectorAll('.model-cb').forEach(l=>{if(l.querySelector('.tag-fast')&&hasKeyFor(l))l.querySelector('input').checked=true});updCount();}
@@ -1203,7 +1209,7 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
       // GPT-6 / GPT-5.x: max_completion_tokens 필수, reasoning 토큰까지 포함되므로 넉넉히
       body.max_completion_tokens=8000;
       // GPT-6 Astra는 최소 'low' (none·minimal 미지원). Luna/Sol은 none 가능하지만 low가 SOAP 품질/속도 균형점
-      if(modelInfo.m.startsWith('gpt-6')||modelInfo.m.startsWith('gpt-5'))body.reasoning_effort='low';
+      if(/^gpt-[5-9]/.test(modelInfo.m))body.reasoning_effort='low';
     } else {
       body.max_tokens=2000;
     }
@@ -1213,7 +1219,7 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
       body.max_tokens=6000;
     }
     // xAI Grok 4.6/4.7: 추론 기본 high, 끌 수 없음 → low로 (SOAP엔 충분, 응답시간 수 배 단축)
-    if(provKey==='xai'&&/grok-4\.[5-9]/.test(modelInfo.m)){body.reasoning_effort='low';body.max_tokens=6000;}
+    if(provKey==='xai'&&/grok-(4\.[5-9]|[5-9])/.test(modelInfo.m)){body.reasoning_effort='low';body.max_tokens=6000;}
     // Meta Muse Spark: reasoning 항상 켜짐(끌 수 없음, minimal~xhigh). 추론 토큰이 출력에 과금·포함되므로 여유
     if(provKey==='meta'){body.reasoning_effort='minimal';body.max_tokens=8000;}
     // OpenRouter: 통합 reasoning 파라미터 — 최소 effort + 출력에서 제외, reasoning 토큰 대비 max_tokens 여유
@@ -1221,9 +1227,17 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
       body.max_tokens=8000;
       body.reasoning=modelInfo.re?{effort:'low',exclude:true}:{exclude:true};
     }
-    const r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)},TIMEOUT.text,signal);
-    const d=await r.json();
-    if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
+    let r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(body)},TIMEOUT.text,signal);
+    let d=await r.json().catch(()=>({error:{message:'HTTP '+r.status+' (JSON 아님)'}}));
+    // 서버 오류(5xx)나 파라미터 거부(reasoning_effort·thinking 등)면 → 최소 바디로 한 번 더. Meta Muse Spark 'internal server error' 대응
+    const emsg=d.error?(d.error.message||JSON.stringify(d.error)):'';
+    if((r.status>=500||/param|reasoning|unsupported|unknown field|not supported|invalid/i.test(emsg))&&!signal?.aborted){
+      const slim={model:modelInfo.m,messages,max_tokens:4000};
+      console.warn('[callAPI] 재시도(최소 바디)',provKey,modelInfo.m,r.status,emsg.slice(0,120));
+      r=await fetchWithTimeout(`${prov.baseUrl}/chat/completions`,{method:'POST',headers:hdrs,body:JSON.stringify(slim)},TIMEOUT.text,signal);
+      d=await r.json().catch(()=>({error:{message:'HTTP '+r.status+' (JSON 아님)'}}));
+    }
+    if(d.error)throw new Error((d.error.message||JSON.stringify(d.error))+(r.status>=500?' — 서버 오류(HTTP '+r.status+'). 🔄 모델 갱신으로 모델 ID가 바뀌었는지 확인':''));
     // <think> 태그 제거 (reasoning 모델 대응)
     const msg=d.choices?.[0]?.message||{};
     let result=(typeof msg.content==='string'?msg.content:Array.isArray(msg.content)?msg.content.map(x=>x.text||'').join('\n'):'')||'';
@@ -2039,6 +2053,167 @@ async function genExplain(mid){
     btns.append(play,save,cp,re);blk.appendChild(btns);
   }catch(e){blk.replaceChildren(el('div','err-box','❌ 환자 설명 실패: '+e.message));}
   finally{if(btn)btn.disabled=false;}
+}
+
+// ===== 🔄 모델 자동 갱신 (v46) =====
+// 각 회사 /models 로 "지금 실제로 있는 모델"을 받고, OpenRouter 카탈로그(키 불필요)로 가격·출시일·비전·추론 여부를 붙인 뒤
+// 회사마다 ★best(최상위) 🔥hot(중간) ⚡fast(경량) 3종을 자동으로 고른다. 실패한 회사는 이전 목록 유지.
+const STATIC_PROVIDERS=JSON.parse(JSON.stringify(PROVIDERS));
+const LIVE_KEY='soap_models_live';
+const NOT_CHAT=/(realtime|audio|tts|transcri|whisper|embed|rerank|moderation|image|imagen|veo|sora|video|vision-only|search|codex|computer|robotic|guard|learnlm|gemma|instruct|distill|live|native|batch|deep-research|dall)/i;
+const OR_PINNED=['inclusionai/ling-3.0-flash-sante:free'];   // 카탈로그에 남아 있으면 항상 포함 (의료 특화 무료)
+let OR_CATALOG=null;                                           // id → OpenRouter 모델 정보
+function normId(x){return String(x||'').toLowerCase().replace(/^.*\//,'').replace(/[.]/g,'-').replace(/-\d{8}$|-\d{4}-\d{2}-\d{2}$|-latest$|-preview$/,'');}
+function verOf(id){const m=String(id).match(/(\d+(?:\.\d+)?)/);return m?parseFloat(m[1]):0;}
+function slug(pid,m){return pid+'_'+String(m).replace(/[^a-z0-9]+/gi,'_').toLowerCase();}
+function loadLive(){try{return JSON.parse(localStorage.getItem(LIVE_KEY)||'null');}catch(e){return null;}}
+function orInfo(vendorPrefixes,directId){
+  if(!OR_CATALOG)return null;const want=normId(directId);
+  let best=null;
+  for(const e of Object.values(OR_CATALOG)){
+    const v=e.id.split('/')[0];if(!vendorPrefixes.includes(v))continue;
+    const n=normId(e.id.replace(/:.*$/,''));
+    if(n===want||n==='-'+want||want.endsWith(n)||n.endsWith(want)){if(!best||(e.created||0)>(best.created||0))best=e;}
+  }
+  return best;
+}
+function priceOf(e){if(!e||!e.pricing)return null;const i=parseFloat(e.pricing.prompt),o=parseFloat(e.pricing.completion);if(isNaN(i)||isNaN(o))return null;return [Math.round(i*1e6*1000)/1000,Math.round(o*1e6*1000)/1000];}
+function decorate(pid,vendors,list){ // list: [{m,name?,created?,vis?,tag?}] → p·vis·re 보강
+  return list.map(x=>{const e=orInfo(vendors,x.m);const p=x.p||priceOf(e);
+    const vis=x.vis!==undefined?x.vis:!!(e&&(e.architecture?.input_modalities||[]).includes('image'));
+    const st=STATIC_PROVIDERS[pid]?.models.find(sm=>normId(sm.m)===normId(x.m));
+    return {id:slug(pid,x.m),m:x.m,name:x.name||(e?.name||x.m).replace(/^[^:]*:\s*/,''),tag:x.tag,vis:vis||!!st?.vis,p:p||st?.p,re:x.re!==undefined?x.re:!!(e&&(e.supported_parameters||[]).includes('reasoning')),created:x.created||e?.created||0};});
+}
+// 가격(출력 $/M)으로 best/hot/fast 3종 — 가격 없으면 이름·출시일로
+function pick3(list,nameRule){
+  if(!list.length)return [];
+  const allP=list.every(x=>x.p);
+  let out;
+  if(allP&&list.length>=2){const srt=[...list].sort((a,b)=>b.p[1]-a.p[1]);out=[srt[0],srt[Math.floor(srt.length/2)],srt[srt.length-1]];}
+  else{const srt=[...list].sort((a,b)=>verOf(b.m)-verOf(a.m)||(b.created||0)-(a.created||0));out=[srt[0],srt[1],srt[2]];}
+  out=out.filter(Boolean).filter((x,i,a)=>a.findIndex(y=>y.m===x.m)===i);
+  const tags=['best','hot','fast'];out.forEach((x,i)=>x.tag=tags[i]);
+  if(nameRule)out.forEach(x=>{const t=nameRule(x.m);if(t)x.tag=t;});
+  // 태그 중복 정리: 같은 태그 둘이면 뒤쪽을 비움
+  const seen={};out.forEach(x=>{if(seen[x.tag])x.tag='';seen[x.tag]=1;});
+  // 최근 45일 내 출시인데 3종에 못 든 모델은 태그 없이 덧붙임 (최대 2개) — 신상은 보여준다
+  const cut=Date.now()/1000-45*86400;
+  list.filter(x=>(x.created||0)>cut&&!out.some(o=>o.m===x.m)).sort((a,b)=>(b.created||0)-(a.created||0)).slice(0,2).forEach(x=>{x.tag='';out.push(x);});
+  return out.sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag));
+}
+async function getJSON(url,headers,ms){const r=await fetchWithTimeout(url,{headers:headers||{},cache:'no-store'},ms||20000);const j=await r.json().catch(()=>null);if(!r.ok)throw new Error((j&&(j.error?.message||j.message))||('HTTP '+r.status));return j;}
+
+const MODEL_FETCHERS={
+  async openrouter(){ // 키 불필요. 카탈로그 전체 보관 + 추천 10종
+    const j=await getJSON('https://openrouter.ai/api/v1/models');
+    OR_CATALOG={};(j.data||[]).forEach(e=>{OR_CATALOG[e.id]=e;});
+    const now=Date.now()/1000,all=Object.values(OR_CATALOG);
+    const ok=e=>{const a=e.architecture||{};const im=a.input_modalities||[],om=a.output_modalities||[];
+      return im.includes('text')&&(!om.length||om.includes('text'))&&!NOT_CHAT.test(e.id.replace(/:free$/,''))&&!/preview|exp\b|-exp-|\d{4}-\d{2}-\d{2}|(:(?!free)[a-z]+)$/i.test(e.id)&&(e.context_length||0)>=32000;};
+    const paid=all.filter(e=>ok(e)&&priceOf(e)&&priceOf(e)[1]>0&&priceOf(e)[1]<=6&&now-(e.created||0)<150*86400).sort((a,b)=>(b.created||0)-(a.created||0));
+    const byVendor={};paid.forEach(e=>{const v=e.id.split('/')[0];if(!byVendor[v])byVendor[v]=e;});
+    const top=Object.values(byVendor).slice(0,8);
+    const free=all.filter(e=>ok(e)&&/:free$/.test(e.id)&&now-(e.created||0)<200*86400).sort((a,b)=>(b.context_length||0)-(a.context_length||0)).slice(0,2);
+    const pinned=OR_PINNED.map(id=>OR_CATALOG[id]).filter(Boolean);
+    const uniq=[...pinned,...top,...free].filter((e,i,a)=>a.findIndex(y=>y.id===e.id)===i);
+    const list=uniq.map(e=>{const p=priceOf(e)||[0,0];const isFree=/:free$/.test(e.id)||(p[0]===0&&p[1]===0);
+      return {id:slug('openrouter',e.id),m:e.id,name:(e.name||e.id).replace(/^[^:]*:\s*/,'')+(isFree?' 무료':` $${p[0]}/${p[1]}`),tag:isFree?'free':'',p:isFree?[0,0]:p,vis:(e.architecture?.input_modalities||[]).includes('image'),re:(e.supported_parameters||[]).includes('reasoning'),created:e.created||0};});
+    // 상위 3개에 가격 기준 태그
+    const paidOnly=list.filter(x=>!x.p||x.p[1]>0);if(paidOnly.length>=3){const srt=[...paidOnly].sort((a,b)=>b.p[1]-a.p[1]);srt[0].tag='best';srt[Math.floor(srt.length/2)].tag='hot';srt[srt.length-1].tag='fast';}
+    return list;
+  },
+  async openai(key){
+    const j=await getJSON('https://api.openai.com/v1/models',{'Authorization':'Bearer '+key});
+    let ids=(j.data||[]).filter(e=>/^gpt-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-\d{4}-\d{2}-\d{2}$|chat-latest|preview/.test(e.id));
+    const top=Math.max(...ids.map(e=>verOf(e.id)));ids=ids.filter(e=>verOf(e.id)===top);
+    const list=decorate('openai',['openai'],ids.map(e=>({m:e.id,created:e.created,vis:true})));
+    return pick3(list,m=>/-nano$/.test(m)?'fast':/-pro$/.test(m)?'best':null);
+  },
+  async anthropic(key){
+    const j=await getJSON('https://api.anthropic.com/v1/models?limit=100',{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'});
+    const fam={opus:'best',sonnet:'hot',haiku:'fast'},pick={};
+    (j.data||[]).forEach(e=>{const f=(e.id.match(/claude-(opus|sonnet|haiku)/)||[])[1];if(!f)return;
+      const t=Date.parse(e.created_at||0)||0,dated=/-\d{8}$/.test(e.id);
+      const cur=pick[f];if(!cur||t>cur.t||(t===cur.t&&cur.dated&&!dated))pick[f]={e,t,dated};});
+    const list=decorate('anthropic',['anthropic'],Object.entries(pick).map(([f,{e,t}])=>({m:e.id,name:e.display_name||e.id,created:t/1000,vis:true,tag:fam[f]})));
+    return list.sort((a,b)=>['fast','hot','best'].indexOf(a.tag)-['fast','hot','best'].indexOf(b.tag));
+  },
+  async gemini(key){
+    const j=await getJSON('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key='+encodeURIComponent(key));
+    const ms=(j.models||[]).filter(e=>(e.supportedGenerationMethods||[]).includes('generateContent')).map(e=>({id:e.name.replace(/^models\//,''),dn:e.displayName||''}))
+      .filter(e=>/^gemini-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-exp|thinking|-\d{3,}$/.test(e.id));
+    const tier=id=>/flash-lite/.test(id)?'fast':/flash/.test(id)?'hot':/pro/.test(id)?'best':null,pick={};
+    ms.forEach(e=>{const t=tier(e.id);if(!t)return;const v=verOf(e.id),pv=/preview/.test(e.id)?1:0;const cur=pick[t];
+      if(!cur||v>cur.v||(v===cur.v&&(pv<cur.pv||(pv===cur.pv&&e.id.length<cur.e.id.length))))pick[t]={e,v,pv};});
+    const list=decorate('gemini',['google'],Object.entries(pick).map(([t,{e}])=>({m:e.id,name:e.dn.replace(/^Gemini\s*/,'Gemini '),vis:true,tag:t})));
+    return list.sort((a,b)=>['fast','hot','best'].indexOf(a.tag)-['fast','hot','best'].indexOf(b.tag));
+  },
+  async xai(key){
+    const j=await getJSON('https://api.x.ai/v1/models',{'Authorization':'Bearer '+key});
+    const ids=(j.data||[]).map(e=>e.id).filter(id=>/^grok-\d/.test(id)&&!NOT_CHAT.test(id)&&!/imagine|-\d{4}$/.test(id));
+    const main=ids.filter(id=>!/fast|mini/.test(id)).sort((a,b)=>verOf(b)-verOf(a)),fast=ids.filter(id=>/fast|mini/.test(id)).sort((a,b)=>verOf(b)-verOf(a));
+    const sel=[];if(fast[0])sel.push({m:fast[0],tag:'fast'});if(main[1])sel.push({m:main[1],tag:'hot'});if(main[0])sel.push({m:main[0],tag:'best'});
+    if(!sel.some(x=>x.tag==='hot')&&!sel.some(x=>x.tag==='fast')&&main[0])sel.unshift({m:main[0],tag:'hot'});
+    return decorate('xai',['x-ai'],sel.map(x=>({...x,name:'Grok '+x.m.replace(/^grok-/,'').replace(/-/g,' '),vis:true})));
+  },
+  async deepseek(key){
+    const j=await getJSON('https://api.deepseek.com/models',{'Authorization':'Bearer '+key});
+    const ids=(j.data||[]).map(e=>e.id).filter(id=>/^deepseek/.test(id)&&!NOT_CHAT.test(id));
+    const tag=id=>/pro|reasoner|max/.test(id)?'best':/flash|lite|mini/.test(id)?'fast':'hot';
+    const list=decorate('deepseek',['deepseek'],ids.map(id=>({m:id,name:id.replace(/^deepseek-/,'DeepSeek '),tag:tag(id)})));
+    const seen={};return list.filter(x=>{if(seen[x.tag])x.tag='';seen[x.tag]=1;return true;}).sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag));
+  },
+  async meta(key){
+    const j=await getJSON('https://api.meta.ai/v1/models',{'Authorization':'Bearer '+key});
+    const ids=(j.data||j.models||[]).map(e=>e.id||e.name).filter(id=>id&&!NOT_CHAT.test(id)&&!/-\d{4}-\d{2}-\d{2}$/.test(id));
+    if(!ids.length)throw new Error('채팅 모델 없음');
+    const list=decorate('meta',['meta','meta-llama'],ids.sort((a,b)=>verOf(b)-verOf(a)).slice(0,3).map(id=>({m:id,name:id.replace(/muse-spark/i,'Muse Spark').replace(/-/g,' '),vis:true})));
+    return pick3(list);
+  },
+};
+async function refreshModels(manual){
+  const btn=document.getElementById('refreshModelsBtn'),info=document.getElementById('modelRefreshInfo');
+  if(btn){btn.textContent='⏳ 갱신 중';btn.style.pointerEvents='none';}
+  const prev=loadLive()||{providers:{}};const prevIds={};Object.entries(PROVIDERS).forEach(([pid,p])=>prevIds[pid]=p.models.map(m=>m.m));
+  const result={ts:Date.now(),providers:{}};const errs=[];let added=0,gone=0;
+  try{ // 1) OpenRouter 카탈로그 먼저 (가격·출시일 출처)
+    try{result.providers.openrouter={ok:true,models:await MODEL_FETCHERS.openrouter()};}catch(e){errs.push('OpenRouter: '+e.message);const old=prev.providers?.openrouter;if(old?.ok)result.providers.openrouter=old;}
+    // 2) 키 있는 회사만 병렬
+    const jobs=Object.keys(MODEL_FETCHERS).filter(pid=>pid!=='openrouter').map(async pid=>{
+      const key=getKey(PROVIDERS[pid].keyId);
+      if(!key){const old=prev.providers?.[pid];if(old?.ok)result.providers[pid]=old;return;}
+      try{const models=await MODEL_FETCHERS[pid](key);if(!models.length)throw new Error('목록 비어 있음');result.providers[pid]={ok:true,models};}
+      catch(e){errs.push(PROVIDERS[pid].name.replace(/^\S+\s/,'')+': '+(e.message||'실패').slice(0,60));const old=prev.providers?.[pid];if(old?.ok)result.providers[pid]=old;}
+    });
+    await Promise.all(jobs);
+    // 3) NEW 표시 + 집계
+    Object.entries(result.providers).forEach(([pid,r])=>{if(!r.ok)return;const before=prevIds[pid]||[];
+      r.models.forEach(m=>{m.isNew=!before.some(b=>normId(b)===normId(m.m));if(m.isNew)added++;});
+      gone+=before.filter(b=>!r.models.some(m=>normId(m.m)===normId(b))).length;});
+    result.errors=errs;
+    const fresh=Object.keys(MODEL_FETCHERS).filter(pid=>result.providers[pid]?.ok&&result.providers[pid]!==prev.providers?.[pid]).length;
+    if(!fresh){ // 이번에 새로 받은 회사가 하나도 없음(오프라인·키 없음) → 저장 안 함, 다음 접속 때 다시 시도
+      if(manual)showToast('❌ 모델 갱신 실패 — '+(errs[0]||'인터넷 또는 API 키 확인'));
+      if(info&&manual){info.textContent='⚠️ '+(errs.join(' / ')||'갱신할 회사 없음');info.style.color='#f59e0b';}
+      return;
+    }
+    localStorage.setItem(LIVE_KEY,JSON.stringify(result));
+    applyLiveModels();renderModels();
+    if(manual||added||gone)showToast(`🔄 모델 갱신 — ${fresh}개 회사 · 신규 ${added} · 퇴출 ${gone}`+(errs.length?` · 실패 ${errs.length}`:''));
+  }catch(e){showToast('❌ 모델 갱신 실패: '+e.message);if(info)info.textContent='❌ '+e.message;}
+  finally{if(btn){btn.textContent='🔄 모델 갱신';btn.style.pointerEvents='';}}
+}
+// 저장된 갱신 결과를 PROVIDERS 에 입힘 (실패/미갱신 회사는 내장 목록 유지)
+function applyLiveModels(){
+  const live=loadLive(),info=document.getElementById('modelRefreshInfo');
+  Object.keys(PROVIDERS).forEach(pid=>{const r=live?.providers?.[pid];PROVIDERS[pid].models=(r&&r.ok&&r.models?.length)?r.models:JSON.parse(JSON.stringify(STATIC_PROVIDERS[pid].models));});
+  if(live&&OR_CATALOG===null&&live.providers?.openrouter?.ok)OR_CATALOG=OR_CATALOG||{}; // 캐시 플래그
+  if(!info)return;
+  if(!live){info.textContent='모델 목록: 내장(2026-09-29 기준) · 🔄 모델 갱신을 누르면 각 회사 최신 목록으로 바뀝니다';return;}
+  const d=new Date(live.ts),when=`${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const okN=Object.values(live.providers||{}).filter(r=>r.ok).length;
+  info.textContent=`갱신 ${when} · ${okN}개 회사 최신 · 24시간마다 자동`+(live.errors?.length?` · ⚠️ ${live.errors.join(' / ')}`:'');
+  info.style.color=live.errors?.length?'#f59e0b':'var(--dim)';
 }
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
