@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>비누제조기 Personal v47 · Nari | SOAP Maker</title>
+<title>비누제조기 Personal v48 · Nari | SOAP Maker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -222,11 +222,11 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v47 · 🌸 Nari · 🔄 자동 갱신</span></h1>
+  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v48 · 🌸 Nari · 🔄 자동 갱신</span></h1>
   <p class="sub">신경외과 개인용 · 🌸 Nari 실시간 자막 STT · <span id="bridgeBadge" class="nari-badge off">중계 확인 중…</span></p>
   <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
     <button id="newPatientBtn" class="btn-new" title="이전 환자의 입력·영상·결과를 지우고 다음 환자 준비 (API 키·프로필은 유지)">🆕 새 환자</button>
-    <a href="./guide.html" class="btn-link">📖 사용 설명서</a>
+    <a href="./guide.html?v=48" class="btn-link">📖 사용 설명서</a>
   </div>
 </div>
 
@@ -326,7 +326,7 @@ textarea::placeholder{color:var(--dim)}
 
 <!-- ① AI 모델 선택 -->
 <div class="card">
-  <div class="card-hdr"><span class="card-title">① SOAP 작성 AI 선택</span><span style="display:flex;gap:4px"><span class="btn-sm" id="refreshModelsBtn" onclick="refreshModels(true)" title="각 회사 API에서 최신 모델 목록을 받아 추천 3종(★🔥⚡)을 자동으로 다시 고릅니다. 24시간 지나면 접속 시 자동">🔄 모델 갱신</span><span class="btn-sm" onclick="loadExample()" title="내 진료과 예시 문장을 입력란에 넣습니다">예시 입력</span></span></div>
+  <div class="card-hdr"><span class="card-title">① SOAP 작성 AI 선택</span><span style="display:flex;gap:4px"><span class="btn-sm" id="refreshModelsBtn" onclick="refreshModels(true)" title="각 회사 API에서 최신 모델 목록을 받아 추천 3종(★🔥⚡)을 자동으로 다시 고릅니다. 접속할 때마다 자동">🔄 모델 갱신</span><span class="btn-sm" onclick="loadExample()" title="내 진료과 예시 문장을 입력란에 넣습니다">예시 입력</span></span></div>
   <div class="card-body">
     <div id="modelRefreshInfo" style="font-size:9px;color:var(--dim);margin:-2px 0 6px;line-height:1.5"></div>
     <div style="font-size:10px;color:var(--dim);margin-bottom:6px;line-height:1.6">체크한 AI가 동시에 SOAP을 써서 비교할 수 있습니다. 처음엔 <b style="color:var(--green)">⭐ 추천</b> 버튼으로 시작하세요.<br>★ 최고성능 · 🔥 인기 · ⚡ 빠름 · 👁 영상·사진 판독 가능 · ≈₩ SOAP 1회 예상 비용</div>
@@ -351,7 +351,7 @@ textarea::placeholder{color:var(--dim)}
           <option value="meta">Meta Muse</option>
           <option value="openrouter">OpenRouter</option>
         </select>
-        <input type="text" class="api-inp" id="customModelId" placeholder="모델 ID (예: gemini-4.0-flash)" style="flex:1;font-size:9px;min-width:100px">
+        <input type="text" class="api-inp" id="customModelId" placeholder="모델 ID (예: gemini-4-hydrogen)" style="flex:1;font-size:9px;min-width:100px">
         <button class="btn-sm" onclick="addCustomModel()" style="font-size:9px;white-space:nowrap">➕ 추가</button>
       </div>
       <div id="customModels" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px"></div>
@@ -366,8 +366,8 @@ textarea::placeholder{color:var(--dim)}
     <div style="font-size:10px;color:var(--dim);margin-bottom:6px;line-height:1.5">SOAP이 끝나면 진단명에 맞는 교육용 그림을 만들 수 있습니다. 엔진을 고르면 결과 아래에 🖼️ 버튼이 나타납니다.</div>
     <div class="img-model-grid">
       <label class="detail-opt sel"><input type="radio" name="imgEng" value="none" checked> 🚫 생성 안 함</label>
-      <label class="detail-opt"><input type="radio" name="imgEng" value="nanobana2"> 🍌 NanoBanana 2 <small>Gemini 키</small></label>
-      <label class="detail-opt"><input type="radio" name="imgEng" value="gpt"> 🤖 GPT Image 2.5 <small>OpenAI 키</small></label>
+      <label class="detail-opt"><input type="radio" name="imgEng" value="nanobana2"> 🍌 NanoBanana 2.1 <small>Gemini 키</small></label>
+      <label class="detail-opt"><input type="radio" name="imgEng" value="gpt"> 🤖 GPT Image 2.6 <small>OpenAI 키</small></label>
       <label class="detail-opt"><input type="radio" name="imgEng" value="grok"> ⚡ Grok Imagine <small>xAI 키</small></label>
     </div>
   </div>
@@ -406,9 +406,9 @@ textarea::placeholder{color:var(--dim)}
       <div class="stt-pick" id="sttPickMore" style="display:none">
         <label class="stt-chip" data-eng="gemini-tx-dia" title="화자1/화자2로 의사·환자 구분">💎 Gemini <small>화자분리</small></label>
         <label class="stt-chip" data-eng="gpt-tx" title="OpenAI 최신 STT">🤖 GPT-Transcribe</label>
-        <label class="stt-chip" data-eng="gpt4o-dia" title="OpenAI 화자분리">🤖 GPT <small>화자분리</small></label>
-        <label class="stt-chip" data-eng="openai" title="구형 백업">🤖 Whisper-1</label>
-        <label class="stt-chip" data-eng="or-asr" title="OpenRouter 키 필요 · 0.6B">🌐 Qwen3-ASR <small>OpenRouter</small></label>
+        <label class="stt-chip" data-eng="gpt4o-dia" title="OpenAI 화자분리 (gpt-4o-transcribe-diarize · OpenAI 공지: 2027-02-26 종료 예정)">🤖 GPT <small>화자분리</small></label>
+        <label class="stt-chip" data-eng="openai" title="구형 백업 (whisper-1 · OpenAI 공지: 2027-02-26 종료 예정)">🤖 Whisper-1</label>
+        <label class="stt-chip" data-eng="or-asr" title="OpenRouter 키 필요 · Qwen3-ASR 1.7B">🌐 Qwen3-ASR <small>OpenRouter</small></label>
       </div>
       <select id="sttEngine" style="display:none">
         <option value="nari-fast" selected>Nari Fast</option><option value="nari">Nari 표준</option>
@@ -434,7 +434,7 @@ textarea::placeholder{color:var(--dim)}
         <button class="btn-sm" id="reSttBtn" style="display:none;font-size:9px" onclick="reTranscribe()" title="방금 녹음(백업 파일)을 지금 고른 엔진으로 다시 인식">🔁 방금 녹음 다시 인식</button>
         <span id="recMimeInfo" style="display:none"></span>
       </div>
-      <div style="font-size:9px;color:var(--dim);text-align:center;margin-top:8px;line-height:1.6">🎧 권장 마이크: <b>Jabra Speak2 55</b> 같은 360° 스피커폰을 의사·환자 사이 책상 위에 (일반 마이크는 의사 목소리만 잡힘)<br>녹음 전 환자에게 구두로 알리세요 · 자세한 세팅은 <a href="./guide.html#mic" style="color:var(--accent)">📖 설명서 9장</a></div>
+      <div style="font-size:9px;color:var(--dim);text-align:center;margin-top:8px;line-height:1.6">🎧 권장 마이크: <b>Jabra Speak2 55</b> 같은 360° 스피커폰을 의사·환자 사이 책상 위에 (일반 마이크는 의사 목소리만 잡힘)<br>녹음 전 환자에게 구두로 알리세요 · 자세한 세팅은 <a href="./guide.html?v=48#mic" style="color:var(--accent)">📖 설명서 9장</a></div>
       <div class="stt-pipeline" id="sttPipe1">
         <div class="stt-step" id="stt1a"><div class="stt-dot"></div>음성인식 중...</div>
         <div class="stt-step" id="stt1b"><div class="stt-dot"></div>텍스트 변환 완료</div>
@@ -522,50 +522,54 @@ textarea::placeholder{color:var(--dim)}
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== PROVIDERS (2026-09 기준 모델 ID · 회사당 2~3개, 싼 것 → 비싼 것 순) =====
-// vis:true = 영상·사진 판독 가능(👁). p = $/1M 토큰 [입력, 출력]
+// ===== PROVIDERS (2026-11-18 기준 모델 ID · 각 회사 공식 문서로 확인 · 싼 것 → 비싼 것 순) =====
+// vis:true = 영상·사진 판독 가능(👁). p = $/1M 토큰 [입력, 출력]. tag 없는 모델 = 신상/대안(⭐추천 대상 아님)
 const PROVIDERS = {
   gemini:{name:'💎 Gemini',color:'gemini',apiType:'gemini',baseUrl:'https://generativelanguage.googleapis.com/v1beta',keyId:'gemini',models:[
-    {id:'gem35fl',name:'Gemini 3.5 Flash-Lite',m:'gemini-3.5-flash-lite',tag:'fast',vis:true,p:[0.1,0.4]},
-    {id:'gem38f',name:'Gemini 3.8 Flash',m:'gemini-3.8-flash',tag:'hot',vis:true,p:[0.75,3.75]},
-    {id:'gem31p',name:'Gemini 3.1 Pro',m:'gemini-3.1-pro-preview',tag:'best',vis:true,p:[2,12]},
+    {id:'gem35fl',name:'Gemini 3.5 Flash-Lite',m:'gemini-3.5-flash-lite',tag:'fast',vis:true,p:[0.3,2.5]},
+    {id:'gem4h',name:'Gemini 4 Hydrogen',m:'gemini-4-hydrogen',tag:'hot',vis:true,p:[1.5,7.5]},
+    {id:'gem4c',name:'Gemini 4 Carbon',m:'gemini-4-carbon',tag:'best',vis:true,p:[4,20]},
+    {id:'gem4a',name:'Gemini 4 Argon',m:'gemini-4-argon',tag:'',vis:true,p:[4,20]},
   ]},
   openai:{name:'🤖 OpenAI',color:'openai',apiType:'openai',baseUrl:'https://api.openai.com/v1',keyId:'openai',models:[
     {id:'oai-6l',name:'GPT-6 Luna',m:'gpt-6-luna',tag:'fast',vis:true,p:[0.1,0.5]},
-    {id:'oai-6s',name:'GPT-6 Sol',m:'gpt-6-sol',tag:'hot',vis:true,p:[2,10]},
-    {id:'oai-6a',name:'GPT-6 Astra',m:'gpt-6-astra',tag:'best',vis:true,p:[10,50]},
+    {id:'oai-62s',name:'GPT-6.2 Sol',m:'gpt-6.2-sol',tag:'hot',vis:true,p:[2,10]},
+    {id:'oai-62a',name:'GPT-6.2 Astra',m:'gpt-6.2-astra',tag:'best',vis:true,p:[8,40]},
+    {id:'oai-61t',name:'GPT-6.1 Terra',m:'gpt-6.1-terra',tag:'',vis:true,p:[1,5]},
   ]},
   deepseek:{name:'💰 DeepSeek',color:'deepseek',apiType:'openai',baseUrl:'https://api.deepseek.com/v1',keyId:'deepseek',models:[
-    {id:'ds-flash',name:'V4.1 Flash',m:'deepseek-flash',tag:'best',vis:true,p:[0.15,0.6]},
-    {id:'ds-v4p',name:'V4 Pro',m:'deepseek-v4-pro',tag:'hot',p:[0.58,1.73]},
+    {id:'ds-flash',name:'V4.1 Flash (1017)',m:'deepseek-flash',tag:'best',vis:true,p:[0.15,0.6]},
+    {id:'ds-v4p',name:'V4 Pro (0813)',m:'deepseek-v4-pro',tag:'hot',p:[0.66,1.98]},
   ]},
   anthropic:{name:'🧠 Claude',color:'anthropic',apiType:'anthropic',baseUrl:'https://api.anthropic.com/v1',keyId:'anthropic',models:[
-    {id:'ant-h45',name:'Haiku 4.5',m:'claude-haiku-4-5-20251001',tag:'fast',vis:true,p:[1,5]},
-    {id:'ant-s5',name:'Sonnet 5',m:'claude-sonnet-5',tag:'hot',vis:true,p:[2,10]},
+    {id:'ant-h55',name:'Haiku 5.5',m:'claude-haiku-5-5',tag:'fast',vis:true,p:[0.1,0.5]},
+    {id:'ant-s55',name:'Sonnet 5.5',m:'claude-sonnet-5-5',tag:'hot',vis:true,p:[2,10]},
     {id:'ant-o55',name:'Opus 5.5',m:'claude-opus-5-5',tag:'best',vis:true,p:[4,20]},
+    {id:'ant-f52',name:'Fable 5.2',m:'claude-fable-5-2',tag:'',vis:true,p:[8,40]},
   ]},
   xai:{name:'🤖 xAI (Grok)',color:'xai',apiType:'openai',baseUrl:'https://api.x.ai/v1',keyId:'xai',models:[
     {id:'grk46',name:'Grok 4.6',m:'grok-4.6',tag:'hot',vis:true,p:[2,6]},
     {id:'grk47',name:'Grok 4.7',m:'grok-4.7',tag:'best',vis:true,p:[2,6]},
   ]},
-  meta:{name:'🟦 Meta Muse Spark',color:'meta',apiType:'openai',baseUrl:'https://api.meta.ai/v1',keyId:'meta',models:[
-    {id:'meta-ms12',name:'Muse Spark 1.2',m:'muse-spark-1.2',tag:'hot',vis:true,p:[1.25,4.25]},
-    {id:'meta-ms13',name:'Muse Spark 1.3',m:'muse-spark-1.3',tag:'best',vis:true,p:[1.25,4.25]},
+  meta:{name:'🟦 Meta Muse',color:'meta',apiType:'openai',baseUrl:'https://api.meta.ai/v1',keyId:'meta',models:[
+    {id:'meta-me10',name:'Muse Ember 1.0',m:'muse-ember-1.0',tag:'fast',vis:true,p:[0.1,0.5]},
+    {id:'meta-ms13',name:'Muse Spark 1.3',m:'muse-spark-1.3',tag:'hot',vis:true,p:[1.25,4.25]},
+    {id:'meta-mw10',name:'Muse Wonder 1.0 (preview)',m:'muse-wonder-1.0',tag:'best',vis:true,p:[4,20]},
   ]},
 };
 
-// OpenRouter — 키 하나로 쓰는 추천 10종 (2026-07~09 출시분 중 SOAP에 쓸 만하고 가격 합리적인 것). 이름의 $입력/출력 = 1M 토큰당
+// OpenRouter — 키 하나로 쓰는 추천 10종 (2026-11-18 카탈로그 확인분). 이름의 $입력/출력 = 1M 토큰당
 PROVIDERS.openrouter={name:'🌐 OpenRouter (추천 10종 · 클릭해서 펼치기)',collapsed:true,color:'openrouter',apiType:'openai',baseUrl:'https://openrouter.ai/api/v1',keyId:'openrouter',models:[
-  {id:'or-dsv41f',name:'DeepSeek V4.1 Flash $0.15/0.6',m:'deepseek/deepseek-v4.1-flash',tag:'best',vis:true,re:true},
-  {id:'or-sante',name:'Ling 3.0 Flash Santé 의료특화 무료',m:'inclusionai/ling-3.0-flash-sante:free',tag:'free'},
-  {id:'or-solar4',name:'Upstage Solar Pro 4 한국산 $0.09/0.36',m:'upstage/solar-pro4',tag:'fast'},
+  {id:'or-dsv41f',name:'DeepSeek V4.1 Flash $0.051/0.567',m:'deepseek/deepseek-v4.1-flash',tag:'best',vis:true,re:true},
+  {id:'or-ling32f',name:'Ling 3.2 Flash 무료',m:'inclusionai/ling-3.2-flash:free',tag:'free',vis:true},
+  {id:'or-solar4',name:'Upstage Solar Pro 4 한국산 $0.15/0.6',m:'upstage/solar-pro4',tag:'fast'},
   {id:'or-qw38f',name:'Qwen3.8 Flash $0.15/0.47',m:'qwen/qwen3.8-flash',tag:'fast',vis:true},
-  {id:'or-glm53f',name:'GLM 5.3 Flash $0.15/0.5',m:'z-ai/glm-5.3-flash',tag:'fast',vis:true,re:true},
+  {id:'or-glm53f',name:'GLM 5.3 Flash $0.04/0.078',m:'z-ai/glm-5.3-flash',tag:'fast',vis:true,re:true},
   {id:'or-luna',name:'GPT-6 Luna $0.1/0.5',m:'openai/gpt-6-luna',tag:'fast',vis:true,re:true},
-  {id:'or-gem38f',name:'Gemini 3.8 Flash $0.75/3.75',m:'google/gemini-3.8-flash',tag:'hot',vis:true,re:true},
-  {id:'or-son5',name:'Claude Sonnet 5 $2/10',m:'anthropic/claude-sonnet-5',tag:'hot',vis:true,re:true},
+  {id:'or-gem4h',name:'Gemini 4 Hydrogen $1.5/7.5',m:'google/gemini-4-hydrogen',tag:'hot',vis:true,re:true},
+  {id:'or-son55',name:'Claude Sonnet 5.5 $2/10',m:'anthropic/claude-sonnet-5.5',tag:'hot',vis:true,re:true},
   {id:'or-grk47',name:'Grok 4.7 $2/6',m:'x-ai/grok-4.7',tag:'best',vis:true,re:true},
-  {id:'or-qw38max',name:'Qwen3.8 Max $2/6',m:'qwen/qwen3.8-max-0902',tag:'best',vis:true,re:true},
+  {id:'or-qw4max',name:'Qwen4 Max $1.425/4.275',m:'qwen/qwen4-max',tag:'best',vis:true,re:true},
 ]};
 
 PROVIDERS.openrouter.models.forEach(m=>{const x=m.name.match(/\$([\d.]+)\/([\d.]+)/);if(x)m.p=[+x[1],+x[2]];else if(/무료|free/i.test(m.name))m.p=[0,0];});
@@ -582,7 +586,7 @@ const API_KEYS_CONFIG = [
   {id:'deepseek',label:'💰 DeepSeek — 가장 싼 고품질 SOAP',placeholder:'sk-...'},
   {id:'anthropic',label:'🧠 Claude',placeholder:'sk-ant-...'},
   {id:'xai',label:'🤖 xAI (Grok) — 텍스트 + Grok Imagine',placeholder:'xai-...'},
-  {id:'meta',label:'🟦 Meta Muse Spark (api.meta.ai)',placeholder:'meta_...'},
+  {id:'meta',label:'🟦 Meta Muse (Ember·Spark·Wonder, api.meta.ai)',placeholder:'meta_...'},
   {id:'openrouter',label:'🌐 OpenRouter — 키 하나로 10종 + Qwen3-ASR 음성인식',placeholder:'sk-or-...'},
 ];
 
@@ -865,6 +869,7 @@ async function importSettings(e){
 // ===== 구버전 잔재 청소 (v42 이하: Cerebras·Groq·NovelAI 키, 삭제된 회사의 커스텀 모델) =====
 function purgeLegacy(){
   ['cerebras','groq','novelai'].forEach(k=>localStorage.removeItem('soap_key_'+k));
+  localStorage.removeItem('soap_models_live'); // v47 이하 모델 캐시
   const before=customModelList.length;
   customModelList=customModelList.filter(cm=>cm&&PROVIDERS[cm.provider]);
   if(customModelList.length!==before)localStorage.setItem('soap_custom_models',JSON.stringify(customModelList));
@@ -874,7 +879,7 @@ function purgeLegacy(){
 function init() {
   purgeLegacy();
   renderApiKeys(); applyLiveModels(); renderModels(); renderCustomModels(); loadProfile();
-  setTimeout(()=>{const live=loadLive();if(!live||Date.now()-live.ts>24*3600*1000)refreshModels(false);},1500);
+  setTimeout(()=>{const live=loadLive();if(!live||Date.now()-live.ts>5*60*1000)refreshModels(false);},1500); // v48: 접속할 때마다 (5분 안에 새로고침한 경우만 생략)
   document.querySelectorAll('.detail-opt').forEach(opt => {
     opt.addEventListener('click', e => {
       const inp = opt.querySelector('input');
@@ -1110,7 +1115,7 @@ async function handleProfileFile(e){
 
 // ===== RUN STATE (중복 실행 · 이전 환자 응답 오염 방지) =====
 let isRunning=false, currentRunId=0, runAbort=null;
-const TIMEOUT={text:150000,stt:90000,image:120000}; // Grok 4.6·GPT-6 등 reasoning 모델은 60초 넘김
+const TIMEOUT={text:150000,stt:90000,image:120000}; // Grok 4.7·GPT-6.2·Gemini 4 등 reasoning 모델은 60초 넘김
 
 // timeout + 상위 AbortController 연동 + 429/502/503 1회 재시도
 async function fetchWithTimeout(url,opts,ms,signal,retry=1){
@@ -1152,7 +1157,7 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
       medImages.forEach(img=>{content.push({type:'image',source:{type:'base64',media_type:img.mimeType,data:img.base64}});});
     }
     content.push({type:'text',text:userMsg});
-    const r=await fetchWithTimeout('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:modelInfo.m,max_tokens:6000,system:sysPrompt,messages:[{role:'user',content}]})},TIMEOUT.text,signal);
+    const r=await fetchWithTimeout('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:modelInfo.m,max_tokens:12000,system:sysPrompt,messages:[{role:'user',content}]})},TIMEOUT.text,signal); // v48: Opus 5.5·Fable 5.2는 adaptive thinking 항상 켜짐 → 추론 토큰 몫까지 여유
     const d=await r.json();if(d.error)throw new Error(d.error.message);
     const txt=(d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
     if(!txt)throw new Error('Claude: 빈 응답');
@@ -1165,8 +1170,15 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
       medImages.forEach(img=>{parts.push({inline_data:{mime_type:img.mimeType,data:img.base64}});});
     }
     parts.push({text:userMsg});
-    const r=await fetchWithTimeout(`${prov.baseUrl}/models/${modelInfo.m}:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:sysPrompt}]},contents:[{parts}]})},TIMEOUT.text,signal);
-    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    const gbody={system_instruction:{parts:[{text:sysPrompt}]},contents:[{parts}]};
+    // v48: Gemini 4(Hydrogen 기본 thinking=high)는 SOAP에 과함 → low. 거부되면 thinking 설정 빼고 1회 재시도
+    const g4=/^gemini-([4-9]|\d{2,})/.test(modelInfo.m);
+    if(g4)gbody.generationConfig={thinkingConfig:{thinkingLevel:'low'}};
+    const gurl=`${prov.baseUrl}/models/${modelInfo.m}:generateContent?key=${key}`;
+    let r=await fetchWithTimeout(gurl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(gbody)},TIMEOUT.text,signal);
+    let d=await r.json().catch(()=>({error:{message:'HTTP '+r.status}}));
+    if(g4&&d.error&&/thinking|invalid|unknown|argument/i.test(d.error.message||'')&&!signal?.aborted){delete gbody.generationConfig;r=await fetchWithTimeout(gurl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(gbody)},TIMEOUT.text,signal);d=await r.json().catch(()=>({error:{message:'HTTP '+r.status}}));}
+    if(d.error)throw new Error(d.error.message);
     const gparts=d.candidates?.[0]?.content?.parts||[];
     const txt=gparts.filter(p=>p.text&&!p.thought).map(p=>p.text).join('\n');
     if(!txt)throw new Error('Gemini: 빈 응답');
@@ -1229,6 +1241,12 @@ async function callAPI(provKey,modelInfo,inputText,detailLevel,langMode,signal,o
     return result;
   }
 }
+
+// v48: 모델 없음/퇴출/권한없음 판별 + 같은 등급 내장 모델 찾기
+const MODEL_GONE=/404|not.?found|does not exist|decommission|deprecat|retired|no access|not available|unknown model|invalid model|model_not_found|unsupported model/i;
+function fallbackModel(pid,model){const st=STATIC_PROVIDERS[pid]?.models||[];if(!st.length)return null;
+  const same=st.find(x=>x.tag===model.tag&&x.m!==model.m)||st.find(x=>x.tag==='hot'&&x.m!==model.m)||st.find(x=>x.m!==model.m);
+  return same&&!isBad(pid,same.m)?{...same,id:model.id}:null;}
 
 // ===== SOAP PARSE =====
 function parseSOAP(text){
@@ -1327,7 +1345,14 @@ async function runAll(){
   await Promise.allSettled(selected.map(async({pid,prov,model})=>{
     let result=null,err=null;
     if(imageOnly&&!modelHasVision(pid,model))err=new Error('이 모델은 영상·사진을 읽지 못합니다 — 👁 표시된 모델을 선택하세요');
-    else{try{result=await callAPI(pid,model,inputText,detailLevel,langMode,signal);}catch(e){err=e;}}
+    else{try{result=await callAPI(pid,model,inputText,detailLevel,langMode,signal);}catch(e){err=e;}
+      // v48: 갱신된 모델이 404·퇴출·권한없음이면 → 같은 등급의 내장 모델로 1회 자동 대체 + 그 ID는 7일간 자동 선정에서 제외
+      if(err&&!signal.aborted&&!String(model.id).startsWith('custom_')&&MODEL_GONE.test(err.message)){
+        const alt=fallbackModel(pid,model);
+        if(alt){markBad(pid,model.m);showToast('↪️ '+model.m+' 사용 불가 → '+alt.m+'로 대체');
+          const lt=document.querySelector('#body_'+CSS.escape(model.id)+' .loading-box div:last-child');if(lt)lt.textContent=alt.name+' (대체) 변환 중...';
+          try{result=await callAPI(pid,alt,inputText,detailLevel,langMode,signal);err=null;const nm=document.querySelector('#rc_'+CSS.escape(model.id)+' .model-name');if(nm)nm.textContent=alt.name+' ↪️ (대체: '+model.m+' 사용 불가)';}catch(e2){err=new Error(err.message+' / 대체 '+alt.m+': '+e2.message);}}
+      }}
     if(runId!==currentRunId)return; // 늦게 돌아온 이전 환자 응답 → 폐기
     const body=document.getElementById('body_'+model.id);if(!body)return;
     if(err){fail++;renderError(body,err.message);}
@@ -1396,7 +1421,10 @@ function buildImagePrompt(){
   document.getElementById('imgPrompt').value=`medical illustration, anatomical diagram, ${(p.A||'').trim()}, patient symptoms: ${(p.S||'').trim()}, clean medical textbook style, labeled anatomy, professional healthcare infographic, white background, high detail, educational, landscape orientation, wide format`.substring(0,800);
 }
 
-const IMG_LABELS={nanobana2:'🍌 NanoBanana 2',gpt:'🤖 GPT Image 2.5',grok:'⚡ Grok Imagine'};
+const IMG_LABELS={nanobana2:'🍌 NanoBanana 2.1',gpt:'🤖 GPT Image 2.6',grok:'⚡ Grok Imagine 2.0'};
+// v48: 최신 이미지 모델 우선 → 실패(404·권한·파라미터)하면 직전 모델로 1회 재시도. 키 오류는 재시도 안 함
+const IMG_MODELS={nanobana2:['gemini-nano-banana-2.1','gemini-3.1-flash-image'],gpt:['gpt-image-2.6-flare','gpt-image-2.5-flare'],grok:['grok-imagine-image-2.0','grok-imagine-image']};
+async function genImgWithFallback(fn,list,prompt){let last;for(const m of list){try{return await fn(prompt,m);}catch(e){last=e;if(/키 필요|API key|api_key|401|unauthor|incorrect|invalid.*key|CORS/i.test(e.message))throw e;console.warn('[img] '+m+' 실패 → 다음 모델',e.message);}}throw last;}
 
 async function genImages(){
   const prompt=document.getElementById('imgPrompt').value.trim();
@@ -1409,9 +1437,9 @@ async function genImages(){
   const lt=el('div','',IMG_LABELS[eng]+' 생성 중...');lt.style.cssText='font-size:10px;color:var(--dim)';inner.appendChild(lt);box.appendChild(inner);div.appendChild(box);
   try{
     let url;
-    if(eng==='nanobana2')url=await genGeminiImage(prompt,'gemini-3.1-flash-image');
-    else if(eng==='gpt')url=await genGPTImg(prompt,'gpt-image-2.5-flare');
-    else url=await genGrokImg(prompt,'grok-imagine-image');
+    if(eng==='nanobana2')url=await genImgWithFallback(genGeminiImage,IMG_MODELS.nanobana2,prompt);
+    else if(eng==='gpt')url=await genImgWithFallback(genGPTImg,IMG_MODELS.gpt,prompt);
+    else url=await genImgWithFallback(genGrokImg,IMG_MODELS.grok,prompt);
     if(!/^(data:image\/|blob:|https:\/\/)/.test(url))throw new Error('잘못된 이미지 URL');
     box.className='img-result';
     const im=document.createElement('img');im.src=url;im.addEventListener('click',()=>showImgModal(im.src,eng));
@@ -1425,7 +1453,7 @@ async function genImages(){
 // Gemini Image (NanoBanana 시리즈 공용)
 async function genGeminiImage(prompt,model){
   const key=getKey('gemini');if(!key)throw new Error('Gemini API 키 필요');
-  if(!model)model='gemini-3.1-flash-image';
+  if(!model)model=IMG_MODELS.nanobana2[0];
   const cleanPrompt=prompt.replace(/[{}\[\]<>]/g,'').substring(0,1800);
   const body={
     contents:[{parts:[{text:`Generate an image (horizontal wide 16:9): ${cleanPrompt}`}]}],
@@ -1445,10 +1473,10 @@ async function genGeminiImage(prompt,model){
   throw new Error('Gemini: 이미지 없음');
 }
 
-// GPT Image 2.5 (flare / sunburst 공용)
+// GPT Image 2.6 / 2.5 (flare / sunburst 공용)
 async function genGPTImg(prompt,model){
   const key=getKey('openai');if(!key)throw new Error('OpenAI 키 필요');
-  model=model||'gpt-image-2.5-flare';
+  model=model||IMG_MODELS.gpt[0];
   const r=await fetchWithTimeout('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model,prompt:prompt.substring(0,4000),n:1,size:'1536x1024',quality:'medium'})},TIMEOUT.image);
   const d=await r.json();if(d.error)throw new Error(d.error.message);
   const b64=d?.data?.[0]?.b64_json;
@@ -1460,7 +1488,7 @@ async function genGPTImg(prompt,model){
 // Grok Image — 직접 호출만. 공개 CORS 프록시(corsproxy.*)는 API 키가 제3자 서버를 지나가므로 제거함.
 async function genGrokImg(prompt,model){
   const key=getKey('xai');if(!key)throw new Error('xAI 키 필요');
-  model=model||'grok-imagine-image';
+  model=model||IMG_MODELS.grok[0];
   const payload=JSON.stringify({model,prompt:prompt.substring(0,4000),n:1,aspect_ratio:'16:9',response_format:'b64_json'});
   let r;
   try{
@@ -1659,7 +1687,7 @@ const STT_CONFIG={
   'gpt-tx':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-transcribe',label:'GPT-Transcribe',fmt:'json'},
   'gpt4o-dia':{url:'https://api.openai.com/v1/audio/transcriptions',model:'gpt-4o-transcribe-diarize',label:'GPT-4o Transcribe 화자분리',fmt:'diarized_json'},
   'openai':{url:'https://api.openai.com/v1/audio/transcriptions',model:'whisper-1',label:'OpenAI Whisper',fmt:'text'},
-  'or-asr':{label:'OpenRouter Qwen3-ASR',openrouter:true,model:'qwen/qwen3-asr-0.6b'},
+  'or-asr':{label:'OpenRouter Qwen3-ASR',openrouter:true,model:'qwen/qwen3-asr-1.7b'},
 };
 
 async function runWhisper(blob,filename,pipeId,s1Id,s2Id,sttEng,autoSoap){
@@ -1954,17 +1982,32 @@ function finishLive(text,note){
   if(autoSoap&&!hadError){showToast('🧼 자동 SOAP 변환 시작...');setTimeout(()=>runAll(),500);}
 }
 
-// ===== 🔄 모델 자동 갱신 (v46) =====
+// ===== 🔄 모델 자동 갱신 (v46 → v48: 접속할 때마다 · 버전 비교 개선 · 회사별 신규 명명 대응 · 404 자동 대체) =====
 // 각 회사 /models 로 "지금 실제로 있는 모델"을 받고, OpenRouter 카탈로그(키 불필요)로 가격·출시일·비전·추론 여부를 붙인 뒤
 // 회사마다 ★best(최상위) 🔥hot(중간) ⚡fast(경량) 3종을 자동으로 고른다. 실패한 회사는 이전 목록 유지.
 const STATIC_PROVIDERS=JSON.parse(JSON.stringify(PROVIDERS));
-const LIVE_KEY='soap_models_live';
-const NOT_CHAT=/(realtime|audio|tts|transcri|whisper|embed|rerank|moderation|image|imagen|veo|sora|video|vision-only|search|codex|computer|robotic|guard|learnlm|gemma|instruct|distill|live|native|batch|deep-research|dall)/i;
-const OR_PINNED=['inclusionai/ling-3.0-flash-sante:free'];   // 카탈로그에 남아 있으면 항상 포함 (의료 특화 무료)
+const LIVE_KEY='soap_models_live_v48';                         // v48: v47까지의 캐시(옛 선정 규칙 결과)는 버리고 새 규칙으로 다시 고름
+const NOT_CHAT=/(realtime|audio|tts|transcri|whisper|embed|rerank|moderation|image|imagen|veo|sora|video|vision-only|search|codex|computer|robotic|guard|learnlm|gemma|instruct|distill|live|native|batch|deep-research|dall|omni|banana|cyber|rosalind|mythos|multi-agent|customtools|contributor|voice|stt|asr)/i;
+const OR_PINNED=['inclusionai/ling-3.0-flash-sante:free','inclusionai/ling-3.2-flash:free'];   // 카탈로그에 남아 있으면 항상 포함 (sante는 2026-11 카탈로그에서 빠짐 → 있으면 자동 복귀)
+const BAD_KEY='soap_models_bad';                               // 실제 호출에서 404/권한없음 난 모델 → 다음 갱신 때 제외
+function loadBad(){try{return JSON.parse(localStorage.getItem(BAD_KEY)||'{}');}catch(e){return {};}}
+function markBad(pid,m){const b=loadBad();b[pid+'|'+m]=Date.now();localStorage.setItem(BAD_KEY,JSON.stringify(b));}
+function isBad(pid,m){const t=loadBad()[pid+'|'+m];return !!t&&Date.now()-t<7*86400000;} // 7일 지나면 다시 시도
 let OR_CATALOG=null;                                           // id → OpenRouter 모델 정보
+let OR_STT=null;                                               // OpenRouter 음성인식(transcription) 모델 목록
 const RAW={};                                                  // 이번 갱신에서 받은 원시 /models 응답
 function normId(x){return String(x||'').toLowerCase().replace(/^.*\//,'').replace(/[.]/g,'-').replace(/-\d{8}$|-\d{4}-\d{2}-\d{2}$|-latest$|-preview$/,'');}
-function verOf(id){const m=String(id).match(/(\d+(?:\.\d+)?)/);return m?parseFloat(m[1]):0;}
+// 버전 파싱: 'gpt-6.2-sol'→[6,2] · 'claude-opus-5-5'→[5,5] · 'gemini-3.10-flash'→[3,10] (parseFloat는 3.10<3.9로 틀림)
+function verParts(id){let s=String(id).toLowerCase().replace(/^[^/]+\//,'').replace(/:.*$/,'').replace(/-\d{8}$|-\d{4}-\d{2}-\d{2}$|-\d{4}$/,'');
+  if(/^claude/.test(s)){const mm=s.match(/-(\d+)(?:-(\d{1,2}))?(?:-|$)/);if(mm)return [+mm[1],+(mm[2]||0)];}
+  const m=s.match(/(\d+(?:\.\d+)*)/);return m?m[1].split('.').map(Number):[0];}
+function cmpVer(a,b){const x=verParts(a),y=verParts(b);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d;}return 0;}
+function verOf(id){const p=verParts(id);return p[0]+(p[1]||0)/1000;} // 표시·하위호환용. 정렬은 newer() 사용
+// 최신 순 비교: 출시일(created)이 둘 다 있고 하루 이상 차이 나면 출시일 우선 (xAI grok-4.20[4월] < grok-4.7[9월] 같은 함정 방지), 아니면 버전, 그다음 정식>preview, 짧은 ID
+function newer(a,b){const ca=a.created||0,cb=b.created||0;if(ca&&cb&&Math.abs(ca-cb)>86400)return cb-ca;
+  return cmpVer(b.m||b.id,a.m||a.id)||((/preview|exp/.test(a.m||a.id)?1:0)-(/preview|exp/.test(b.m||b.id)?1:0))||(String(a.m||a.id).length-String(b.m||b.id).length);}
+// 버전 숫자를 지운 '계열 이름' — gpt-6.2-sol → gpt-sol, claude-opus-5-5 → claude-opus, gemini-4-hydrogen → gemini-hydrogen
+function famOf(id){return String(id).toLowerCase().replace(/^[^/]+\//,'').replace(/:.*$/,'').replace(/-\d{8}$|-\d{4}-\d{2}-\d{2}$|-\d{4}$/,'').replace(/[-.]?\d+(?:[.-]\d+)*/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');}
 function slug(pid,m){return pid+'_'+String(m).replace(/[^a-z0-9]+/gi,'_').toLowerCase();}
 function loadLive(){try{return JSON.parse(localStorage.getItem(LIVE_KEY)||'null');}catch(e){return null;}}
 function orInfo(vendorPrefixes,directId){
@@ -1990,7 +2033,7 @@ function pick3(list,nameRule){
   const allP=list.every(x=>x.p);
   let out;
   if(allP&&list.length>=2){const srt=[...list].sort((a,b)=>b.p[1]-a.p[1]);out=[srt[0],srt[Math.floor(srt.length/2)],srt[srt.length-1]];}
-  else{const srt=[...list].sort((a,b)=>verOf(b.m)-verOf(a.m)||(b.created||0)-(a.created||0));out=[srt[0],srt[1],srt[2]];}
+  else{const srt=[...list].sort(newer);out=[srt[0],srt[1],srt[2]];}
   out=out.filter(Boolean).filter((x,i,a)=>a.findIndex(y=>y.m===x.m)===i);
   const tags=['best','hot','fast'];out.forEach((x,i)=>x.tag=tags[i]);
   if(nameRule)out.forEach(x=>{const t=nameRule(x.m);if(t)x.tag=t;});
@@ -2007,13 +2050,18 @@ const MODEL_FETCHERS={
   async openrouter(){ // 키 불필요. 카탈로그 전체 보관 + 추천 10종
     const j=await getJSON('https://openrouter.ai/api/v1/models');
     OR_CATALOG={};(j.data||[]).forEach(e=>{OR_CATALOG[e.id]=e;});
+    // v48: STT 모델은 기본 /models에 안 나옴(문서: output_modalities=transcription 필터 필요) → 따로 받아 보관
+    try{const t=await getJSON('https://openrouter.ai/api/v1/models?output_modalities=transcription');OR_STT=(t.data||[]);}catch(e){OR_STT=null;}
     const now=Date.now()/1000,all=Object.values(OR_CATALOG);
     const ok=e=>{const a=e.architecture||{};const im=a.input_modalities||[],om=a.output_modalities||[];
       return im.includes('text')&&(!om.length||om.includes('text'))&&!NOT_CHAT.test(e.id.replace(/:free$/,''))&&!/preview|exp\b|-exp-|\d{4}-\d{2}-\d{2}|(:(?!free)[a-z]+)$/i.test(e.id)&&(e.context_length||0)>=32000;};
-    const paid=all.filter(e=>ok(e)&&priceOf(e)&&priceOf(e)[1]>0&&priceOf(e)[1]<=6&&now-(e.created||0)<150*86400).sort((a,b)=>(b.created||0)-(a.created||0));
+    // v48: 아무 회사의 최신작이 아니라(1.7B 소형·생소한 회사가 섞였음) 검증된 회사 위주 + 소형(<20B) 제외 + 출력 $10/M 이하
+    const TRUSTED=/^(openai|google|anthropic|x-ai|deepseek|qwen|z-ai|moonshotai|upstage|meta|mistralai|minimax|kt|inclusionai|lgai|naver)$/;
+    const big=e=>{const z=sizeOf(e.id);return !z||z>=20;};
+    const paid=all.filter(e=>ok(e)&&TRUSTED.test(e.id.split('/')[0])&&big(e)&&!isBad('openrouter',e.id)&&!/^~|^openrouter\/|-\d{4}$|-legal|-code/.test(e.id)&&!(/-pro$/.test(e.id)&&OR_CATALOG[e.id.replace(/-pro$/,'')])&&priceOf(e)&&priceOf(e)[1]>0&&priceOf(e)[1]<=10&&now-(e.created||0)<150*86400).sort((a,b)=>(b.created||0)-(a.created||0));
     const byVendor={};paid.forEach(e=>{const v=e.id.split('/')[0];if(!byVendor[v])byVendor[v]=e;});
     const top=Object.values(byVendor).slice(0,8);
-    const free=all.filter(e=>ok(e)&&/:free$/.test(e.id)&&now-(e.created||0)<200*86400).sort((a,b)=>(b.context_length||0)-(a.context_length||0)).slice(0,2);
+    const free=all.filter(e=>ok(e)&&/:free$/.test(e.id)&&big(e)&&now-(e.created||0)<200*86400).sort((a,b)=>(TRUSTED.test(b.id.split('/')[0])?1:0)-(TRUSTED.test(a.id.split('/')[0])?1:0)||(b.context_length||0)-(a.context_length||0)).slice(0,2);
     const pinned=OR_PINNED.map(id=>OR_CATALOG[id]).filter(Boolean);
     const uniq=[...pinned,...top,...free].filter((e,i,a)=>a.findIndex(y=>y.id===e.id)===i);
     const list=uniq.map(e=>{const p=priceOf(e)||[0,0];const isFree=/:free$/.test(e.id)||(p[0]===0&&p[1]===0);
@@ -2024,51 +2072,65 @@ const MODEL_FETCHERS={
   },
   async openai(key){
     const j=await getJSON('https://api.openai.com/v1/models',{'Authorization':'Bearer '+key});RAW.openai=j;
-    let ids=(j.data||[]).filter(e=>/^gpt-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-\d{4}-\d{2}-\d{2}$|chat-latest|preview/.test(e.id));
-    const top=Math.max(...ids.map(e=>verOf(e.id)));ids=ids.filter(e=>verOf(e.id)===top);
-    const list=decorate('openai',['openai'],ids.map(e=>({m:e.id,created:e.created,vis:true})));
-    return pick3(list,m=>/-nano$/.test(m)?'fast':/-pro$/.test(m)?'best':null);
+    // v48: 예전엔 '최고 버전 숫자'만 남겨서 GPT-6.2(Sol/Astra)가 나오면 6.0 Luna(가성비)가 사라졌음 → 계열별 최신 1개씩
+    const ids=(j.data||[]).filter(e=>/^gpt-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-\d{4}-\d{2}-\d{2}$|chat-latest|preview|-pro$|oss/.test(e.id)&&!isBad('openai',e.id)).map(e=>({m:e.id,created:e.created||0}));
+    const topMajor=Math.max(...ids.map(e=>verParts(e.m)[0]));
+    const fam={};ids.filter(e=>verParts(e.m)[0]>=topMajor-0).forEach(e=>{const f=famOf(e.m);if(!fam[f]||newer(e,fam[f])<0)fam[f]=e;});
+    const TIER={luna:'fast',nano:'fast',mini:'fast',sol:'hot',astra:'best'};
+    const sel=Object.values(fam).map(e=>{const w=(famOf(e.m).match(/(luna|nano|mini|terra|sol|astra)$/)||[])[1];return {...e,vis:true,tag:w?(TIER[w]||''):undefined};});
+    if(!sel.some(x=>x.tag)){return pick3(decorate('openai',['openai'],sel.map(x=>({m:x.m,created:x.created,vis:true}))),m=>/-nano$/.test(m)?'fast':/-pro$/.test(m)?'best':null);}
+    const list=decorate('openai',['openai'],sel.map(x=>({m:x.m,created:x.created,vis:true,tag:x.tag||''})));
+    return list.sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag)).slice(0,5);
   },
   async anthropic(key){
     const j=await getJSON('https://api.anthropic.com/v1/models?limit=100',{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'});
-    const fam={opus:'best',sonnet:'hot',haiku:'fast'},pick={};
-    (j.data||[]).forEach(e=>{const f=(e.id.match(/claude-(opus|sonnet|haiku)/)||[])[1];if(!f)return;
+    const fam={opus:'best',sonnet:'hot',haiku:'fast',fable:''},pick={};
+    (j.data||[]).forEach(e=>{const f=(e.id.match(/claude-(opus|sonnet|haiku|fable)/)||[])[1];if(!f||isBad('anthropic',e.id))return;
       const t=Date.parse(e.created_at||0)||0,dated=/-\d{8}$/.test(e.id);
-      const cur=pick[f];if(!cur||t>cur.t||(t===cur.t&&cur.dated&&!dated))pick[f]={e,t,dated};});
+      const cur=pick[f];if(!cur||t>cur.t||(t===cur.t&&(cmpVer(e.id,cur.e.id)>0||(cur.dated&&!dated))))pick[f]={e,t,dated};});
     const list=decorate('anthropic',['anthropic'],Object.entries(pick).map(([f,{e,t}])=>({m:e.id,name:e.display_name||e.id,created:t/1000,vis:true,tag:fam[f]})));
-    return list.sort((a,b)=>['fast','hot','best'].indexOf(a.tag)-['fast','hot','best'].indexOf(b.tag));
+    return list.sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag));
   },
   async gemini(key){
     const j=await getJSON('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key='+encodeURIComponent(key));RAW.gemini=j;
     const ms=(j.models||[]).filter(e=>(e.supportedGenerationMethods||[]).includes('generateContent')).map(e=>({id:e.name.replace(/^models\//,''),dn:e.displayName||''}))
       .filter(e=>/^gemini-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/-exp|thinking|-\d{3,}$/.test(e.id));
-    const tier=id=>/flash-lite/.test(id)?'fast':/flash/.test(id)?'hot':/pro/.test(id)?'best':null,pick={};
-    ms.forEach(e=>{const t=tier(e.id);if(!t)return;const v=verOf(e.id),pv=/preview/.test(e.id)?1:0;const cur=pick[t];
-      if(!cur||v>cur.v||(v===cur.v&&(pv<cur.pv||(pv===cur.pv&&e.id.length<cur.e.id.length))))pick[t]={e,v,pv};});
-    const list=decorate('gemini',['google'],Object.entries(pick).map(([t,{e}])=>({m:e.id,name:e.dn.replace(/^Gemini\s*/,'Gemini '),vis:true,tag:t})));
-    return list.sort((a,b)=>['fast','hot','best'].indexOf(a.tag)-['fast','hot','best'].indexOf(b.tag));
+    // v48: Gemini 4는 flash/pro 대신 원소 이름(Hydrogen=빠른 주력, Argon=효율 추론, Carbon=최상위). 이름 규칙이 또 바뀌어도 최신 메이저는 태그 없이 붙임
+    const tier=id=>/flash-lite|-lite\b|nano/.test(id)?'fast':/hydrogen|flash/.test(id)?'hot':/carbon|ultra|pro/.test(id)?'best':/argon/.test(id)?'alt':null,pick={};
+    const rows=ms.filter(e=>!isBad('gemini',e.id)).map(e=>({e,m:e.id,created:(orInfo(['google'],e.id)||{}).created||0}));
+    rows.forEach(r=>{const t=tier(r.m);if(!t)return;const cur=pick[t];if(!cur||newer(r,cur)<0)pick[t]=r;});
+    const topMajor=Math.max(0,...rows.map(r=>verParts(r.m)[0]));
+    rows.filter(r=>!tier(r.m)&&verParts(r.m)[0]>=topMajor&&topMajor>0).sort(newer).slice(0,2).forEach((r,i)=>{pick['new'+i]=r;});
+    const list=decorate('gemini',['google'],Object.entries(pick).map(([t,{e,m}])=>({m,name:(e.dn||m).replace(/^Gemini\s*/,'Gemini '),vis:true,tag:['fast','hot','best'].includes(t)?t:''})));
+    return list.sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag));
   },
   async xai(key){
     const j=await getJSON('https://api.x.ai/v1/models',{'Authorization':'Bearer '+key});
-    const ids=(j.data||[]).map(e=>e.id).filter(id=>/^grok-\d/.test(id)&&!NOT_CHAT.test(id)&&!/imagine|-\d{4}$/.test(id));
-    const main=ids.filter(id=>!/fast|mini/.test(id)).sort((a,b)=>verOf(b)-verOf(a)),fast=ids.filter(id=>/fast|mini/.test(id)).sort((a,b)=>verOf(b)-verOf(a));
+    const rows=(j.data||[]).filter(e=>/^grok-\d/.test(e.id)&&!NOT_CHAT.test(e.id)&&!/imagine|-\d{4}$/.test(e.id)&&!isBad('xai',e.id)).map(e=>({m:e.id,created:e.created||(orInfo(['x-ai'],e.id)||{}).created||0}));
+    const main=rows.filter(r=>!/fast|mini/.test(r.m)).sort(newer).map(r=>r.m),fast=rows.filter(r=>/fast|mini/.test(r.m)).sort(newer).map(r=>r.m);
     const sel=[];if(fast[0])sel.push({m:fast[0],tag:'fast'});if(main[1])sel.push({m:main[1],tag:'hot'});if(main[0])sel.push({m:main[0],tag:'best'});
     if(!sel.some(x=>x.tag==='hot')&&!sel.some(x=>x.tag==='fast')&&main[0])sel.unshift({m:main[0],tag:'hot'});
     return decorate('xai',['x-ai'],sel.map(x=>({...x,name:'Grok '+x.m.replace(/^grok-/,'').replace(/-/g,' '),vis:true})));
   },
   async deepseek(key){
     const j=await getJSON('https://api.deepseek.com/models',{'Authorization':'Bearer '+key});
-    const ids=(j.data||[]).map(e=>e.id).filter(id=>/^deepseek/.test(id)&&!NOT_CHAT.test(id));
+    // v48: 공식 문서 기준 현행은 deepseek-flash(=V4.1-Flash-1017)·deepseek-v4-pro. 옛 이름(v4-flash·vision-exp·chat·reasoner)은 은퇴/별칭이라 제외
+    const ids=(j.data||[]).map(e=>e.id).filter(id=>/^deepseek/.test(id)&&!NOT_CHAT.test(id)&&!/exp|^deepseek-(chat|reasoner|coder)$|^deepseek-v4-flash$/.test(id)&&!isBad('deepseek',id));
     const tag=id=>/pro|reasoner|max/.test(id)?'best':/flash|lite|mini/.test(id)?'fast':'hot';
-    const list=decorate('deepseek',['deepseek'],ids.map(id=>({m:id,name:id.replace(/^deepseek-/,'DeepSeek '),tag:tag(id)})));
-    const seen={};return list.filter(x=>{if(seen[x.tag])x.tag='';seen[x.tag]=1;return true;}).sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag));
+    // 같은 태그 안에서는 버전 없는 상시 별칭(deepseek-flash) 우선, 그다음 최신 버전
+    const srt=[...ids].sort((a,b)=>((/\d/.test(a)?1:0)-(/\d/.test(b)?1:0))||cmpVer(b,a));
+    const list=decorate('deepseek',['deepseek'],srt.map(id=>({m:id,name:id.replace(/^deepseek-/,'DeepSeek '),tag:tag(id),vis:/flash/.test(id)})));
+    const seen={};return list.filter(x=>{if(seen[x.tag])x.tag='';seen[x.tag]=1;return true;}).slice(0,4).sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag));
   },
   async meta(key){
     const j=await getJSON('https://api.meta.ai/v1/models',{'Authorization':'Bearer '+key});
-    const ids=(j.data||j.models||[]).map(e=>e.id||e.name).filter(id=>id&&!NOT_CHAT.test(id)&&!/-\d{4}-\d{2}-\d{2}$/.test(id));
-    if(!ids.length)throw new Error('채팅 모델 없음');
-    const list=decorate('meta',['meta','meta-llama'],ids.sort((a,b)=>verOf(b)-verOf(a)).slice(0,3).map(id=>({m:id,name:id.replace(/muse-spark/i,'Muse Spark').replace(/-/g,' '),vis:true})));
-    return pick3(list);
+    const rows=(j.data||j.models||[]).map(e=>({m:e.id||e.name,created:e.created||0})).filter(r=>r.m&&/^muse-/.test(r.m)&&!NOT_CHAT.test(r.m)&&!/image|sam|glimmer|open/.test(r.m)&&!/-\d{4}-\d{2}-\d{2}$/.test(r.m)&&!isBad('meta',r.m));
+    if(!rows.length)throw new Error('채팅 모델 없음');
+    // v48: Muse Ember(경량)·Spark(주력)·Wonder(최상위) 계열별 최신 1개씩 — 예전엔 버전 숫자만 봐서 Spark 1.3/1.2/1.1만 골랐음
+    const TIER={ember:'fast',spark:'hot',wonder:'best'},fam={};
+    rows.forEach(r=>{const f=(r.m.match(/^muse-([a-z]+)/)||[])[1];if(!f)return;if(!fam[f]||newer(r,fam[f])<0)fam[f]=r;});
+    const list=decorate('meta',['meta','meta-llama'],Object.entries(fam).map(([f,r])=>({m:r.m,created:r.created,name:r.m.replace(/^muse-([a-z]+)-?/,(x,a)=>'Muse '+a[0].toUpperCase()+a.slice(1)+' ').trim(),vis:true,tag:TIER[f]||''})));
+    return list.sort((a,b)=>['fast','hot','best',''].indexOf(a.tag)-['fast','hot','best',''].indexOf(b.tag)).slice(0,4);
   },
 };
 // STT 엔진 자동 선정: 같은 /models 응답에서 음성인식 모델만 골라 최신으로
@@ -2077,18 +2139,18 @@ function pickStt(){
   const out={};
   if(RAW.openai){
     const ids=(RAW.openai.data||[]).map(e=>({id:e.id,c:e.created||0})).filter(e=>!/preview|realtime|latest/.test(e.id));
-    const tx=ids.filter(e=>/transcribe(-\d+(\.\d+)?)?$/.test(e.id)&&!/mini|nano/.test(e.id)).sort((a,b)=>b.c-a.c||verOf(b.id.replace(/^gpt-\d+o?/,''))-verOf(a.id.replace(/^gpt-\d+o?/,''))||a.id.length-b.id.length);
+    const tx=ids.filter(e=>/transcribe(-\d+(\.\d+)?)?$/.test(e.id)&&!/mini|nano|live/.test(e.id)).sort((a,b)=>b.c-a.c||cmpVer(b.id.replace(/^gpt-\d+o?/,''),a.id.replace(/^gpt-\d+o?/,''))||a.id.length-b.id.length);
     const dia=ids.filter(e=>/transcribe(-\d+(\.\d+)?)?-diarize$/.test(e.id)).sort((a,b)=>b.c-a.c||a.id.length-b.id.length);
     if(tx[0])out['gpt-tx']=tx[0].id;if(dia[0])out['gpt4o-dia']=dia[0].id;
   }
   if(RAW.gemini){
-    const ids=(RAW.gemini.models||[]).map(e=>String(e.name||'').replace(/^models\//,'')).filter(id=>/^gemini-[\d.]+-transcribe/.test(id)&&!/exp/.test(id));
-    const best=ids.sort((a,b)=>verOf(b)-verOf(a)||(/preview/.test(a)?1:0)-(/preview/.test(b)?1:0)||a.length-b.length)[0];
+    const ids=(RAW.gemini.models||[]).map(e=>String(e.name||'').replace(/^models\//,'')).filter(id=>/^gemini-[\d.]+-transcribe/.test(id)&&!/exp|live/.test(id));
+    const best=ids.sort((a,b)=>cmpVer(b,a)||(/preview/.test(a)?1:0)-(/preview/.test(b)?1:0)||a.length-b.length)[0];
     if(best)out['gemini-tx']=best;
   }
-  if(OR_CATALOG){
-    const c=Object.values(OR_CATALOG).filter(e=>(e.architecture?.input_modalities||[]).includes('audio')&&/asr|transcri|whisper|speech|stt/i.test(e.id)&&!/:|preview|exp/.test(e.id)&&(e.architecture?.output_modalities||['text']).includes('text'))
-      .sort((a,b)=>(b.created||0)-(a.created||0)||sizeOf(b.id)-sizeOf(a.id));
+  if(OR_STT&&OR_STT.length){
+    // v48: transcription 전용 목록에서 Qwen ASR 계열(이 칩의 정체성) 중 최신·가장 큰 것. 없으면 기존 값 유지
+    const c=OR_STT.filter(e=>/^qwen\/.*asr/i.test(e.id)&&!/:|preview|exp|stream/.test(e.id)).sort((a,b)=>(b.created||0)-(a.created||0)||sizeOf(b.id)-sizeOf(a.id));
     if(c[0])out['or-asr']=c[0].id;
   }
   return out;
@@ -2147,11 +2209,11 @@ function applyLiveModels(){
   Object.keys(PROVIDERS).forEach(pid=>{const r=live?.providers?.[pid];PROVIDERS[pid].models=(r&&r.ok&&r.models?.length)?r.models:JSON.parse(JSON.stringify(STATIC_PROVIDERS[pid].models));});
   if(live&&OR_CATALOG===null&&live.providers?.openrouter?.ok)OR_CATALOG=OR_CATALOG||{}; // 캐시 플래그
   if(!info)return;
-  if(!live){applyLiveStt();info.textContent='모델 목록: 내장(2026-09-29 기준) · 🔄 모델 갱신을 누르면 각 회사 최신 목록으로 바뀝니다';return;}
+  if(!live){applyLiveStt();info.textContent='모델 목록: 내장(2026-11-18 기준) · 🔄 모델 갱신을 누르면 각 회사 최신 목록으로 바뀝니다';return;}
   const d=new Date(live.ts),when=`${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
   const okN=Object.values(live.providers||{}).filter(r=>r.ok).length;
   const cur=applyLiveStt();const sttTxt=[cur['gpt-tx'],cur['gemini-tx'],cur['or-asr']].filter(Boolean).map(x=>String(x).replace(/^.*\//,'')).join(' · ');
-  info.textContent=`갱신 ${when} · ${okN}개 회사 최신 · STT ${sttTxt} · 24시간마다 자동`+(live.errors?.length?` · ⚠️ ${live.errors.join(' / ')}`:'');
+  info.textContent=`갱신 ${when} · ${okN}개 회사 최신 · STT ${sttTxt} · 접속할 때마다 자동`+(live.errors?.length?` · ⚠️ ${live.errors.join(' / ')}`:'');
   info.style.color=live.errors?.length?'#f59e0b':'var(--dim)';
 }
 
