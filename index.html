@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>비누제조기 Personal v48 · Nari | SOAP Maker</title>
+<title>비누제조기 Personal v48.1 · Nari | SOAP Maker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%BC%3C/text%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -222,11 +223,11 @@ textarea::placeholder{color:var(--dim)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v48 · 🌸 Nari · 🔄 자동 갱신</span></h1>
+  <h1>🧼 <span>비누제조기</span> Personal <span style="font-size:11px;color:var(--dim);font-weight:400">v48.1 · 🌸 Nari · 🔄 자동 갱신</span></h1>
   <p class="sub">신경외과 개인용 · 🌸 Nari 실시간 자막 STT · <span id="bridgeBadge" class="nari-badge off">중계 확인 중…</span></p>
   <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
     <button id="newPatientBtn" class="btn-new" title="이전 환자의 입력·영상·결과를 지우고 다음 환자 준비 (API 키·프로필은 유지)">🆕 새 환자</button>
-    <a href="./guide.html?v=48" class="btn-link">📖 사용 설명서</a>
+    <a href="./guide.html?v=48.1" class="btn-link">📖 사용 설명서</a>
   </div>
 </div>
 
@@ -240,7 +241,7 @@ textarea::placeholder{color:var(--dim)}
     <div class="info-box">
       💡 <b>API 키</b>는 AI 회사가 발급하는 비밀번호입니다. 회사 홈페이지에서 발급받아 붙여넣으면 이 브라우저에만 저장됩니다.<br>
       <span style="color:var(--green)">✓ <b>Gemini 키 하나</b>면 SOAP 작성 + 음성인식 + 이미지 생성이 전부 됩니다. 처음이면 Gemini 하나로 시작하세요.</span><br>
-      <span style="color:var(--dim)">• 🌸 <b>Nari 키는 여기 넣지 않습니다</b> — 중계 프로그램(bridge.py)이 PC 안에서만 보관 · Gemini/OpenAI STT는 백업용 · 발급 방법은 📖 설명서 2장</span>
+      <span style="color:var(--dim)">• 🌸 <b>Nari 키는 여기 넣지 않습니다</b> — 중계 프로그램(bridge.py)이 PC 안에서만 보관 · GitHub 주소에서도 중계가 켜져 있으면 자동 연결 · Gemini/OpenAI STT는 백업용 · 발급 방법은 📖 설명서 2장</span>
     </div>
     <div class="api-wrap" id="apiWrap"></div>
     <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;align-items:center">
@@ -434,7 +435,7 @@ textarea::placeholder{color:var(--dim)}
         <button class="btn-sm" id="reSttBtn" style="display:none;font-size:9px" onclick="reTranscribe()" title="방금 녹음(백업 파일)을 지금 고른 엔진으로 다시 인식">🔁 방금 녹음 다시 인식</button>
         <span id="recMimeInfo" style="display:none"></span>
       </div>
-      <div style="font-size:9px;color:var(--dim);text-align:center;margin-top:8px;line-height:1.6">🎧 권장 마이크: <b>Jabra Speak2 55</b> 같은 360° 스피커폰을 의사·환자 사이 책상 위에 (일반 마이크는 의사 목소리만 잡힘)<br>녹음 전 환자에게 구두로 알리세요 · 자세한 세팅은 <a href="./guide.html?v=48#mic" style="color:var(--accent)">📖 설명서 9장</a></div>
+      <div style="font-size:9px;color:var(--dim);text-align:center;margin-top:8px;line-height:1.6">🎧 권장 마이크: <b>Jabra Speak2 55</b> 같은 360° 스피커폰을 의사·환자 사이 책상 위에 (일반 마이크는 의사 목소리만 잡힘)<br>녹음 전 환자에게 구두로 알리세요 · 자세한 세팅은 <a href="./guide.html?v=48.1#mic" style="color:var(--accent)">📖 설명서 9장</a></div>
       <div class="stt-pipeline" id="sttPipe1">
         <div class="stt-step" id="stt1a"><div class="stt-dot"></div>음성인식 중...</div>
         <div class="stt-step" id="stt1b"><div class="stt-dot"></div>텍스트 변환 완료</div>
@@ -827,13 +828,18 @@ function setRecStatus(kind,text){
   const el=document.getElementById('recStatus'),t=document.getElementById('recStatusTxt');
   if(!el)return;el.className='rec-status '+kind;if(t)t.textContent=text;
 }
-async function refreshRecStatus(){
+async function refreshRecStatus(user){
   const eng=document.getElementById('sttEngine')?.value||'nari-fast';
   const need=STT_NEEDS[eng]||'gemini';
   if(need==='nari'){
     setRecStatus('wait','🌸 Nari 중계 확인 중…');
-    try{await ensureNariBridge();setRecStatus('ok','🌸 Nari 중계 연결됨 — 녹음하면 실시간 자막이 뜹니다');}
-    catch(e){setRecStatus('bad',e.message+' (클릭하면 다시 확인)');}
+    try{await ensureNariBridge({user:user===true});setRecStatus('ok','🌸 Nari 중계 연결됨 — 녹음하면 실시간 자막이 뜹니다');}
+    catch(e){
+      NARI.ok=false;setBridgeBadge(false,e.code==='NEED_CLICK'?'🔌 PC 중계 — 눌러서 연결':'중계 없음 — 켜고 나서 클릭');
+      const fb=sttFallbackEngine();
+      if(fb)setRecStatus('ok','중계 없음 → 녹음하면 '+STT_CONFIG[fb].label+'로 대신 인식 · 🌸 Nari는 중계 켜고 여기 클릭');
+      else setRecStatus('bad',e.message+' (클릭하면 다시 확인)');
+    }
     return;
   }
   const label=STT_KEY_LABEL[need]||need;
@@ -1574,8 +1580,12 @@ const STT_KEY_LABEL={nari:'Nari 중계',gemini:'Gemini',openai:'OpenAI',openrout
 
 async function toggleRecord(){if(isRecording)stopRecording();else startRecording();}
 async function startRecording(){
-  const sttEng=document.getElementById('sttEngine')?.value||'nari-fast';
-  if(sttEng.startsWith('nari')){return startLiveNari(STT_CONFIG[sttEng].model);}
+  let sttEng=document.getElementById('sttEngine')?.value||'nari-fast';
+  if(sttEng.startsWith('nari')){
+    try{sttEng=await resolveSttEngine(sttEng);}catch(e){showToast('⚠️ '+e.message);setRecStatus('bad',e.message);return;}
+    if(sttEng.startsWith('nari'))return startLiveNari(STT_CONFIG[sttEng].model);
+  }
+  const useEng=sttEng;
   const needKey=sttKeyFor(sttEng);
   if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' API 키 필요 — 위 🔑 카드에 입력');return;}
   try{
@@ -1591,9 +1601,8 @@ async function startRecording(){
       let ext='webm';const am=mediaRecorder.mimeType||'';
       if(am.includes('mp4'))ext='mp4';else if(am.includes('ogg'))ext='ogg';
       keepLastRec(blob,'recording.'+ext);
-      const sttEng=document.getElementById('sttEngine')?.value||'nari-fast';
       const autoSoap=document.getElementById('autoSoapCheck')?.checked||false;
-      runWhisper(blob,'recording.'+ext,'sttPipe1','stt1a','stt1b',sttEng,autoSoap);
+      runWhisper(blob,'recording.'+ext,'sttPipe1','stt1a','stt1b',useEng,autoSoap); // v48.1: 시작할 때 정한 엔진(중계 없으면 백업 엔진)
     };
     mediaRecorder.start(1000);isRecording=true;recSeconds=0;recFlow(1);
     document.getElementById('recBtn').classList.add('recording');
@@ -1628,9 +1637,10 @@ async function handleAnyFile(e){
     finally{reset();}
     return;
   }
-  const sttEng=document.getElementById('sttEngine2')?.value||'nari-fast';
+  let sttEng=document.getElementById('sttEngine2')?.value||'nari-fast';
+  if(sttEng.startsWith('nari')){try{sttEng=await resolveSttEngine(sttEng);}catch(err){showToast('⚠️ '+err.message);reset();return;}}
   const needKey=sttKeyFor(sttEng);
-  if(needKey==='nari'){try{await ensureNariBridge();}catch(err){showToast('⚠️ '+err.message);reset();return;}}
+  if(needKey==='nari'){/* 위에서 중계 확인됨 */}
   else if(!getKey(needKey)){showToast('⚠️ '+STT_KEY_LABEL[needKey]+' 키 필요 — 위 🔑 카드에 입력');reset();return;}
   if(file.size>25*1024*1024){showToast('⚠️ 25MB 초과');reset();return;}
   box.classList.add('processing');txt.textContent='음성인식 중: '+file.name;
@@ -1838,36 +1848,74 @@ async function convertToWav(blob){
   ctx.close();return new Blob([wavBuf],{type:'audio/wav'});
 }
 
-// ===== 🌸 Nari 중계 (Personal v45) — 실시간 STT · 파일 STT · TTS =====
-const NARI={token:null,wsPort:8766,status:null,ok:false};
+// ===== 🌸 Nari 중계 (Personal v45 → v48.1: GitHub 주소에서도 PC 중계에 직접 연결) =====
+// 두 가지로 열 수 있음 ① http://127.0.0.1:8765 (중계가 서빙 + 토큰 meta 주입)  ② https://schockwave720.github.io/soap/ (중계에 /api/nari/pair 로 토큰 받기)
+const NARI_BRIDGE='http://127.0.0.1:8765';
+const NARI={token:null,wsPort:8766,status:null,ok:false,base:'',paired:false,lastTry:0,lastErr:''};
 let live=null,lastRec=null,liveDoneTimer=null;
-function nariHere(){return location.protocol==='http:'&&['127.0.0.1','localhost'].includes(location.hostname);}
-function nariMeta(){NARI.token=document.querySelector('meta[name="nari-bridge-token"]')?.content||null;NARI.wsPort=parseInt(document.querySelector('meta[name="nari-bridge-ws"]')?.content||'8766');return !!NARI.token;}
-async function ensureNariBridge(){
-  if(!nariHere())throw new Error('Nari는 start_windows.cmd로 연 http://127.0.0.1:8765 화면에서만 됩니다');
-  if(!nariMeta())throw new Error('중계 프로그램이 연 화면이 아닙니다 — start_windows.cmd 실행');
-  let r;try{r=await fetchWithTimeout('/api/status',{cache:'no-store'},5000);}catch(e){throw new Error('PC 중계에 연결되지 않습니다 — 검은 실행창이 살아 있는지 확인');}
+function nariHere(){return location.protocol==='http:'&&['127.0.0.1','localhost'].includes(location.hostname)&&location.port==='8765';}
+function nariMeta(){const t=document.querySelector('meta[name="nari-bridge-token"]')?.content||null;if(!t)return false;NARI.token=t;NARI.base='';NARI.wsPort=parseInt(document.querySelector('meta[name="nari-bridge-ws"]')?.content||'8766');return true;}
+function nariUrl(p){return (NARI.base||'')+p;}
+function nariFetchOpts(o){o=o||{};if(NARI.base)o.targetAddressSpace='loopback';return o;} // Chrome 로컬 네트워크 접근(LNA): GitHub(https) → 127.0.0.1 임을 미리 알림
+async function nariLoopbackPerm(){ // 'granted' | 'prompt' | 'denied' | 'unknown'
+  try{const r=await navigator.permissions.query({name:'loopback-network'});return r.state;}catch(e){return 'unknown';}
+}
+async function nariPair(){
+  // GitHub Pages 등 다른 주소: 중계가 Origin 을 확인하고 토큰을 줌
+  NARI.base=NARI_BRIDGE;
+  let r;try{r=await fetchWithTimeout(NARI_BRIDGE+'/api/nari/pair',nariFetchOpts({cache:'no-store'}),4000,null,0);}
+  catch(e){throw new Error('PC 중계가 꺼져 있거나 “로컬 기기 연결” 권한이 막혀 있습니다 — start_windows.cmd 실행 후 배지 클릭');}
   const d=await r.json().catch(()=>({}));
-  if(!r.ok||d.service!=='soap-nari-personal-v45')throw new Error('중계 프로그램 버전이 다릅니다 — v45 폴더의 bridge.py 인지 확인');
+  if(!r.ok||!d.token)throw new Error(r.status===403?'중계가 이 주소를 허용하지 않습니다 — v48.1 bridge.py 인지 확인':'중계 연결 실패 ('+r.status+')');
+  NARI.token=d.token;NARI.wsPort=parseInt(d.ws_port||8766);NARI.paired=true;return d;
+}
+// 동시에 여러 곳(페이지 열기·준비 줄·배지)에서 불러도 확인은 한 번만 — 중계가 꺼져 있을 때 콘솔에 연결 실패가 여러 줄 찍히지 않게
+const _nariInflight={};
+function ensureNariBridge(opts){
+  const k=opts&&opts.user?'u':'a'; // 클릭으로 부른 확인과 자동 확인은 따로 (클릭은 권한 창을 띄울 수 있음)
+  if(_nariInflight[k])return _nariInflight[k];
+  return _nariInflight[k]=_ensureNariBridge(opts).finally(()=>{_nariInflight[k]=null;});
+}
+async function _ensureNariBridge(opts){
+  opts=opts||{};
+  if(nariHere()&&nariMeta()){/* ① 중계가 연 화면 */}
+  else{
+    const perm=await nariLoopbackPerm();
+    // 페이지 열 때 자동 확인: 권한을 아직 안 물어본 상태면 팝업을 띄우지 않음 (배지 클릭·녹음 버튼 때 물어봄)
+    if(!opts.user&&perm==='prompt')throw Object.assign(new Error('PC 중계 연결 전 — 배지를 눌러 연결 (Chrome이 “로컬 기기 연결” 허용을 물으면 허용)'),{code:'NEED_CLICK'});
+    try{await nariPair();} // 매번 새로 받음 (중계를 껐다 켜면 토큰이 바뀜)
+    catch(e){if(perm==='denied')throw Object.assign(new Error('PC 중계가 꺼져 있거나 Chrome “로컬 네트워크/루프백” 권한이 차단됨 — 중계 실행 확인 · 주소창 왼쪽 아이콘 → 사이트 설정에서 허용'),{code:'DENIED'});throw e;}
+  }
+  let r;try{r=await fetchWithTimeout(nariUrl('/api/status'),nariFetchOpts({cache:'no-store'}),5000,null,0);}
+  catch(e){NARI.ok=false;NARI.paired=false;throw new Error('PC 중계에 연결되지 않습니다 — 검은 실행창이 살아 있는지 확인');}
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok||!String(d.service||'').startsWith('soap-nari-personal'))throw new Error('중계 프로그램 버전이 다릅니다 — v48.1 bridge.py 인지 확인');
   if(!d.key_configured)throw new Error('중계 실행창에 Nari 키를 넣어주세요');
   NARI.status=d;NARI.ok=true;setBridgeBadge(true);return d;
 }
-function setBridgeBadge(ok,msg){const b=document.getElementById('bridgeBadge');if(!b)return;b.className='nari-badge '+(ok?'on':'off');b.textContent=ok?'🌸 Nari 중계 연결됨':(msg||'중계 없음 — GitHub Pages 모드');}
+// 중계가 없을 때 대신 쓸 STT (조용히 백업) — Gemini → OpenAI 순. 키가 하나도 없으면 null
+function sttFallbackEngine(){return getKey('gemini')?'gemini-tx':getKey('openai')?'gpt-tx':null;}
+async function resolveSttEngine(eng){
+  if(!String(eng).startsWith('nari'))return eng;
+  try{await ensureNariBridge({user:true});return eng;}
+  catch(e){const fb=sttFallbackEngine();if(fb){NARI.lastErr=e.message;setBridgeBadge(false,'중계 없음 → '+STT_CONFIG[fb].label+' 대신 사용');showToast('🌸 중계 없음 → '+STT_CONFIG[fb].label+'로 대신 인식');return fb;}throw e;}
+}
+function setBridgeBadge(ok,msg){const b=document.getElementById('bridgeBadge');if(!b)return;b.className='nari-badge '+(ok?'on':'off');b.textContent=ok?'🌸 Nari 중계 연결됨'+(NARI.base?' (GitHub 화면)':''):(msg||'중계 없음 — GitHub Pages 모드');}
 async function initNari(){
-  const b=document.getElementById('bridgeBadge');if(b)b.addEventListener('click',()=>refreshRecStatus());
-  document.getElementById('recStatus')?.addEventListener('click',refreshRecStatus);
+  const b=document.getElementById('bridgeBadge');if(b)b.addEventListener('click',()=>{NARI.paired=false;refreshRecStatus(true);});
+  document.getElementById('recStatus')?.addEventListener('click',()=>refreshRecStatus(true));
   try{await ensureNariBridge();}
-  catch(e){NARI.ok=false;setBridgeBadge(false,nariHere()?'중계 연결 안 됨 — 클릭해서 재확인':'중계 없음 — GitHub Pages 모드');}
+  catch(e){NARI.ok=false;setBridgeBadge(false,e.code==='NEED_CLICK'?'🔌 PC 중계 — 눌러서 연결':nariHere()?'중계 연결 안 됨 — 클릭해서 재확인':'중계 없음 — 켜고 나서 클릭');}
 }
 function nariHdr(extra){return Object.assign({'X-Bridge-Token':NARI.token||''},extra||{});}
 
 // ── 파일 · 백업 녹음 전사: WAV 16k 로 바꿔 중계에 POST ──
 async function runNariBridge(blob,model){
-  await ensureNariBridge();
+  await ensureNariBridge({user:true});
   let wav;try{wav=await convertToWav(blob);}catch(e){throw new Error('브라우저가 이 오디오를 변환하지 못했습니다 — WAV·MP3·M4A로 다시 시도');}
   if(wav.size>30*60*32000+44)throw new Error('Nari 파일 전사는 최대 30분');
   const prompt=getSttVocab().join(', ');
-  let r;try{r=await fetchWithTimeout('/api/nari/transcribe?model='+encodeURIComponent(model)+'&prompt='+encodeURIComponent(prompt),{method:'POST',headers:nariHdr({'Content-Type':'audio/wav'}),body:wav},20*60*1000);}
+  let r;try{r=await fetchWithTimeout(nariUrl('/api/nari/transcribe?model='+encodeURIComponent(model)+'&prompt='+encodeURIComponent(prompt)),nariFetchOpts({method:'POST',headers:nariHdr({'Content-Type':'audio/wav'}),body:wav}),20*60*1000,null,0);}
   catch(e){throw new Error('Nari 연결이 끊겼거나 시간이 초과됐습니다 — 중계 창 확인');}
   const d=await r.json().catch(()=>({}));
   if(!r.ok||!d.ok){
@@ -1884,7 +1932,8 @@ function keepLastRec(blob,name){lastRec={blob,name};const b=document.getElementB
 async function reTranscribe(){
   if(!lastRec){showToast('⚠️ 다시 인식할 녹음이 없습니다');return;}
   if(isRecording||live){showToast('⏳ 녹음 중에는 안 됩니다');return;}
-  const eng=document.getElementById('sttEngine')?.value||'nari-fast';
+  let eng=document.getElementById('sttEngine')?.value||'nari-fast';
+  try{eng=await resolveSttEngine(eng);}catch(e){showToast('⚠️ '+e.message);return;}
   await runWhisper(lastRec.blob,lastRec.name,'sttPipe1','stt1a','stt1b',eng,false);
 }
 
@@ -1906,7 +1955,7 @@ function renderLive(){
 }
 async function startLiveNari(model){
   if(live||isRecording)return;
-  try{await ensureNariBridge();}catch(e){showToast('⚠️ '+e.message);setRecStatus('bad',e.message);return;}
+  try{await ensureNariBridge({user:true});}catch(e){showToast('⚠️ '+e.message);setRecStatus('bad',e.message);return;}
   let stream;
   try{stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true}});}
   catch(e){showToast('⚠️ 마이크 접근 실패 — 주소창의 마이크 권한을 허용하세요');return;}
